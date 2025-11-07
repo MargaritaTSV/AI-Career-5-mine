@@ -9,7 +9,7 @@ public class Database {
 
     public static Connection get() throws SQLException {
         try {
-            Class.forName("org.h2.Driver"); // ✅ важно! Без этого драйвер не подхватывается в IntelliJ
+            Class.forName("org.h2.Driver");
         } catch (ClassNotFoundException e) {
             throw new RuntimeException("H2 driver not found", e);
         }

@@ -10,7 +10,7 @@ import java.util.Map;
 public class DemoMain {
     public static void main(String[] args) {
 
-        Database.init(); // создание таблиц users и profiles
+        Database.init();
         Database.smokeTest();
         System.out.println("Схема готова. Файл БД: ./data/aicareer.mv.db");
 
@@ -23,9 +23,9 @@ public class DemoMain {
         register.register("test@example.com", "12345", "Мария");
 
         LoginUser login = new LoginUser(userRepo);
-        login.login("test@example.com", "12345"); // успешный вход
-        login.login("wrong@example.com", "12345"); // неверный email
-        login.login("test@example.com", "wrongpass"); // неверный пароль
+        login.login("test@example.com", "12345");
+        login.login("wrong@example.com", "12345");
+        login.login("test@example.com", "wrongpass");
 
         Profile profile = new Profile(
                 userRepo.findByEmail("test@example.com").orElseThrow().getId(),

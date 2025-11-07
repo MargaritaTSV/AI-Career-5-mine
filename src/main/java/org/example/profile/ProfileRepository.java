@@ -11,9 +11,6 @@ import java.util.*;
 public class ProfileRepository {
     private final ObjectMapper mapper = new ObjectMapper();
 
-    /**
-     * Создаёт или обновляет анкету пользователя.
-     */
     public void save(Profile profile) {
         String sql = """
             MERGE INTO profiles (user_id, target_role, skills, experience_years, updated_at)
@@ -36,9 +33,7 @@ public class ProfileRepository {
         }
     }
 
-    /**
-     * Находит профиль по user_id.
-     */
+
     public Optional<Profile> findByUserId(String userId) {
         String sql = "SELECT * FROM profiles WHERE user_id = ?";
         try (Connection c = Database.get();
@@ -67,9 +62,7 @@ public class ProfileRepository {
         }
     }
 
-    /**
-     * Возвращает всех пользователей с профилями (для отладки или выгрузки в AI-модуль).
-     */
+
     public List<Profile> findAll() {
         List<Profile> profiles = new ArrayList<>();
         String sql = "SELECT * FROM profiles";
