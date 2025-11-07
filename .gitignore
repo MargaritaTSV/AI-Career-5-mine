@@ -37,3 +37,46 @@ build/
 
 ### Mac OS ###
 .DS_Store
+
+# === Java / Maven ===
+target/
+out/
+*.class
+*.jar
+*.war
+*.ear
+*.iml
+
+# === IntelliJ IDEA ===
+.idea/
+*.iws
+*.ipr
+
+# === Logs ===
+*.log
+logs/
+*.tmp
+
+# === OS temporary files ===
+.DS_Store
+Thumbs.db
+
+# === H2 Database files ===
+*.mv.db
+*.trace.db
+*.h2.db
+/data/
+!src/main/resources/db/        # <- если ты захочешь держать schema.sql, оставляем только его
+
+# === JSON / local test data ===
+users.json
+profile.json
+roles.json
+
+# === Environment & configs ===
+.env
+*.env.local
+
+# === Temporary backup files ===
+*~
+*.bak
