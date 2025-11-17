@@ -1,0 +1,166 @@
+{
+  "skills": [
+    "java",
+    "c++",
+    "python",
+    "javascript",
+    "sql",
+    "docker",
+    "c#",
+    "php",
+    "spring",
+    "machine_learning"
+  ],
+  "positions": [
+    {
+      "title": "Frontend JavaScript Developer",
+      "skills": {
+        "java": 0,
+        "c++": 0,
+        "python": 0,
+        "javascript": 1,
+        "sql": 1,
+        "docker": 0,
+        "c#": 0,
+        "php": 0,
+        "spring": 0,
+        "machine_learning": 0
+      }
+    },
+    {
+      "title": "C++ Backend Engineer",
+      "skills": {
+        "java": 0,
+        "c++": 1,
+        "python": 0,
+        "javascript": 0,
+        "sql": 1,
+        "docker": 1,
+        "c#": 0,
+        "php": 0,
+        "spring": 0,
+        "machine_learning": 0
+      }
+    },
+    {
+      "title": "Java Backend Developer",
+      "skills": {
+        "java": 1,
+        "c++": 0,
+        "python": 0,
+        "javascript": 0,
+        "sql": 1,
+        "docker": 1,
+        "c#": 0,
+        "php": 0,
+        "spring": 1,
+        "machine_learning": 0
+      }
+    },
+    {
+      "title": "Data Scientist",
+      "skills": {
+        "java": 0,
+        "c++": 0,
+        "python": 1,
+        "javascript": 0,
+        "sql": 1,
+        "docker": 1,
+        "c#": 0,
+        "php": 0,
+        "spring": 0,
+        "machine_learning": 1
+      }
+    },
+    {
+      "title": "DevOps Engineer",
+      "skills": {
+        "java": 0,
+        "c++": 0,
+        "python": 1,
+        "javascript": 0,
+        "sql": 1,
+        "docker": 1,
+        "c#": 0,
+        "php": 0,
+        "spring": 0,
+        "machine_learning": 0
+      }
+    },
+    {
+      "title": "Full Stack Developer",
+      "skills": {
+        "java": 1,
+        "c++": 0,
+        "python": 1,
+        "javascript": 1,
+        "sql": 1,
+        "docker": 1,
+        "c#": 0,
+        "php": 1,
+        "spring": 1,
+        "machine_learning": 0
+      }
+    },
+    {
+      "title": "Android Mobile Developer",
+      "skills": {
+        "java": 1,
+        "c++": 0,
+        "python": 0,
+        "javascript": 0,
+        "sql": 0,
+        "docker": 0,
+        "c#": 0,
+        "php": 0,
+        "spring": 0,
+        "machine_learning": 0
+      }
+    },
+    {
+      "title": "QA Automation Engineer",
+      "skills": {
+        "java": 1,
+        "c++": 0,
+        "python": 1,
+        "javascript": 1,
+        "sql": 1,
+        "docker": 0,
+        "c#": 1,
+        "php": 0,
+        "spring": 0,
+        "machine_learning": 0
+      }
+    },
+    {
+      "title": "Data Engineer",
+      "skills": {
+        "java": 0,
+        "c++": 0,
+        "python": 1,
+        "javascript": 0,
+        "sql": 1,
+        "docker": 1,
+        "c#": 0,
+        "php": 0,
+        "spring": 0,
+        "machine_learning": 1
+      }
+    },
+    {
+      "title": "Machine Learning Engineer",
+      "skills": {
+        "java": 0,
+        "c++": 0,
+        "python": 1,
+        "javascript": 0,
+        "sql": 1,
+        "docker": 1,
+        "c#": 0,
+        "php": 0,
+        "spring": 0,
+        "machine_learning": 1
+      }
+    }
+  ]
+}
