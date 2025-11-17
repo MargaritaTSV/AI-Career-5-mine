@@ -1,9 +1,8 @@
-package com.aicareer.hh.hhapi;
+package com.aicareer.hh.model;
 
 import java.util.List;
 
 public class HhVacancySearchResponse {
-    public int pages;
-    public int found;
+    public Integer pages;
     public List<HhVacancy> items;
 }
