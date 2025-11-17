@@ -30,7 +30,7 @@ public class HhVacancyFetcher implements VacancyFetcher {
                                  Integer salaryFrom) {
         List<HhVacancy> all = new ArrayList<>();
 
-        for (int page = 0; page < 3; page++) { // до 3 страниц для MVP
+        for (int page = 0; page < 3; page++) { // до 3 страниц
             StringBuilder url = new StringBuilder("https://api.hh.ru/vacancies?");
             url.append("text=").append(URLEncoder.encode(text, StandardCharsets.UTF_8));
             if (area != null && !area.isBlank()) url.append("&area=").append(area);
@@ -45,7 +45,7 @@ public class HhVacancyFetcher implements VacancyFetcher {
                 String body = client.get(url.toString());
                 HhVacancySearchResponse resp = om.readValue(body, HhVacancySearchResponse.class);
                 if (resp.items != null) all.addAll(resp.items);
-                if (page >= resp.pages - 1) break; // последняя страница
+                if (resp.pages <= 0 || page >= resp.pages - 1) break;
             } catch (Exception e) {
                 throw new RuntimeException("Fetch error: " + e.getMessage(), e);
             }

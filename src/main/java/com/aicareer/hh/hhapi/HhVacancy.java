@@ -5,14 +5,20 @@ import java.util.List;
 public class HhVacancy {
     public String id;
     public String name;
-    public HhEmployer employer;
-    public HhArea area;
-    public String published_at;
-    public HhSalary salary;
-    public String alternate_url;
-    public HhSnippet snippet;
-    public List<HhKeySkill> key_skills;
-    public HhExperience experience;
-    public HhEmployment employment;
-    public HhSchedule schedule;
+    public Area area;
+    public Employer employer;
+    public Salary salary;
+    public List<KeySkill> key_skills;
+    public Schedule schedule;
+    public Employment employment;
+    public Snippet snippet;
+    public String url;
+
+    public static class Area { public String name; }
+    public static class Employer { public String name; }
+    public static class Salary { public Integer from; public Integer to; public String currency; public Boolean gross; }
+    public static class KeySkill { public String name; }
+    public static class Schedule { public String name; }
+    public static class Employment { public String name; }
+    public static class Snippet { public String requirement; public String responsibility; }
 }

@@ -1,23 +1,21 @@
 package com.aicareer.hh.infrastructure.export;
 
-import com.aicareer.hh.model.Vacancy;
-import com.aicareer.hh.ports.Exporter;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
 
 import java.io.File;
-import java.util.List;
+import java.nio.charset.StandardCharsets;
 
-public class JsonExporter implements Exporter {
+public class JsonExporter {
     private final ObjectMapper om = new ObjectMapper()
             .enable(SerializationFeature.INDENT_OUTPUT);
 
-    @Override
-    public void writeJson(List<Vacancy> list, String filePath) {
+    public void writeJson(Object data, String fileName) {
         try {
-            om.writeValue(new File(filePath), list);
+            om.writeValue(new File(fileName), data);
+            System.out.println("Сохранено: " + fileName);
         } catch (Exception e) {
-            throw new RuntimeException("Export error: " + e.getMessage(), e);
+            throw new RuntimeException("JSON export failed: " + e.getMessage(), e);
         }
     }
 }

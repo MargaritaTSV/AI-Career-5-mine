@@ -1,49 +1,59 @@
 package com.aicareer.hh.infrastructure.mapper;
 
-import com.aicareer.hh.hhapi.HhKeySkill;
 import com.aicareer.hh.hhapi.HhVacancy;
 import com.aicareer.hh.model.Vacancy;
 import com.aicareer.hh.ports.VacancyMapper;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
+import java.util.stream.Collectors;
 
 public class DefaultVacancyMapper implements VacancyMapper {
+
+    // Набор часто встречающихся скиллов для быстрых эвристик из сниппета
+    private static final List<String> DICT = List.of(
+            "java","kotlin","spring","spring boot","hibernate","jpa",
+            "maven","gradle","git","docker","kubernetes",
+            "sql","postgres","mysql","oracle","clickhouse",
+            "rest","kafka","rabbitmq","linux","aws","gcp","azure"
+    );
+
     @Override
-    public Vacancy mapFromRaw(HhVacancy r) {
-        Vacancy v = new Vacancy();
+    public Vacancy mapFromRaw(HhVacancy v) {
+        Vacancy x = new Vacancy();
+        x.title   = v.name;
+        x.company = v.employer != null ? v.employer.name : null;
+        x.city    = v.area != null ? v.area.name : null;
 
-        v.id = r.id;
-        v.title = r.name;
-        v.company = (r.employer != null) ? r.employer.name : null;
-        v.city = (r.area != null) ? r.area.name : null;
-
-        v.experience = (r.experience != null) ? r.experience.id : null;
-        v.employment = (r.employment != null) ? r.employment.id : null;
-        v.schedule = (r.schedule != null) ? r.schedule.id : null;
-
-        if (r.salary != null) {
-            v.salaryFrom = r.salary.from;
-            v.salaryTo = r.salary.to;
-            v.currency = r.salary.currency;
+        if (v.salary != null) {
+            x.salaryFrom = v.salary.from;
+            x.salaryTo   = v.salary.to;
+            x.currency   = v.salary.currency;
         }
+        x.url = v.url;
 
-        List<String> skills = new ArrayList<>();
-        if (r.key_skills != null) {
-            for (HhKeySkill k : r.key_skills) {
-                if (k != null && k.name != null) skills.add(k.name.toLowerCase());
+        // 1) key_skills если есть
+        List<String> skills = v.key_skills == null ? new ArrayList<>()
+                : v.key_skills.stream()
+                .map(ks -> ks.name)
+                .filter(Objects::nonNull)
+                .map(s -> s.trim().toLowerCase())
+                .collect(Collectors.toCollection(ArrayList::new));
+
+        // 2) Если пусто — берем из сниппета эвристически
+        if (skills.isEmpty() && v.snippet != null) {
+            String text = ((v.snippet.requirement == null ? "" : v.snippet.requirement) + " " +
+                    (v.snippet.responsibility == null ? "" : v.snippet.responsibility))
+                    .toLowerCase(Locale.ROOT);
+
+            for (String kw : DICT) {
+                if (text.contains(kw)) skills.add(kw);
             }
+            // чуть нормализуем «spring boot» → и «spring»
+            if (skills.contains("spring boot") && !skills.contains("spring")) skills.add("spring");
         }
-        v.skills = skills;
 
-        v.description = (r.snippet != null)
-                ? (r.snippet.requirement != null ? r.snippet.requirement : r.snippet.responsibility)
-                : null;
-
-        v.url = r.alternate_url;
-        v.publishedAt = r.published_at;
-        v.source = "hh";
-
-        return v;
+        // удаляем дубли
+        x.skills = skills.stream().distinct().toList();
+        return x;
     }
 }
