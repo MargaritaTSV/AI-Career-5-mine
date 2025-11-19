@@ -20,12 +20,8 @@ public final class HhVacancyFetcher implements VacancyFetcher {
     public HhVacancyFetcher(HhApiClient client) { this.client = client; }
 
     @Override
-    public List<HhVacancy> fetch(String text,
-                                 String area,
-                                 int perPage,
-                                 String employment,
-                                 String schedule,
-                                 Integer salaryFrom) {
+    public List<HhVacancy> fetch(String text, String area, int perPage,
+                                 String employment, String schedule, Integer salaryFrom) {
         List<HhVacancy> all = new ArrayList<>();
 
         for (int page = 0; page < 3; page++) {
@@ -43,7 +39,7 @@ public final class HhVacancyFetcher implements VacancyFetcher {
                 String body = client.get(url.toString());
                 HhVacancySearchResponse resp = om.readValue(body, HhVacancySearchResponse.class);
                 if (resp.items != null) all.addAll(resp.items);
-                if (resp.pages != null && resp.pages > 0 && page >= resp.pages - 1) break;
+                if (resp.pages <= 0 || page >= resp.pages - 1) break;
             } catch (Exception e) {
                 throw new RuntimeException("Fetch error: " + e.getMessage(), e);
             }

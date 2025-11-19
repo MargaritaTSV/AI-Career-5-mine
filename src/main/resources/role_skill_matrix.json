@@ -1,0 +1,12 @@
+{
+  "Frontend JavaScript Developer": ["javascript", "sql"],
+  "C++ Backend Engineer": ["c++", "sql", "docker"],
+  "Java Backend Developer": ["java", "sql", "docker", "spring"],
+  "Data Scientist": ["python", "sql", "docker", "machine_learning"],
+  "DevOps Engineer": ["python", "sql", "docker"],
+  "Full Stack Developer": ["java", "python", "javascript", "sql", "docker", "php", "spring"],
+  "Android Mobile Developer": ["java"],
+  "QA Automation Engineer": ["java", "python", "javascript", "sql", "c#"],
+  "Data Engineer": ["python", "sql", "docker", "machine_learning"],
+  "Machine Learning Engineer": ["python", "sql", "docker", "machine_learning"]
+}
