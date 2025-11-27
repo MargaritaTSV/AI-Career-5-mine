@@ -12,122 +12,80 @@ public class ProfileRepository {
     private final ObjectMapper mapper = new ObjectMapper();
 
     public void save(Profile profile) {
-        try (Connection c = Database.get()) {
-            c.setAutoCommit(false);
+        String sql = """
+            MERGE INTO profiles (user_id, target_role, skills, experience_years, updated_at)
+            KEY (user_id)
+            VALUES (?, ?, ?, ?, ?)
+        """;
 
-            String upsertProfile = """
-                INSERT INTO app_profiles (user_id, target_role, experience_years, updated_at)
-                VALUES (?, ?, ?, ?)
-                ON CONFLICT (user_id)
-                DO UPDATE SET target_role = EXCLUDED.target_role,
-                              experience_years = EXCLUDED.experience_years,
-                              updated_at = EXCLUDED.updated_at
-            """;
+        try (Connection c = Database.get();
+             PreparedStatement ps = c.prepareStatement(sql)) {
 
-            try (PreparedStatement ps = c.prepareStatement(upsertProfile)) {
-                ps.setString(1, profile.getUserId());
-                ps.setString(2, profile.getTargetRole());
-                ps.setInt(3, profile.getExperienceYears());
-                ps.setTimestamp(4, Timestamp.valueOf(LocalDateTime.now()));
-                ps.executeUpdate();
-            }
+            ps.setString(1, profile.getUserId());
+            ps.setString(2, profile.getTargetRole());
+            ps.setString(3, mapper.writeValueAsString(profile.getSkills())); // JSON skills
+            ps.setInt(4, profile.getExperienceYears());
+            ps.setTimestamp(5, Timestamp.valueOf(LocalDateTime.now()));
 
-            String deleteSkills = "DELETE FROM app_profile_skills WHERE profile_id = ?";
-            try (PreparedStatement ps = c.prepareStatement(deleteSkills)) {
-                ps.setString(1, profile.getUserId());
-                ps.executeUpdate();
-            }
-
-
-            String insertSkill = """
-                INSERT INTO app_profile_skills (profile_id, skill_key, level)
-                VALUES (?, ?, ?)
-            """;
-
-            try (PreparedStatement ps = c.prepareStatement(insertSkill)) {
-        for (Map.Entry<String, Integer> entry : profile.getSkills().entrySet()) {
-        ps.setString(1, profile.getUserId());
-        ps.setString(2, entry.getKey());
-        ps.setInt(3, entry.getValue());
-        ps.addBatch();
-                }
-                        ps.executeBatch();
-            }
-
-                    c.commit();
-        } catch (SQLException e) {
-        throw new RuntimeException("Ошибка при сохранении профиля", e);
+            ps.executeUpdate();
+        } catch (SQLException | JsonProcessingException e) {
+            throw new RuntimeException("Не удалось сохранить профиль", e);
         }
-                }
-
-
-public Optional<Profile> findByUserId(String userId) {
-    try (Connection c = Database.get()) {
-
-        String profileSql = "SELECT * FROM app_profiles WHERE user_id = ?";
-        String skillsSql = "SELECT skill_key, level FROM app_profile_skills WHERE profile_id = ?";
-
-        PreparedStatement psProf = c.prepareStatement(profileSql);
-        psProf.setString(1, userId);
-        ResultSet rsProf = psProf.executeQuery();
-
-        if (!rsProf.next()) return Optional.empty();
-
-        Map<String, Integer> skills = new HashMap<>();
-        PreparedStatement psSkills = c.prepareStatement(skillsSql);
-        psSkills.setString(1, userId);
-        ResultSet rsSkills = psSkills.executeQuery();
-
-        while (rsSkills.next()) {
-            skills.put(rsSkills.getString("skill_key"), rsSkills.getInt("level"));
-        }
-
-        return Optional.of(new Profile(
-                rsProf.getString("user_id"),
-                rsProf.getString("target_role"),
-                skills,
-                rsProf.getInt("experience_years")
-        ));
-
-    } catch (SQLException e) {
-        throw new RuntimeException("Ошибка при загрузке профиля", e);
     }
-}
 
 
-public List<Profile> findAll() {
-    List<Profile> result = new ArrayList<>();
-    try (Connection c = Database.get()) {
+    public Optional<Profile> findByUserId(String userId) {
+        String sql = "SELECT * FROM profiles WHERE user_id = ?";
+        try (Connection c = Database.get();
+             PreparedStatement ps = c.prepareStatement(sql)) {
 
-        String profileSql = "SELECT * FROM app_profiles";
-        String skillsSql = "SELECT skill_key, level FROM app_profile_skills WHERE profile_id = ?";
+            ps.setString(1, userId);
+            ResultSet rs = ps.executeQuery();
 
-        Statement st = c.createStatement();
-        ResultSet rs = st.executeQuery(profileSql);
+            if (rs.next()) {
+                String skillsJson = rs.getString("skills");
+                Map<String, Integer> skills = mapper.readValue(
+                        skillsJson, mapper.getTypeFactory().constructMapType(Map.class, String.class, Integer.class)
+                );
 
-        while (rs.next()) {
-            String userId = rs.getString("user_id");
-
-            Map<String, Integer> skills = new HashMap<>();
-            PreparedStatement psSkills = c.prepareStatement(skillsSql);
-            psSkills.setString(1, userId);
-            ResultSet rsSkills = psSkills.executeQuery();
-
-            while (rsSkills.next()) {
-                skills.put(rsSkills.getString("skill_key"), rsSkills.getInt("level"));
+                return Optional.of(new Profile(
+                        rs.getString("user_id"),
+                        rs.getString("target_role"),
+                        skills,
+                        rs.getInt("experience_years")
+                ));
             }
+            return Optional.empty();
 
-            result.add(new Profile(
-                    userId,
-                    rs.getString("target_role"),
-                    skills,
-                    rs.getInt("experience_years")
-            ));
+        } catch (SQLException | JsonProcessingException e) {
+            throw new RuntimeException("Ошибка при загрузке профиля", e);
         }
-
-    } catch (SQLException e) {
-        throw new RuntimeException("Ошибка при загрузке всех профилей", e);
     }
-    return result;
-}
+
+
+    public List<Profile> findAll() {
+        List<Profile> profiles = new ArrayList<>();
+        String sql = "SELECT * FROM profiles";
+        try (Connection c = Database.get();
+             Statement st = c.createStatement();
+             ResultSet rs = st.executeQuery(sql)) {
+
+            while (rs.next()) {
+                String skillsJson = rs.getString("skills");
+                Map<String, Integer> skills = mapper.readValue(
+                        skillsJson, mapper.getTypeFactory().constructMapType(Map.class, String.class, Integer.class)
+                );
+
+                profiles.add(new Profile(
+                        rs.getString("user_id"),
+                        rs.getString("target_role"),
+                        skills,
+                        rs.getInt("experience_years")
+                ));
+            }
+        } catch (SQLException | JsonProcessingException e) {
+            throw new RuntimeException("Ошибка при загрузке всех профилей", e);
+        }
+        return profiles;
+    }
 }
