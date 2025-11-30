@@ -1,4 +1,3 @@
-
 package org.example.profile;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -14,13 +13,9 @@ public class ProfileRepository {
 
     public void save(Profile profile) {
         String sql = """
-            INSERT INTO app_profiles (user_id, target_role, skills, experience_years, updated_at)
-            VALUES (?, ?, ?::jsonb, ?, ?)
-            ON CONFLICT (user_id) DO UPDATE SET
-                target_role = EXCLUDED.target_role,
-                skills = EXCLUDED.skills,
-                experience_years = EXCLUDED.experience_years,
-                updated_at = EXCLUDED.updated_at
+            MERGE INTO profiles (user_id, target_role, skills, experience_years, updated_at)
+            KEY (user_id)
+            VALUES (?, ?, ?, ?, ?)
         """;
 
         try (Connection c = Database.get();
@@ -38,9 +33,9 @@ public class ProfileRepository {
         }
     }
 
-    public Optional<Profile> findByUserId(String userId) {
-        String sql = "SELECT * FROM app_profiles WHERE user_id = ?";
 
+    public Optional<Profile> findByUserId(String userId) {
+        String sql = "SELECT * FROM profiles WHERE user_id = ?";
         try (Connection c = Database.get();
              PreparedStatement ps = c.prepareStatement(sql)) {
 
@@ -48,46 +43,49 @@ public class ProfileRepository {
             ResultSet rs = ps.executeQuery();
 
             if (rs.next()) {
-                return Optional.of(map(rs));
+                String skillsJson = rs.getString("skills");
+                Map<String, Integer> skills = mapper.readValue(
+                        skillsJson, mapper.getTypeFactory().constructMapType(Map.class, String.class, Integer.class)
+                );
+
+                return Optional.of(new Profile(
+                        rs.getString("user_id"),
+                        rs.getString("target_role"),
+                        skills,
+                        rs.getInt("experience_years")
+                ));
             }
             return Optional.empty();
-        } catch (SQLException e) {
-            throw new RuntimeException("Ошибка загрузки профиля", e);
+
+        } catch (SQLException | JsonProcessingException e) {
+            throw new RuntimeException("Ошибка при загрузке профиля", e);
         }
     }
 
+
     public List<Profile> findAll() {
         List<Profile> profiles = new ArrayList<>();
-        String sql = "SELECT * FROM app_profiles";
-
+        String sql = "SELECT * FROM profiles";
         try (Connection c = Database.get();
              Statement st = c.createStatement();
              ResultSet rs = st.executeQuery(sql)) {
 
             while (rs.next()) {
-                profiles.add(map(rs));
+                String skillsJson = rs.getString("skills");
+                Map<String, Integer> skills = mapper.readValue(
+                        skillsJson, mapper.getTypeFactory().constructMapType(Map.class, String.class, Integer.class)
+                );
+
+                profiles.add(new Profile(
+                        rs.getString("user_id"),
+                        rs.getString("target_role"),
+                        skills,
+                        rs.getInt("experience_years")
+                ));
             }
-        } catch (SQLException e) {
-            throw new RuntimeException("Ошибка загрузки всех профилей", e);
+        } catch (SQLException | JsonProcessingException e) {
+            throw new RuntimeException("Ошибка при загрузке всех профилей", e);
         }
         return profiles;
-    }
-
-    private Profile map(ResultSet rs) throws SQLException {
-        try {
-            Map<String, Integer> skills = mapper.readValue(
-                    rs.getString("skills"),
-                    mapper.getTypeFactory().constructMapType(Map.class, String.class, Integer.class)
-            );
-
-            return new Profile(
-                    rs.getString("user_id"),
-                    rs.getString("target_role"),
-                    skills,
-                    rs.getInt("experience_years")
-            );
-        } catch (JsonProcessingException e) {
-            throw new RuntimeException("Ошибка парсинга JSON навыков", e);
-        }
     }
 }
