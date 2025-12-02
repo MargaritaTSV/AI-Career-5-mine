@@ -1,9 +1,9 @@
 package com.aicareer.aitransform;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
-
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.UncheckedIOException;
@@ -11,23 +11,18 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.LinkedHashMap;
 import java.util.List;
-import java.util.Locale;
 import java.util.Map;
-import java.util.Set;
-import java.util.regex.Pattern;
 
 public final class SkillsExtraction {
     private static final ObjectMapper MAPPER = new ObjectMapper();
 
-    private static final List<String> SKILL_LIST = List.of(
-            "java", "c++", "python", "javascript", "sql",
-            "docker", "c#", "php", "spring", "machine_learning"
-    );
+    private static final String DEFAULT_MODEL_PATH = "deepseek-r1:8b";
+    private static final String DEFAULT_OLLAMA_HOST =
+            System.getenv().getOrDefault("OLLAMA_HOST", "http://localhost:11434");
 
-    private static final Map<String, Pattern> SKILL_PATTERNS = Map.of(
-            "c++", Pattern.compile("\\bc\\s*\\+\\s*\\+\\b", Pattern.CASE_INSENSITIVE),
-            "c#", Pattern.compile("\\bc\\s*#\\b", Pattern.CASE_INSENSITIVE)
-    );
+    private static final String SKILLS_RESOURCE = "skills.json";
+
+    private static final List<String> SKILL_LIST = loadSkillList();
 
     private SkillsExtraction() {
     }
@@ -59,65 +54,58 @@ public final class SkillsExtraction {
             if (!root.isArray()) {
                 throw new IllegalArgumentException("Vacancies payload must be a JSON array");
             }
-            return aggregate(root);
+            return requestFromModel(json);
         } catch (JsonProcessingException e) {
             throw new IllegalArgumentException("Invalid JSON provided for vacancies", e);
         }
     }
 
-    private static Map<String, Integer> aggregate(JsonNode vacancies) {
-        Map<String, Integer> hits = new LinkedHashMap<>();
-        SKILL_LIST.forEach(skill -> hits.put(skill, 0));
+    private static Map<String, Integer> requestFromModel(String vacanciesJson) {
+        String prompt = ExtractionPrompt.build()
+                + "\n\nVacancies JSON (analyze them together and return only the skills matrix):\n"
+                + vacanciesJson
+                + "\n\nReturn only the JSON object with the skill flags.";
 
-        for (JsonNode vacancy : vacancies) {
-            String text = collectText(vacancy);
+        String rawResponse = new OllamaClient(DEFAULT_OLLAMA_HOST)
+                .generate(DEFAULT_MODEL_PATH, prompt);
+
+        String jsonResponse = extractJson(rawResponse);
+        try {
+            JsonNode matrixNode = MAPPER.readTree(jsonResponse);
+            Map<String, Integer> matrix = new LinkedHashMap<>();
             for (String skill : SKILL_LIST) {
-                if (mentionsSkill(vacancy, text, skill)) {
-                    hits.computeIfPresent(skill, (k, v) -> v + 1);
-                }
+                int value = matrixNode.has(skill) && matrixNode.get(skill).isNumber()
+                        ? matrixNode.get(skill).asInt()
+                        : 0;
+                matrix.put(skill, value == 0 ? 0 : 1);
             }
+            return matrix;
+        } catch (JsonProcessingException e) {
+            throw new IllegalStateException("Failed to parse model response as skill matrix", e);
         }
-
-        Map<String, Integer> matrix = new LinkedHashMap<>();
-        for (String skill : SKILL_LIST) {
-            matrix.put(skill, hits.getOrDefault(skill, 0) > 0 ? 1 : 0);
-        }
-        return matrix;
     }
 
-    private static boolean mentionsSkill(JsonNode vacancy, String joinedText, String skill) {
-        if (vacancy.has("skills") && vacancy.get("skills").isArray()) {
-            for (JsonNode n : vacancy.get("skills")) {
-                if (n.isTextual() && normalize(n.asText()).contains(skill)) {
-                    return true;
-                }
-            }
+    private static String extractJson(String text) {
+        int start = text.indexOf('{');
+        int end = text.lastIndexOf('}');
+        if (start == -1 || end == -1 || end <= start) {
+            throw new IllegalStateException("Model response does not contain a JSON object");
         }
-
-        Pattern pattern = SKILL_PATTERNS.getOrDefault(
-                skill,
-                Pattern.compile("\\b" + Pattern.quote(skill.replace('_', ' ')) + "\\b", Pattern.CASE_INSENSITIVE)
-        );
-        return pattern.matcher(joinedText).find();
+        return text.substring(start, end + 1);
     }
 
-    private static String collectText(JsonNode vacancy) {
-        StringBuilder sb = new StringBuilder();
-        Set<String> fields = Set.of(
-                "title", "description", "snippet", "responsibilities",
-                "requirements", "duties", "notes"
-        );
-        for (String field : fields) {
-            JsonNode node = vacancy.get(field);
-            if (node != null && node.isTextual()) {
-                sb.append(' ').append(normalize(node.asText()));
+    private static List<String> loadSkillList() {
+        try (InputStream is = Thread.currentThread()
+                .getContextClassLoader()
+                .getResourceAsStream(SKILLS_RESOURCE)) {
+            if (is == null) {
+                throw new IllegalStateException("Skills resource not found: " + SKILLS_RESOURCE);
             }
+            return MAPPER.readValue(is, new TypeReference<>() {
+            });
+        } catch (IOException e) {
+            throw new UncheckedIOException("Failed to load skills list from resource: " + SKILLS_RESOURCE, e);
         }
-        return sb.toString();
-    }
-
-    private static String normalize(String text) {
-        return text.toLowerCase(Locale.ROOT);
     }
 
 public static void main(String[] args) {
@@ -143,4 +131,5 @@ public static void main(String[] args) {
         throw new IllegalStateException("Failed to serialize matrix", e);
     }
 }
+
 }
