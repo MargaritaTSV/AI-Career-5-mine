@@ -120,17 +120,27 @@ public final class SkillsExtraction {
         return text.toLowerCase(Locale.ROOT);
     }
 
-    public static void main(String[] args) {
-        if (args.length != 1) {
-            System.err.println("Usage: SkillsExtraction <path-to-vacancies-json>");
-            System.exit(1);
-        }
-        Path path = Path.of(args[0]);
-        Map<String, Integer> matrix = fromFile(path);
-        try {
-            System.out.println(MAPPER.writerWithDefaultPrettyPrinter().writeValueAsString(matrix));
-        } catch (JsonProcessingException e) {
-            throw new IllegalStateException("Failed to serialize matrix", e);
-        }
+public static void main(String[] args) {
+    String defaultPath = "src/main/resources/samples/skills-extraction-sample.json";
+    String pathString;
+    if (args.length == 0) {
+        System.err.println("No arguments provided, using default sample file:");
+        System.err.println("  " + defaultPath);
+        pathString = defaultPath;
+    } else if (args.length == 1) {
+        pathString = args[0];
+    } else {
+        System.err.println("Usage: SkillsExtraction <path-to-vacancies-json>");
+        System.exit(1);
+        return;
     }
+
+    Path path = Path.of(pathString);
+    Map<String, Integer> matrix = fromFile(path);
+    try {
+        System.out.println(MAPPER.writerWithDefaultPrettyPrinter().writeValueAsString(matrix));
+    } catch (JsonProcessingException e) {
+        throw new IllegalStateException("Failed to serialize matrix", e);
+    }
+}
 }
