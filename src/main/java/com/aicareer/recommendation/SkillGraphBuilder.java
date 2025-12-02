@@ -27,7 +27,6 @@ import java.util.stream.Stream;
 public final class SkillGraphBuilder {
     private static final ObjectMapper MAPPER = new ObjectMapper();
     private static final String SKILLS_RESOURCE = "skills.json";
-    private static final Path DEFAULT_VACANCIES_DIR = Path.of("src/main/resources/export");
 
     private static final Map<String, Pattern> SKILL_PATTERNS = Map.of(
             "c++", Pattern.compile("\\bc\\s*\\+\\s*\\+\\b", Pattern.CASE_INSENSITIVE),
@@ -43,7 +42,7 @@ public final class SkillGraphBuilder {
     }
 
     public static void main(String[] args) {
-        Path baseDir = args.length > 0 ? Path.of(args[0]) : DEFAULT_VACANCIES_DIR;
+        Path baseDir = Path.of(args.length > 0 ? args[0] : ".");
         Path output = Path.of("src/main/resources/graphs/skills-graph.json");
 
         SkillGraph graph = build(baseDir);

@@ -9,13 +9,18 @@ import java.time.LocalDateTime;
 import java.util.*;
 
 public class ProfileRepository {
+
     private final ObjectMapper mapper = new ObjectMapper();
 
     public void save(Profile profile) {
         String sql = """
-            MERGE INTO profiles (user_id, target_role, skills, experience_years, updated_at)
-            KEY (user_id)
-            VALUES (?, ?, ?, ?, ?)
+            INSERT INTO user_profiles (user_id, target_role, skills, experience_years, updated_at)
+            VALUES (?, ?, ?::jsonb, ?, ?)
+            ON CONFLICT (user_id) DO UPDATE SET
+                target_role = EXCLUDED.target_role,
+                skills = EXCLUDED.skills,
+                experience_years = EXCLUDED.experience_years,
+                updated_at = EXCLUDED.updated_at
         """;
 
         try (Connection c = Database.get();
@@ -23,19 +28,19 @@ public class ProfileRepository {
 
             ps.setString(1, profile.getUserId());
             ps.setString(2, profile.getTargetRole());
-            ps.setString(3, mapper.writeValueAsString(profile.getSkills())); // JSON skills
+            ps.setString(3, mapper.writeValueAsString(profile.getSkills()));
             ps.setInt(4, profile.getExperienceYears());
             ps.setTimestamp(5, Timestamp.valueOf(LocalDateTime.now()));
 
             ps.executeUpdate();
+
         } catch (SQLException | JsonProcessingException e) {
             throw new RuntimeException("Не удалось сохранить профиль", e);
         }
     }
 
-
     public Optional<Profile> findByUserId(String userId) {
-        String sql = "SELECT * FROM profiles WHERE user_id = ?";
+        String sql = "SELECT * FROM user_profiles WHERE user_id = ?";
         try (Connection c = Database.get();
              PreparedStatement ps = c.prepareStatement(sql)) {
 
@@ -43,9 +48,9 @@ public class ProfileRepository {
             ResultSet rs = ps.executeQuery();
 
             if (rs.next()) {
-                String skillsJson = rs.getString("skills");
                 Map<String, Integer> skills = mapper.readValue(
-                        skillsJson, mapper.getTypeFactory().constructMapType(Map.class, String.class, Integer.class)
+                        rs.getString("skills"),
+                        mapper.getTypeFactory().constructMapType(Map.class, String.class, Integer.class)
                 );
 
                 return Optional.of(new Profile(
@@ -55,25 +60,26 @@ public class ProfileRepository {
                         rs.getInt("experience_years")
                 ));
             }
+
             return Optional.empty();
 
-        } catch (SQLException | JsonProcessingException e) {
+        } catch (Exception e) {
             throw new RuntimeException("Ошибка при загрузке профиля", e);
         }
     }
 
-
     public List<Profile> findAll() {
         List<Profile> profiles = new ArrayList<>();
-        String sql = "SELECT * FROM profiles";
+        String sql = "SELECT * FROM user_profiles";
+
         try (Connection c = Database.get();
              Statement st = c.createStatement();
              ResultSet rs = st.executeQuery(sql)) {
 
             while (rs.next()) {
-                String skillsJson = rs.getString("skills");
                 Map<String, Integer> skills = mapper.readValue(
-                        skillsJson, mapper.getTypeFactory().constructMapType(Map.class, String.class, Integer.class)
+                        rs.getString("skills"),
+                        mapper.getTypeFactory().constructMapType(Map.class, String.class, Integer.class)
                 );
 
                 profiles.add(new Profile(
@@ -83,9 +89,10 @@ public class ProfileRepository {
                         rs.getInt("experience_years")
                 ));
             }
-        } catch (SQLException | JsonProcessingException e) {
+        } catch (Exception e) {
             throw new RuntimeException("Ошибка при загрузке всех профилей", e);
         }
+
         return profiles;
     }
 }

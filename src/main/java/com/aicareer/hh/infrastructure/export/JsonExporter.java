@@ -1,32 +1,34 @@
 package com.aicareer.hh.infrastructure.export;
 
-import com.aicareer.hh.model.OutVacancy;
-import com.aicareer.hh.model.Vacancy;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.SerializationFeature;
 
+import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.Collection;
-import java.util.List;
 
-public final class JsonExporter {
-    private static final Path EXPORT_DIR = Path.of("src/main/resources/export");
+public class JsonExporter {
 
-    private final ObjectMapper om = new ObjectMapper()
-            .enable(SerializationFeature.INDENT_OUTPUT);
+    // ОДНО место для всех JSON-файлов
+    private static final Path EXPORT_DIR = Path.of("src", "main", "resources", "export");
 
-    public void writeJson(Collection<Vacancy> items, String fileName) {
+    private final ObjectMapper mapper = new ObjectMapper();
+
+    public <T> void writeJson(Collection<T> data, String fileName) {
         try {
-            List<OutVacancy> out = items.stream()
-                    .map(OutVacancy::from)
-                    .toList();
+            // создаём папку src/main/resources/export, если её ещё нет
             Files.createDirectories(EXPORT_DIR);
-            Path output = EXPORT_DIR.resolve(fileName);
-            om.writeValue(output.toFile(), out);
-            System.out.println("Сохранено: " + output.toAbsolutePath());
-        } catch (Exception e) {
-            throw new RuntimeException("JSON export failed: " + e.getMessage(), e);
+
+            // соберём полный путь к файлу внутри resources/export
+            Path outputFile = EXPORT_DIR.resolve(fileName);
+
+            mapper
+                    .writerWithDefaultPrettyPrinter()
+                    .writeValue(outputFile.toFile(), data);
+
+            System.out.println("✅ JSON сохранён: " + outputFile.toAbsolutePath());
+        } catch (IOException e) {
+            throw new RuntimeException("Ошибка при записи JSON: " + e.getMessage(), e);
         }
     }
 }
