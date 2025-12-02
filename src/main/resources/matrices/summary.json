@@ -1,0 +1,5 @@
+{
+  "соответствует" : [ "java", "c++", "sql", "c#", "php", "machine_learning" ],
+  "требует улучшения" : [ "docker", "spring" ],
+  "лучше ожидаемого" : [ "python", "javascript" ]
+}
