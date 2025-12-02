@@ -6,70 +6,110 @@ import com.aicareer.hh.model.Vacancy;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
-import java.util.List;
+import java.sql.Types;
+import java.util.Collection;
 
-/**
- * Репозиторий для сохранения вакансий в PostgreSQL.
- */
-public class JdbcVacancyRepository {
+public class JdbcVacancyRepository implements VacancyRepository {
 
-    private final DbConnectionProvider provider;
+    private final DbConnectionProvider connectionProvider;
 
-    public JdbcVacancyRepository(DbConnectionProvider provider) {
-        this.provider = provider;
+    public JdbcVacancyRepository(DbConnectionProvider connectionProvider) {
+        this.connectionProvider = connectionProvider;
     }
 
-    public void saveAll(List<Vacancy> vacancies) {
-        String sql = """
-            INSERT INTO vacancy (
-                external_id, title, company, city,
-                experience, employment, schedule,
-                salary_from, salary_to, currency,
-                description, url, source, published_at
-            )
-            VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
-            ON CONFLICT (external_id) DO UPDATE
-            SET title = EXCLUDED.title,
-                company = EXCLUDED.company,
-                city = EXCLUDED.city,
-                experience = EXCLUDED.experience,
-                employment = EXCLUDED.employment,
-                schedule = EXCLUDED.schedule,
-                salary_from = EXCLUDED.salary_from,
-                salary_to = EXCLUDED.salary_to,
-                currency = EXCLUDED.currency,
-                description = EXCLUDED.description,
-                url = EXCLUDED.url,
-                source = EXCLUDED.source,
-                published_at = EXCLUDED.published_at;
-        """;
+    @Override
+    public void saveAll(Collection<Vacancy> vacancies) {
+        if (vacancies == null || vacancies.isEmpty()) {
+            return;
+        }
 
-        try (Connection conn = provider.getConnection();
-             PreparedStatement ps = conn.prepareStatement(sql)) {
+        // ОДНА таблица vacancy, без skills
+        // Ожидаем схему типа:
+        // id (PK, text/varchar),
+        // title, company, city, experience, employment, schedule,
+        // salary_from, salary_to, currency,
+        // description, url, source, published_at, score
+        String sql = """
+                INSERT INTO vacancy (
+                    id,
+                    title,
+                    company,
+                    city,
+                    experience,
+                    employment,
+                    schedule,
+                    salary_from,
+                    salary_to,
+                    currency,
+                    description,
+                    url,
+                    source,
+                    published_at,
+                    score
+                ) VALUES (
+                    ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?
+                )
+                ON CONFLICT (id) DO UPDATE SET
+                    title        = EXCLUDED.title,
+                    company      = EXCLUDED.company,
+                    city         = EXCLUDED.city,
+                    experience   = EXCLUDED.experience,
+                    employment   = EXCLUDED.employment,
+                    schedule     = EXCLUDED.schedule,
+                    salary_from  = EXCLUDED.salary_from,
+                    salary_to    = EXCLUDED.salary_to,
+                    currency     = EXCLUDED.currency,
+                    description  = EXCLUDED.description,
+                    url          = EXCLUDED.url,
+                    source       = EXCLUDED.source,
+                    published_at = EXCLUDED.published_at,
+                    score        = EXCLUDED.score
+                """;
+
+        try (Connection conn = connectionProvider.getConnection();
+             PreparedStatement stmt = conn.prepareStatement(sql)) {
 
             conn.setAutoCommit(false);
 
             for (Vacancy v : vacancies) {
-                ps.setString(1, v.getId());
-                ps.setString(2, v.getTitle());
-                ps.setString(3, v.getCompany());
-                ps.setString(4, v.getCity());
-                ps.setString(5, v.getExperience());
-                ps.setString(6, v.getEmployment());
-                ps.setString(7, v.getSchedule());
-                ps.setObject(8, v.getSalaryFrom());
-                ps.setObject(9, v.getSalaryTo());
-                ps.setString(10, v.getCurrency());
-                ps.setString(11, v.getDescription());
-                ps.setString(12, v.getUrl());
-                ps.setString(13, v.getSource());
-                ps.setString(14, v.getPublishedAt() != null ? v.getPublishedAt().toString() : null);
-                ps.addBatch();
+                if (v == null || v.getId() == null) {
+                    continue;
+                }
+
+                int i = 1;
+                stmt.setString(i++, v.getId());
+                stmt.setString(i++, v.getTitle());
+                stmt.setString(i++, v.getCompany());
+                stmt.setString(i++, v.getCity());
+                stmt.setString(i++, v.getExperience());
+                stmt.setString(i++, v.getEmployment());
+                stmt.setString(i++, v.getSchedule());
+
+                if (v.getSalaryFrom() != null) {
+                    stmt.setInt(i++, v.getSalaryFrom());
+                } else {
+                    stmt.setNull(i++, Types.INTEGER);
+                }
+
+                if (v.getSalaryTo() != null) {
+                    stmt.setInt(i++, v.getSalaryTo());
+                } else {
+                    stmt.setNull(i++, Types.INTEGER);
+                }
+
+                stmt.setString(i++, v.getCurrency());
+                stmt.setString(i++, v.getDescription());
+                stmt.setString(i++, v.getUrl());
+                stmt.setString(i++, v.getSource());
+                stmt.setString(i++, v.getPublishedAt());
+                stmt.setInt(i, v.getScore());
+
+                stmt.addBatch();
             }
 
-            ps.executeBatch();
+            stmt.executeBatch();
             conn.commit();
-
+            System.out.println("✅ Вакансии сохранены в БД: " + vacancies.size());
         } catch (SQLException e) {
             throw new RuntimeException("Ошибка при сохранении вакансий в БД", e);
         }

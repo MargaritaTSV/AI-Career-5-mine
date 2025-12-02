@@ -9,19 +9,16 @@ import java.util.Collection;
 
 public class JsonExporter {
 
-    // ОДНО место для всех JSON-файлов
+    // Все JSON складываем сюда
     private static final Path EXPORT_DIR = Path.of("src", "main", "resources", "export");
 
     private final ObjectMapper mapper = new ObjectMapper();
 
     public <T> void writeJson(Collection<T> data, String fileName) {
         try {
-            // создаём папку src/main/resources/export, если её ещё нет
             Files.createDirectories(EXPORT_DIR);
 
-            // соберём полный путь к файлу внутри resources/export
             Path outputFile = EXPORT_DIR.resolve(fileName);
-
             mapper
                     .writerWithDefaultPrettyPrinter()
                     .writeValue(outputFile.toFile(), data);

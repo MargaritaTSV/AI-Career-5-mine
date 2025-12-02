@@ -4,20 +4,21 @@ import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
 
-/**
- * Провайдер подключения к PostgreSQL.
- * Использует параметры окружения из Docker:
- *  DB_URL, DB_USER, DB_PASSWORD
- */
 public class DbConnectionProvider {
+
     private final String url;
     private final String user;
     private final String password;
 
     public DbConnectionProvider() {
-        this.url = System.getenv("DB_URL");
-        this.user = System.getenv("DB_USER");
-        this.password = System.getenv("DB_PASSWORD");
+        this.url = getOrDefault("DB_URL", "jdbc:postgresql://localhost:5432/aicareer");
+        this.user = getOrDefault("DB_USER", "aicareer");
+        this.password = getOrDefault("DB_PASSWORD", "aicareer");
+    }
+
+    private String getOrDefault(String key, String def) {
+        String value = System.getenv(key);
+        return (value == null || value.isBlank()) ? def : value;
     }
 
     public Connection getConnection() throws SQLException {
