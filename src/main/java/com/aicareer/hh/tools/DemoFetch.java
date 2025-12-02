@@ -4,10 +4,8 @@ import com.aicareer.hh.infrastructure.fetcher.HhVacancyFetcher;
 import com.aicareer.hh.infrastructure.http.HhApiClient;
 import com.aicareer.hh.infrastructure.export.JsonExporter;
 import com.aicareer.hh.infrastructure.mapper.DefaultVacancyMapper;
-import com.aicareer.hh.model.Vacancy;
 import com.aicareer.hh.service.DefaultVacancySearchService;
 import com.aicareer.hh.service.SearchService;
-import com.aicareer.hh.tools.RoleMatrix; // добавлено — чтобы IDE видела RoleMatrix
 
 import java.util.List;
 import java.util.Locale;
@@ -46,24 +44,24 @@ public class DemoFetch {
         String employment = null, schedule = null;
         Integer salaryFrom = null;
 
-        // 3) для каждой роли: ищем, ранжируем, берём топ-15, сохраняем
+        // 3) для каждой роли: ищем, ранжируем, берём топ-25, сохраняем
         for (var e : matrix.entrySet()) {
             String role = e.getKey();
             List<String> skills = e.getValue();
 
             var items = service.fetch(role, area, perPage, employment, schedule, salaryFrom);
-            var top15 = service.topBySkills(items, skills, 15);
+            var top25 = service.topBySkills(items, skills, 25);
 
             System.out.println("\n== " + role + " ==");
-            top15.forEach(v -> System.out.printf(
+            top25.forEach(v -> System.out.printf(
                     "score=%s | %s | %s | %s | %s-%s %s | %s%n",
                     nz(v.getScore()), nz(v.getTitle()), nz(v.getCompany()), nz(v.getCity()),
                     nz(v.getSalaryFrom()), nz(v.getSalaryTo()), nz(v.getCurrency()), nz(v.getUrl())
             ));
 
             // отдельные файлы по роли
-            exporter.writeJson(items,  "vacancies_all_"   + safe(role) + ".json");
-            exporter.writeJson(top15,  "vacancies_top15_" + safe(role) + ".json");
+            exporter.writeJson(items, "vacancies_all_"   + safe(role) + ".json");
+            exporter.writeJson(top25, "vacancies_top25_" + safe(role) + ".json");
         }
 
         System.out.println("\n✅ Демонстрация завершена: JSON-файлы созданы в корне проекта");
