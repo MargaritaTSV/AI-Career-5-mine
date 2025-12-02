@@ -7,7 +7,8 @@ import com.aicareer.hh.repository.JdbcVacancyRepository;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
-import java.io.File;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -24,8 +25,13 @@ public class ImportJsonToDb {
         JdbcVacancyRepository repository = new JdbcVacancyRepository(provider);
 
         ObjectMapper mapper = new ObjectMapper();
+        Path exportDir = Path.of("src/main/resources/export");
+        Path source = resolveSourcePath(args, exportDir);
+
+        System.out.println("Импорт из файла: " + source.toAbsolutePath());
+
         List<OutVacancy> outVacancies = mapper.readValue(
-                new File("vacancies_all.json"),
+                source.toFile(),
                 new TypeReference<List<OutVacancy>>() {}
         );
 
@@ -62,5 +68,29 @@ public class ImportJsonToDb {
         repository.saveAll(vacancies);
 
         System.out.println("✅ Импорт JSON → БД завершён. Всего записей: " + vacancies.size());
+    }
+
+    private static Path resolveSourcePath(String[] args, Path exportDir) throws Exception {
+        if (args.length > 0) {
+            Path provided = Path.of(args[0]);
+            Path resolved = provided.isAbsolute() ? provided : exportDir.resolve(provided);
+            if (!Files.exists(resolved)) {
+                throw new IllegalArgumentException(
+                        "Указанный файл не найден: " + resolved.toAbsolutePath()
+                );
+            }
+            return resolved;
+        }
+
+        try (var stream = Files.list(exportDir)) {
+            return stream
+                    .filter(Files::isRegularFile)
+                    .filter(path -> path.getFileName().toString().startsWith("vacancies_all_"))
+                    .sorted()
+                    .findFirst()
+                    .orElseThrow(() -> new IllegalStateException(
+                            "Не найден ни один файл vacancies_all_* в " + exportDir.toAbsolutePath()
+                    ));
+        }
     }
 }
