@@ -109,7 +109,7 @@ public final class SkillsExtraction {
     }
 
     public static void main(String[] args) {
-        String defaultPath = "src/main/resources/samples/skills-extraction-sample.json";
+        String defaultPath = "src/main/resources/matrices/vacancies.json";
         String pathString;
         if (args.length == 0) {
             System.err.println("No arguments provided, using default sample file:");
