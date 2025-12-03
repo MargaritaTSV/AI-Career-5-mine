@@ -18,7 +18,7 @@ public final class RoadmapPromptBuilder {
     private static final String USER_MATRIX_RESOURCE = "matrices/user_skill_matrix.json";
     private static final String DESIRED_MATRIX_RESOURCE = "matrices/desired_role_matrix.json";
     private static final String SKILL_GRAPH_RESOURCE = "graphs/skills-graph.json";
-    private static final String VACANCIES_RESOURCE = "export/vacancies_top25_java_backend_developer.json";
+    private static final String VACANCIES_RESOURCE = "matrices/vacancies.json";
 
     private RoadmapPromptBuilder() {
     }
