@@ -1,5 +1,6 @@
 package org.example.db;
 
+import java.net.UnknownHostException;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
@@ -7,9 +8,13 @@ import java.sql.Statement;
 
 public class Database {
 
+    private static final String HOST = envOrDefault("DB_HOST", "postgres");
+    private static final String PORT = envOrDefault("DB_PORT", "5432");
+    private static final String NAME = envOrDefault("DB_NAME", "aicareer");
+
     private static final String URL = envOrDefault(
             "DB_URL",
-            "jdbc:postgresql://localhost:5432/aicareer"
+            String.format("jdbc:postgresql://%s:%s/%s", HOST, PORT, NAME)
     );
     private static final String USER = envOrDefault("DB_USER", "aicareer");
     private static final String PASSWORD = envOrDefault("DB_PASSWORD", "aicareer");
@@ -24,6 +29,29 @@ public class Database {
             Class.forName("org.postgresql.Driver");
             return DriverManager.getConnection(URL, USER, PASSWORD);
         } catch (ClassNotFoundException | SQLException e) {
+            // Если имя хоста по умолчанию 'postgres' и переменная окружения DB_HOST не задана,
+            // а причина — UnknownHostException, попробуем fallback на localhost
+            Throwable cause = e.getCause();
+            boolean unknownHost = false;
+            while (cause != null) {
+                if (cause instanceof UnknownHostException) {
+                    unknownHost = true;
+                    break;
+                }
+                cause = cause.getCause();
+            }
+
+            String userProvidedHost = System.getenv("DB_HOST");
+            if (unknownHost && (userProvidedHost == null || userProvidedHost.isBlank()) && "postgres".equals(HOST)) {
+                String fallbackUrl = String.format("jdbc:postgresql://%s:%s/%s", "localhost", PORT, NAME);
+                System.err.println("[WARN] Cannot resolve host 'postgres'. Attempting fallback to localhost. If you run Postgres via Docker, start it with: docker-compose up -d postgres");
+                try {
+                    return DriverManager.getConnection(fallbackUrl, USER, PASSWORD);
+                } catch (SQLException ex) {
+                    throw new RuntimeException("PostgreSQL connection failed (tried postgres and localhost). Please ensure Postgres is running (e.g. via docker-compose) and DB_URL/DB_HOST are set.", ex);
+                }
+            }
+
             throw new RuntimeException("PostgreSQL connection failed", e);
         }
     }
