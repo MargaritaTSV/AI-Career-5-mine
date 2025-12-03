@@ -1,7 +1,7 @@
 package com.aicareer.hh.repository;
 
-import com.aicareer.hh.infrastructure.db.DbConnectionProvider;
 import com.aicareer.hh.model.Vacancy;
+import org.example.db.Database;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -10,12 +10,6 @@ import java.sql.Types;
 import java.util.Collection;
 
 public class JdbcVacancyRepository implements VacancyRepository {
-
-    private final DbConnectionProvider connectionProvider;
-
-    public JdbcVacancyRepository(DbConnectionProvider connectionProvider) {
-        this.connectionProvider = connectionProvider;
-    }
 
     @Override
     public void saveAll(Collection<Vacancy> vacancies) {
@@ -66,7 +60,9 @@ public class JdbcVacancyRepository implements VacancyRepository {
                     score        = EXCLUDED.score
                 """;
 
-        try (Connection conn = connectionProvider.getConnection();
+        Database.init();
+
+        try (Connection conn = Database.get();
              PreparedStatement stmt = conn.prepareStatement(sql)) {
 
             conn.setAutoCommit(false);
