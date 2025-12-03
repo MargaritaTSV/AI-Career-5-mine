@@ -63,6 +63,7 @@ public final class SkillsExtraction {
     }
 
     private static Map<String, Integer> requestFromModel(String vacanciesJson) {
+        // Простой промпт без лишних пояснений
         String prompt = ExtractionPrompt.build()
                 + "\n\nVacancies JSON (analyze them together and return only the skills matrix):\n"
                 + vacanciesJson
@@ -76,9 +77,7 @@ public final class SkillsExtraction {
             JsonNode matrixNode = MAPPER.readTree(jsonResponse);
             Map<String, Integer> matrix = new LinkedHashMap<>();
             for (String skill : SKILL_LIST) {
-                int value = matrixNode.has(skill) && matrixNode.get(skill).isNumber()
-                        ? matrixNode.get(skill).asInt()
-                        : 0;
+                int value = readInt(matrixNode, skill);
                 matrix.put(skill, value == 0 ? 0 : 1);
             }
             return matrix;
@@ -87,7 +86,45 @@ public final class SkillsExtraction {
         }
     }
 
+    private static int readInt(JsonNode node, String field) {
+        if (!node.has(field)) {
+            return 0;
+        }
+        JsonNode valueNode = node.get(field);
+        if (valueNode.isInt() || valueNode.isLong()) {
+            return valueNode.asInt();
+        }
+        if (valueNode.isTextual()) {
+            try {
+                return Integer.parseInt(valueNode.asText().trim());
+            } catch (NumberFormatException ignored) {
+                return 0;
+            }
+        }
+        return 0;
+    }
+
     private static String extractJson(String text) {
+        // Если модель прислала готовый JSON
+        try {
+            MAPPER.readTree(text);
+            return text;
+        } catch (IOException ignored) {
+            // идём дальше
+        }
+
+        // Часто ответ приходит внутри ```json ... ```
+        int fenceStart = text.indexOf("```json");
+        if (fenceStart >= 0) {
+            int afterFence = text.indexOf('`', fenceStart + 7);
+            int fenceEnd = text.indexOf("```", afterFence + 1);
+            if (afterFence >= 0 && fenceEnd > afterFence) {
+                String body = text.substring(afterFence + 1, fenceEnd);
+                return body.trim();
+            }
+        }
+
+        // Вытаскиваем первое и последнее вхождение фигурных скобок
         int start = text.indexOf('{');
         int end = text.lastIndexOf('}');
         if (start == -1 || end == -1 || end <= start) {
