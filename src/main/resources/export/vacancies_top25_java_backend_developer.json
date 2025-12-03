@@ -9,11 +9,12 @@
   "salaryFrom" : 174000,
   "salaryTo" : 174000,
   "currency" : "RUR",
-  "skills" : [ ],
+  "skills" : null,
   "description" : "Опыт работы от 3-х лет в области <highlighttext>backend</highlighttext>-<highlighttext>разработки</highlighttext> с использованием <highlighttext>Java</highlighttext>, PostgreSQL, REST, Spring. Опыт автоматизации баз данных... Проектирование, <highlighttext>разработка</highlighttext> и сопровождение ПО компании для автоматизации деятельности на основе технологий <highlighttext>Backend</highlighttext>: <highlighttext>Java</highlighttext>, REST, Spring. Работа в базах данных...",
   "url" : "https://hh.ru/vacancy/124153746",
   "source" : "hh",
-  "publishedAt" : null
+  "publishedAt" : null,
+  "score" : 3
 }, {
   "id" : null,
   "title" : "JAVA Spring разработчик",
@@ -25,11 +26,12 @@
   "salaryFrom" : null,
   "salaryTo" : null,
   "currency" : null,
-  "skills" : [ ],
+  "skills" : null,
   "description" : "Опыт работы с <highlighttext>Java</highlighttext> 8+ не менее 3 лет. Глубокое знание Spring экосистемы (Core, MVC, Boot). Уверенные навыки работы... <highlighttext>Разработка</highlighttext> и поддержка <highlighttext>backend</highlighttext>-компонентов на <highlighttext>Java</highlighttext> с использованием Spring Framework (Spring Boot, Spring Security, Spring Data). Интеграция с базами...",
   "url" : "https://hh.ru/vacancy/128101633",
   "source" : "hh",
-  "publishedAt" : null
+  "publishedAt" : null,
+  "score" : 2
 }, {
   "id" : null,
   "title" : "Backend developer/Tech Lead (Java, Spring)",
@@ -41,11 +43,46 @@
   "salaryFrom" : null,
   "salaryTo" : null,
   "currency" : null,
-  "skills" : [ ],
+  "skills" : null,
   "description" : "Опыт коммерческой <highlighttext>разработки</highlighttext> на актуальных версиях <highlighttext>Java</highlighttext> (<highlighttext>Java</highlighttext> 17+) в корпоративных проектах — от 6 лет. Глубокая экспертиза в Spring... <highlighttext>Разработка</highlighttext> unit- и интеграционных тестов, контроль качества кода (SonarQube, Checkstyle). Синхронизация работы с фронтенд‑<highlighttext>разработчиками</highlighttext>, QA, другими командами. ",
   "url" : "https://hh.ru/vacancy/127550404",
   "source" : "hh",
-  "publishedAt" : null
+  "publishedAt" : null,
+  "score" : 2
+}, {
+  "id" : null,
+  "title" : "Стажер Java/Kotlin Developer",
+  "company" : "Ecom.tech",
+  "city" : "Москва",
+  "experience" : null,
+  "employment" : null,
+  "schedule" : null,
+  "salaryFrom" : null,
+  "salaryTo" : null,
+  "currency" : null,
+  "skills" : null,
+  "description" : "Навыки работы в терминале (управление файлами, запуск скриптов). Практический опыт <highlighttext>разработки</highlighttext> на одном из серверных языков (<highlighttext>Java</highlighttext>/Kotlin).  Сервисы на <highlighttext>Java</highlighttext>/Kotlin с использованием Spring framework. Хранение данных в PostgreSQL. Hazelcast и KeyDB для организации кэша. ",
+  "url" : "https://hh.ru/vacancy/128387177",
+  "source" : "hh",
+  "publishedAt" : null,
+  "score" : 1
+}, {
+  "id" : null,
+  "title" : "Backend-разработчик (Java)",
+  "company" : "DM Solutions",
+  "city" : "Москва",
+  "experience" : null,
+  "employment" : null,
+  "schedule" : null,
+  "salaryFrom" : null,
+  "salaryTo" : null,
+  "currency" : null,
+  "skills" : null,
+  "description" : "Опыт коммерческой <highlighttext>разработки</highlighttext> на <highlighttext>Java</highlighttext> 17+ (от 4 лет), хорошее знание Spring Framework. Опыт работы с различными базами данных... Участие в планировании и обсуждении новых функциональных требований и архитектурных решений. Согласование действий с другими <highlighttext>разработчиками</highlighttext> при проведении совместных разработок. ",
+  "url" : "https://hh.ru/vacancy/128373040",
+  "source" : "hh",
+  "publishedAt" : null,
+  "score" : 1
 }, {
   "id" : null,
   "title" : "Java Backend Developer",
@@ -57,11 +94,12 @@
   "salaryFrom" : 120000,
   "salaryTo" : 170000,
   "currency" : "RUR",
-  "skills" : [ ],
+  "skills" : null,
   "description" : "...<highlighttext>Java</highlighttext> 11+. Опыт <highlighttext>разработки</highlighttext> веб-приложений на Spring MVC / Spring Boot. Понимание архитектуры MVC и многослойных систем. Опыт <highlighttext>разработки</highlighttext>... <highlighttext>Разработка</highlighttext> новой версии государственной информационной системы: <highlighttext>Разработка</highlighttext> серверной части системы на <highlighttext>Java</highlighttext>. <highlighttext>Разработка</highlighttext> REST API для внутренних компонентов и внешних...",
   "url" : "https://hh.ru/vacancy/127691382",
   "source" : "hh",
-  "publishedAt" : null
+  "publishedAt" : null,
+  "score" : 1
 }, {
   "id" : null,
   "title" : "Ментор Java Developer Senior/Lead",
@@ -73,11 +111,12 @@
   "salaryFrom" : 150000,
   "salaryTo" : 400000,
   "currency" : "RUR",
-  "skills" : [ ],
+  "skills" : null,
   "description" : "3+ года коммерческого опыта в <highlighttext>Java</highlighttext>-<highlighttext>разработке</highlighttext> (желательно — <highlighttext>backend</highlighttext> highload, микросервисы, cloud). Глубокие знания: Core <highlighttext>Java</highlighttext> (collections, streams, concurrency).  Организовывать mock-собеседования по <highlighttext>Java</highlighttext> и <highlighttext>Backend</highlighttext>-инженерии: разбор типичных вопросов по Core <highlighttext>Java</highlighttext>, Spring, многопоточности, паттернам, архитектуре и системному...",
   "url" : "https://hh.ru/vacancy/128289348",
   "source" : "hh",
-  "publishedAt" : null
+  "publishedAt" : null,
+  "score" : 1
 }, {
   "id" : null,
   "title" : "Senior Backend-разработчик (Java / Kotlin)",
@@ -89,11 +128,12 @@
   "salaryFrom" : 300000,
   "salaryTo" : null,
   "currency" : "RUR",
-  "skills" : [ ],
+  "skills" : null,
   "description" : "Опыт <highlighttext>разработки</highlighttext> на <highlighttext>Java</highlighttext> от 5 лет. Уверенные знания работы с реляционными базами данных. Опыт написания модульных и интеграционных тестов.  <highlighttext>Разработка</highlighttext> и поддержка микросервисов на <highlighttext>Java</highlighttext> и Kotlin. Участие в Code Review и поддержка качества кода. Проектирование и реализация интеграций...",
   "url" : "https://hh.ru/vacancy/127493138",
   "source" : "hh",
-  "publishedAt" : null
+  "publishedAt" : null,
+  "score" : 1
 }, {
   "id" : null,
   "title" : "Senior Backend Developer (Java/Kotlin)",
@@ -105,11 +145,12 @@
   "salaryFrom" : null,
   "salaryTo" : null,
   "currency" : null,
-  "skills" : [ ],
+  "skills" : null,
   "description" : "Общий опыт работы <highlighttext>разработчиком</highlighttext> ПО не менее 4-х лет. Хорошее понимание принципов построения микро сервисной архитектуры и паттернов <highlighttext>разработки</highlighttext>.  <highlighttext>Разработка</highlighttext> функционала приложения в соответствии с техническими требованиями и заданиями. Устранение проблем и уязвимостей. Кросс ревью кода. Предложение и обсуждение...",
   "url" : "https://hh.ru/vacancy/127461614",
   "source" : "hh",
-  "publishedAt" : null
+  "publishedAt" : null,
+  "score" : 1
 }, {
   "id" : null,
   "title" : "Tech Lead Java",
@@ -121,11 +162,12 @@
   "salaryFrom" : null,
   "salaryTo" : null,
   "currency" : null,
-  "skills" : [ ],
+  "skills" : null,
   "description" : "Опыт управления командой. Поможет в работе: Насмотренность fullstack <highlighttext>разработки</highlighttext> web- приложений (<highlighttext>Java</highlighttext> + TypeScript/JS). Понимание особенностей архитектуры JVM.  Техническое лидерство кросс-функциональной командой <highlighttext>разработки</highlighttext> (<highlighttext>Java</highlighttext>, Vue(TypeScript/JS)). Участие в декомпозиции требований, проектировании компонентной архитектуры с продактом, лидерами...",
   "url" : "https://hh.ru/vacancy/125144758",
   "source" : "hh",
-  "publishedAt" : null
+  "publishedAt" : null,
+  "score" : 1
 }, {
   "id" : null,
   "title" : "Разработчик Java (tech|team lead)",
@@ -137,11 +179,12 @@
   "salaryFrom" : null,
   "salaryTo" : null,
   "currency" : null,
-  "skills" : [ ],
+  "skills" : null,
   "description" : "Опыт <highlighttext>разработки</highlighttext> ПО от 3х лет, в т.ч участия в проектировании архитектуры приложений. Опыт <highlighttext>разработки</highlighttext> и уверенное знание... ...другими участниками команды дорожной карты технологического развития продуктов. Наставничество и управление командой <highlighttext>backend</highlighttext>-<highlighttext>разработчиков</highlighttext>. Повышение технической грамотности команды <highlighttext>backend</highlighttext>-<highlighttext>разработчиков</highlighttext>.",
   "url" : "https://hh.ru/vacancy/128134992",
   "source" : "hh",
-  "publishedAt" : null
+  "publishedAt" : null,
+  "score" : 1
 }, {
   "id" : null,
   "title" : "Java backend developer (team lead)",
@@ -153,11 +196,12 @@
   "salaryFrom" : null,
   "salaryTo" : null,
   "currency" : null,
-  "skills" : [ ],
+  "skills" : null,
   "description" : "Готовность учиться. Умение разрабатывать микросервисную архитектуру. Продуктовый подход. Знание <highlighttext>Java</highlighttext> (Core, Collections, Concurrent) и/или .net на уровне тимлида.  Управлять командой <highlighttext>разработки</highlighttext>. Фикс багов (приёмка баг репортов). Заниматься <highlighttext>разработкой</highlighttext> нового функционала. Заниматься интеграцией с внешними сервисами и API для...",
   "url" : "https://hh.ru/vacancy/128098116",
   "source" : "hh",
-  "publishedAt" : null
+  "publishedAt" : null,
+  "score" : 1
 }, {
   "id" : null,
   "title" : "Senior Backend разработчик Java/Kotlin",
@@ -169,11 +213,12 @@
   "salaryFrom" : null,
   "salaryTo" : null,
   "currency" : null,
-  "skills" : [ ],
+  "skills" : null,
   "description" : "...работе с NoSQL базами данных. Опыт работы с Redis, nginx, RabbitMQ, Kafka. Опыт настройки мониторинга <highlighttext>Java</highlighttext>-приложений. Опыт Frontend-<highlighttext>разработки</highlighttext>. Поддержка и <highlighttext>разработка</highlighttext> нового продуктового функционала. Оптимизация имеющихся компонентов в соответствии с реалиями сегодняшнего дня. Дальнейшие перспективы расширения задач в...",
   "url" : "https://hh.ru/vacancy/108265661",
   "source" : "hh",
-  "publishedAt" : null
+  "publishedAt" : null,
+  "score" : 1
 }, {
   "id" : null,
   "title" : "Middle Java Backend Developer",
@@ -185,11 +230,12 @@
   "salaryFrom" : 140000,
   "salaryTo" : 210000,
   "currency" : "RUR",
-  "skills" : [ ],
+  "skills" : null,
   "description" : "Уверенное знание <highlighttext>Java</highlighttext>, включая Stream API, лямбды и многопоточность. -Глубокое понимание JVM и его компонентов. -Продвинутый опыт работы с Spring... <highlighttext>Разработка</highlighttext> и поддержка <highlighttext>бэкенд</highlighttext>-решений для автоматизированных систем. -Работа с высоконагруженными облачными сервисами. -Использование технологий Spring Boot, Spring MVC, Spring...",
   "url" : "https://hh.ru/vacancy/127964252",
   "source" : "hh",
-  "publishedAt" : null
+  "publishedAt" : null,
+  "score" : 1
 }, {
   "id" : null,
   "title" : "Senior Java Developer",
@@ -201,27 +247,12 @@
   "salaryFrom" : null,
   "salaryTo" : null,
   "currency" : null,
-  "skills" : [ ],
+  "skills" : null,
   "description" : "Stack: <highlighttext>Java</highlighttext>17 /spring boot. Опыт в работе с Linux, AWS, Pipelines and Jenkins. PostgreSQL, Snowflake, Сlickhouse. Опыт и интерес... ...сбора и обработки данных. Построение и адаптация архитектуры к новым модулям и изменениям в потоках данных. ETL процессы. <highlighttext>Разработка</highlighttext> инфраструктуры.",
   "url" : "https://hh.ru/vacancy/127814040",
   "source" : "hh",
-  "publishedAt" : null
-}, {
-  "id" : null,
-  "title" : "Backend developer / Java",
-  "company" : "AWX Solutions FZ-LLC",
-  "city" : "Москва",
-  "experience" : null,
-  "employment" : null,
-  "schedule" : null,
-  "salaryFrom" : null,
-  "salaryTo" : null,
-  "currency" : null,
-  "skills" : [ ],
-  "description" : "Готов расти вместе с проектом и влиять на технологические решения. <highlighttext>Java</highlighttext> 8+, уверенное владение Threads, Streams, Lambda.  Разрабатывать и поддерживать <highlighttext>backend</highlighttext>-сервисы AWX. Проектировать архитектуру новых модулей и интеграций. Писать тесты, документировать код и следить за качеством...",
-  "url" : "https://hh.ru/vacancy/127627207",
-  "source" : "hh",
-  "publishedAt" : null
+  "publishedAt" : null,
+  "score" : 1
 }, {
   "id" : null,
   "title" : "Senior Java-разработчик",
@@ -233,11 +264,12 @@
   "salaryFrom" : null,
   "salaryTo" : null,
   "currency" : null,
-  "skills" : [ ],
+  "skills" : null,
   "description" : "Имеете опыт работы <highlighttext>Java</highlighttext>-<highlighttext>разработчиком</highlighttext> от 5 лет. Имеете опыт работы в микросервисной архитектуре. Знаете <highlighttext>Java</highlighttext> 17 и выше и... Участвовать в создании крупного российского решения для металлургии, которое обеспечит потребности бизнеса в управлении производством, в роли <highlighttext>backend</highlighttext>-<highlighttext>разработчика</highlighttext>. ",
   "url" : "https://hh.ru/vacancy/126466048",
   "source" : "hh",
-  "publishedAt" : null
+  "publishedAt" : null,
+  "score" : 1
 }, {
   "id" : null,
   "title" : "Java разработчик / Java Developer",
@@ -249,11 +281,12 @@
   "salaryFrom" : 180000,
   "salaryTo" : null,
   "currency" : "RUR",
-  "skills" : [ ],
+  "skills" : null,
   "description" : "Базовое понимание архитектуры клиент-серверных приложений. - Знание основных принципов ООП и паттернов проектирования. - Опыт работы с REST API. -  ...проектировании, <highlighttext>разработке</highlighttext> и оптимизации кода. - Интеграция с <highlighttext>backend</highlighttext>-сервисами. - Участие в код-ревью и совместной <highlighttext>разработке</highlighttext> с более опытными <highlighttext>разработчиками</highlighttext>. - ",
   "url" : "https://hh.ru/vacancy/127433687",
   "source" : "hh",
-  "publishedAt" : null
+  "publishedAt" : null,
+  "score" : 1
 }, {
   "id" : null,
   "title" : "Senior Java Backend-разработчик в видеоплатформу VK",
@@ -265,11 +298,12 @@
   "salaryFrom" : 500000,
   "salaryTo" : null,
   "currency" : "RUR",
-  "skills" : [ ],
+  "skills" : null,
   "description" : "От шести лет коммерческого опыта в <highlighttext>бэкенд</highlighttext>-<highlighttext>разработке</highlighttext> на <highlighttext>Java</highlighttext>. Глубокие знания JVM и Garbage Collection. Опыт работы с Spring... Загрузку и хранение видео. Обработку (транскодирование, автосубтитры, категоризацию, определение 18+/NSFW). Защиту авторских прав. Адаптивную раздачу видео через CDN. ",
   "url" : "https://hh.ru/vacancy/127403219",
   "source" : "hh",
-  "publishedAt" : null
+  "publishedAt" : null,
+  "score" : 1
 }, {
   "id" : null,
   "title" : "Java разработчик / Java Developer",
@@ -281,11 +315,12 @@
   "salaryFrom" : 110000,
   "salaryTo" : null,
   "currency" : "RUR",
-  "skills" : [ ],
+  "skills" : null,
   "description" : "Базовое понимание архитектуры клиент-серверных приложений. - Знание основных принципов ООП и паттернов проектирования. - Опыт работы с REST API. -  ...проектировании, <highlighttext>разработке</highlighttext> и оптимизации кода. - Интеграция с <highlighttext>backend</highlighttext>-сервисами. - Участие в код-ревью и совместной <highlighttext>разработке</highlighttext> с более опытными <highlighttext>разработчиками</highlighttext>. - ",
   "url" : "https://hh.ru/vacancy/127384881",
   "source" : "hh",
-  "publishedAt" : null
+  "publishedAt" : null,
+  "score" : 1
 }, {
   "id" : null,
   "title" : "Java разработчик / Java Developer",
@@ -297,11 +332,12 @@
   "salaryFrom" : 180000,
   "salaryTo" : null,
   "currency" : "RUR",
-  "skills" : [ ],
+  "skills" : null,
   "description" : "Базовое понимание архитектуры клиент-серверных приложений. - Знание основных принципов ООП и паттернов проектирования. - Опыт работы с REST API. -  ...проектировании, <highlighttext>разработке</highlighttext> и оптимизации кода. - Интеграция с <highlighttext>backend</highlighttext>-сервисами. - Участие в код-ревью и совместной <highlighttext>разработке</highlighttext> с более опытными <highlighttext>разработчиками</highlighttext>. - ",
   "url" : "https://hh.ru/vacancy/127378745",
   "source" : "hh",
-  "publishedAt" : null
+  "publishedAt" : null,
+  "score" : 1
 }, {
   "id" : null,
   "title" : "Senior/Lead Backend Java Developer / System Architect",
@@ -313,11 +349,12 @@
   "salaryFrom" : null,
   "salaryTo" : null,
   "currency" : null,
-  "skills" : [ ],
+  "skills" : null,
   "description" : "5+ лет коммерческой <highlighttext>разработки</highlighttext>, опыт проектирования распределённых систем. Глубокие знания <highlighttext>Java</highlighttext> 17+, Spring Boot, Spring Cloud, понимание внутренних... Проводить code review, внедрять инженерные практики и контролировать качество кода. Разрабатывать сложные <highlighttext>backend</highlighttext>-модули и интеграционные сервисы (REST/gRPC/SOAP...",
   "url" : "https://hh.ru/vacancy/127306296",
   "source" : "hh",
-  "publishedAt" : null
+  "publishedAt" : null,
+  "score" : 1
 }, {
   "id" : null,
   "title" : "Senior Java developer",
@@ -329,11 +366,12 @@
   "salaryFrom" : null,
   "salaryTo" : null,
   "currency" : null,
-  "skills" : [ ],
+  "skills" : null,
   "description" : "Опыт работы с <highlighttext>Java</highlighttext> от 3 лет. Глубокое понимание Spring Boot 3, Spring Data, Spring JDBC. Опыт работы с реляционными... AI-модели для интеллектуального анализа данных. Разрабатывать <highlighttext>backend</highlighttext>-часть системы мониторинга на <highlighttext>Java</highlighttext> 17 + Spring Boot 3. ",
   "url" : "https://hh.ru/vacancy/127281480",
   "source" : "hh",
-  "publishedAt" : null
+  "publishedAt" : null,
+  "score" : 1
 }, {
   "id" : null,
   "title" : "Java TeamLead / Engineering Manager (Uzum Market)",
@@ -345,15 +383,16 @@
   "salaryFrom" : null,
   "salaryTo" : null,
   "currency" : null,
-  "skills" : [ ],
+  "skills" : null,
   "description" : "Запуск продуктов с нуля — проектирование архитектуры, выбор технологий. Глубокое знание <highlighttext>backend</highlighttext>-<highlighttext>разработки</highlighttext>: <highlighttext>Java</highlighttext>/Kotlin, Spring Boot, PostgreSQL/MySQL, Kafka, Redis. Руководство кросс-функциональной командой — вы создаете сильную и эффективную <highlighttext>разработку</highlighttext>. Влияние на полный цикл <highlighttext>разработки</highlighttext> — кодинг, реализация фичей, код-ревью...",
   "url" : "https://hh.ru/vacancy/124923421",
   "source" : "hh",
-  "publishedAt" : null
+  "publishedAt" : null,
+  "score" : 1
 }, {
   "id" : null,
-  "title" : "Технический руководитель продукта (Stream CTO)",
-  "company" : "edna",
+  "title" : "Flutter-разработчик",
+  "company" : "AIC",
   "city" : "Москва",
   "experience" : null,
   "employment" : null,
@@ -361,41 +400,27 @@
   "salaryFrom" : null,
   "salaryTo" : null,
   "currency" : null,
-  "skills" : [ ],
-  "description" : "...лет в <highlighttext>разработке</highlighttext>, из них не менее 3 лет на ролях Tech Lead (<highlighttext>Java</highlighttext>), Архитектора или руководителя команды <highlighttext>разработки</highlighttext> в... Ответственность за качество кода и эффективность процессов <highlighttext>разработки</highlighttext>. Руководство кросс-функциональной командой <highlighttext>разработки</highlighttext> (<highlighttext>backend</highlighttext> (<highlighttext>java</highlighttext>), frontend, QA, DevOps), 4 тимлида...",
-  "url" : "https://hh.ru/vacancy/124383006",
+  "skills" : null,
+  "description" : "Владение английским языком на уровне чтения технической документации. Опыт нативной <highlighttext>разработки</highlighttext> под iOS или Android. Знание SwiftUI/Jetpack Compose.  <highlighttext>Разработка</highlighttext> и поддержка существующего кроссплатформенного мобильного приложения на Flutter. Работа в команде (7 человек): Product Owner, <highlighttext>Backend</highlighttext>-<highlighttext>разработчики</highlighttext>, Frontend-<highlighttext>разработчик</highlighttext>...",
+  "url" : "https://hh.ru/vacancy/128385618",
   "source" : "hh",
-  "publishedAt" : null
+  "publishedAt" : null,
+  "score" : 0
 }, {
   "id" : null,
-  "title" : "Senior Kotlin Developer",
-  "company" : "LADA Цифра",
+  "title" : "Backend-разработчик",
+  "company" : "СМТТех",
   "city" : "Москва",
   "experience" : null,
   "employment" : null,
   "schedule" : null,
-  "salaryFrom" : null,
+  "salaryFrom" : 120000,
   "salaryTo" : null,
-  "currency" : null,
-  "skills" : [ ],
-  "description" : "Чем ты будешь рулить: Экспертные знания: Умение работать в команде, давать и принимать конструктивную обратную связь. Желание постоянно совершенствоваться в... <highlighttext>Разработка</highlighttext> <highlighttext>backend</highlighttext> части платформы. Участие в доработке и оптимизации платформы. Общение с архитекторами, аналитиками, frontend <highlighttext>разработчиками</highlighttext>, devops инженерами для уточнения...",
-  "url" : "https://hh.ru/vacancy/128281712",
+  "currency" : "RUR",
+  "skills" : null,
+  "description" : "Опыт работы с <highlighttext>Java</highlighttext>, IntelliJ IDEA. Хорошее знание реляционных БД (PostgreSQL): проектирование, оптимизация запросов. Уверенные навыки <highlighttext>разработки</highlighttext> под Linux (CLI... Реализация бизнес-логики с использованием декларативного синтаксиса lsFusion. <highlighttext>Разработка</highlighttext> и поддержка модулей обмена с внешними системами (1С, ERP, SCADA. ",
+  "url" : "https://hh.ru/vacancy/127598943",
   "source" : "hh",
-  "publishedAt" : null
-}, {
-  "id" : null,
-  "title" : "Ruby on Rails developer (middle/middle+)",
-  "company" : "«Баланс-Платформа»",
-  "city" : "Москва",
-  "experience" : null,
-  "employment" : null,
-  "schedule" : null,
-  "salaryFrom" : null,
-  "salaryTo" : null,
-  "currency" : null,
-  "skills" : [ ],
-  "description" : "Имеете опыт работы с Ruby on Rails/PostgreSQL от 3-х лет. Имеете опыт реализации web-проектов со множеством интеграций.  Ruby, Python, <highlighttext>Java</highlighttext>). Front-часть на React, которой занимается команда фронт-<highlighttext>разработки</highlighttext>, рубисты сосредотачиваются на API и <highlighttext>backend</highlighttext>-части. ",
-  "url" : "https://hh.ru/vacancy/128275783",
-  "source" : "hh",
-  "publishedAt" : null
+  "publishedAt" : null,
+  "score" : 0
 } ]

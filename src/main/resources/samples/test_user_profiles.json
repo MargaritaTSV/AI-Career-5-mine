@@ -1,0 +1,40 @@
+[
+  {
+    "user_id": "user-001",
+    "target_role": "Java Backend Developer",
+    "experience_years": 1,
+    "skills": [
+      "java",
+      "spring",
+      "sql",
+      "docker"
+    ],
+    "updated_at": "2025-12-02T09:00:00"
+  },
+  {
+    "user_id": "user-002",
+    "target_role": "Data Scientist",
+    "experience_years": 3,
+    "skills": [
+      "python",
+      "sql",
+      "machine_learning",
+      "pandas",
+      "spark"
+    ],
+    "updated_at": "2025-12-02T09:05:00"
+  },
+  {
+    "user_id": "user-003",
+    "target_role": "DevOps Engineer",
+    "experience_years": 5,
+    "skills": [
+      "python",
+      "docker",
+      "kubernetes",
+      "linux",
+      "ci/cd"
+    ],
+    "updated_at": "2025-12-02T09:10:00"
+  }
+]

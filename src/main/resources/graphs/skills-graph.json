@@ -1,126 +1,34 @@
 {
   "nodes" : [ {
     "id" : "java",
-    "vacancies" : 180
+    "vacancies" : 0
   }, {
     "id" : "c++",
-    "vacancies" : 3
+    "vacancies" : 0
   }, {
     "id" : "python",
-    "vacancies" : 453
+    "vacancies" : 0
   }, {
     "id" : "javascript",
-    "vacancies" : 208
+    "vacancies" : 0
   }, {
     "id" : "sql",
-    "vacancies" : 207
+    "vacancies" : 0
   }, {
     "id" : "docker",
-    "vacancies" : 98
+    "vacancies" : 0
   }, {
     "id" : "c#",
     "vacancies" : 0
   }, {
     "id" : "php",
-    "vacancies" : 92
+    "vacancies" : 0
   }, {
     "id" : "spring",
-    "vacancies" : 44
+    "vacancies" : 0
   }, {
     "id" : "machine_learning",
-    "vacancies" : 46
+    "vacancies" : 0
   } ],
-  "edges" : [ {
-    "from" : "python",
-    "to" : "sql",
-    "weight" : 91
-  }, {
-    "from" : "java",
-    "to" : "spring",
-    "weight" : 40
-  }, {
-    "from" : "python",
-    "to" : "javascript",
-    "weight" : 32
-  }, {
-    "from" : "javascript",
-    "to" : "php",
-    "weight" : 30
-  }, {
-    "from" : "python",
-    "to" : "java",
-    "weight" : 21
-  }, {
-    "from" : "python",
-    "to" : "docker",
-    "weight" : 20
-  }, {
-    "from" : "python",
-    "to" : "machine_learning",
-    "weight" : 13
-  }, {
-    "from" : "sql",
-    "to" : "java",
-    "weight" : 12
-  }, {
-    "from" : "javascript",
-    "to" : "java",
-    "weight" : 11
-  }, {
-    "from" : "javascript",
-    "to" : "sql",
-    "weight" : 9
-  }, {
-    "from" : "docker",
-    "to" : "php",
-    "weight" : 8
-  }, {
-    "from" : "java",
-    "to" : "docker",
-    "weight" : 8
-  }, {
-    "from" : "sql",
-    "to" : "docker",
-    "weight" : 8
-  }, {
-    "from" : "javascript",
-    "to" : "docker",
-    "weight" : 7
-  }, {
-    "from" : "python",
-    "to" : "php",
-    "weight" : 6
-  }, {
-    "from" : "java",
-    "to" : "machine_learning",
-    "weight" : 4
-  }, {
-    "from" : "java",
-    "to" : "php",
-    "weight" : 4
-  }, {
-    "from" : "javascript",
-    "to" : "spring",
-    "weight" : 4
-  }, {
-    "from" : "sql",
-    "to" : "spring",
-    "weight" : 4
-  }, {
-    "from" : "docker",
-    "to" : "spring",
-    "weight" : 2
-  }, {
-    "from" : "java",
-    "to" : "c++",
-    "weight" : 1
-  }, {
-    "from" : "sql",
-    "to" : "machine_learning",
-    "weight" : 1
-  }, {
-    "from" : "sql",
-    "to" : "php",
-    "weight" : 1
-  } ]
+  "edges" : [ ]
 }

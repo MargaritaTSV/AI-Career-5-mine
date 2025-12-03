@@ -9,11 +9,12 @@
   "salaryFrom" : null,
   "salaryTo" : null,
   "currency" : null,
-  "skills" : [ ],
+  "skills" : null,
   "description" : "Имеет опыт создания финансовой отчетности и аналитических инструментов. Свободно владеет SQL; имеет навыки Python для анализа данных и автоматизации.  Поддержка и создание ежедневного отчета P&L и других ключевых отчетов. Проектирование и настройка панелей мониторинга в BI-системах. ",
   "url" : "https://hh.ru/vacancy/128057454",
   "source" : "hh",
-  "publishedAt" : null
+  "publishedAt" : null,
+  "score" : 2
 }, {
   "id" : null,
   "title" : "Senior Python developer",
@@ -25,11 +26,12 @@
   "salaryFrom" : null,
   "salaryTo" : null,
   "currency" : null,
-  "skills" : [ ],
+  "skills" : null,
   "description" : "Background in DevOps, platform <highlighttext>engineering</highlighttext>, or site reliability. Experience working closely with <highlighttext>machine</highlighttext> <highlighttext>learning</highlighttext> or NLP teams — integrating APIs, pipelines... Design and maintain Python microservices and REST APIs (FastAPI) powering internal AI and NLP workflows. Build MCP (Model Control & Processing...",
   "url" : "https://hh.ru/vacancy/128092346",
   "source" : "hh",
-  "publishedAt" : null
+  "publishedAt" : null,
+  "score" : 1
 }, {
   "id" : null,
   "title" : "Senior Python/ML Engineer",
@@ -41,11 +43,12 @@
   "salaryFrom" : null,
   "salaryTo" : null,
   "currency" : null,
-  "skills" : [ ],
+  "skills" : null,
   "description" : "Confident knowledge of Python. — High <highlighttext>learning</highlighttext> ability and adaptation to new technologies. — Ability to work in a team and communicate... Research, develop and train deep <highlighttext>learning</highlighttext> models to perform visual tasks (e.g. detection, segmentation, generation, etc.). — Create and implement...",
   "url" : "https://hh.ru/vacancy/128053920",
   "source" : "hh",
-  "publishedAt" : null
+  "publishedAt" : null,
+  "score" : 1
 }, {
   "id" : null,
   "title" : "Senior Python Developer (в Бильбао, Испания)",
@@ -57,11 +60,12 @@
   "salaryFrom" : null,
   "salaryTo" : null,
   "currency" : null,
-  "skills" : [ ],
+  "skills" : null,
   "description" : "4+ лет коммерческого опыта в Python. Отличное знание FastAPI и REST API. Опыт работы с SQL и ORM (SQLAlchemy... Разрабатывать и поддерживать highload-системы на Python. Проектировать и развивать FastAPI web-сервисы. Работать над knowledge graph-алгоритмами (tree-sitter...",
   "url" : "https://hh.ru/vacancy/128011598",
   "source" : "hh",
-  "publishedAt" : null
+  "publishedAt" : null,
+  "score" : 1
 }, {
   "id" : null,
   "title" : "Middle Python Developer (в Бильбао, Испания)",
@@ -73,11 +77,12 @@
   "salaryFrom" : null,
   "salaryTo" : null,
   "currency" : null,
-  "skills" : [ ],
+  "skills" : null,
   "description" : "4+ лет коммерческого опыта в Python. Отличное знание FastAPI и REST API. Опыт работы с SQL и ORM (SQLAlchemy... Разрабатывать и поддерживать highload-системы на Python. Проектировать и развивать FastAPI web-сервисы. Работать над knowledge graph-алгоритмами (tree-sitter...",
   "url" : "https://hh.ru/vacancy/128011580",
   "source" : "hh",
-  "publishedAt" : null
+  "publishedAt" : null,
+  "score" : 1
 }, {
   "id" : null,
   "title" : "ML Engineer / Data Science Developer (Python) / Дата-сайентист",
@@ -89,11 +94,12 @@
   "salaryFrom" : 230000,
   "salaryTo" : 310000,
   "currency" : "RUR",
-  "skills" : [ ],
+  "skills" : null,
   "description" : "Владение Python и уверенная работа с ML-стеком (pandas, numpy, scikit-<highlighttext>learn</highlighttext>, lightgbm/xgboost/catboost). Навыки анализа данных и построения... Работать над системой в продакшн — улучшать ее стабильность, производительность и качество моделей. Разрабатывать и поддерживать ML-пайплайны. Участвовать в полном...",
   "url" : "https://hh.ru/vacancy/127869537",
   "source" : "hh",
-  "publishedAt" : null
+  "publishedAt" : null,
+  "score" : 1
 }, {
   "id" : null,
   "title" : "Full Stack Developer (Python / Golang / React) в Испанию",
@@ -105,11 +111,12 @@
   "salaryFrom" : null,
   "salaryTo" : null,
   "currency" : null,
-  "skills" : [ ],
+  "skills" : null,
   "description" : "3+ лет коммерческого опыта в разработке на Python, Golang и JavaScript. Опыт работы с Vue/React/Node.JS от 2... Разрабатывать и поддерживать high-load систему. Проектировать, писать и внедрять эффективные программные решения. Работать вместе с кросс-функциональными командами (дизайнеры...",
   "url" : "https://hh.ru/vacancy/127845307",
   "source" : "hh",
-  "publishedAt" : null
+  "publishedAt" : null,
+  "score" : 1
 }, {
   "id" : null,
   "title" : "SDET (Python) Инженер по автоматизации тестирования backend (в Бильбао, Испания)",
@@ -121,11 +128,12 @@
   "salaryFrom" : null,
   "salaryTo" : null,
   "currency" : null,
-  "skills" : [ ],
+  "skills" : null,
   "description" : "От 3 лет опыта автоматизации тестирования backend-сервисов. Отличное знание Python и Pytest. Понимание жизненного цикла разработки ПО, методологий тестирования... Выстраивать тестовую инфраструктуру и процессы с нуля. Разрабатывать и совершенствовать практики автоматизированного тестирования для backend-сервисов. Проектировать и внедрять пайплайны...",
   "url" : "https://hh.ru/vacancy/127608438",
   "source" : "hh",
-  "publishedAt" : null
+  "publishedAt" : null,
+  "score" : 1
 }, {
   "id" : null,
   "title" : "Python разработчик (Автоматизация CAD)",
@@ -137,11 +145,131 @@
   "salaryFrom" : 70000,
   "salaryTo" : 125000,
   "currency" : "RUR",
-  "skills" : [ ],
+  "skills" : null,
   "description" : "Any prior experience with CAD software. Familiarity with 3D modeling concepts or geometric libraries. An interest in generative AI.  Create and manage a dataset for training our AI. Collaborate directly with our <highlighttext>machine</highlighttext> <highlighttext>learning</highlighttext> research team and CAD designers...",
   "url" : "https://hh.ru/vacancy/127266864",
   "source" : "hh",
-  "publishedAt" : null
+  "publishedAt" : null,
+  "score" : 1
+}, {
+  "id" : null,
+  "title" : "Machine Learning Engineer",
+  "company" : "НПО ПКРВ",
+  "city" : "Москва",
+  "experience" : null,
+  "employment" : null,
+  "schedule" : null,
+  "salaryFrom" : null,
+  "salaryTo" : null,
+  "currency" : null,
+  "skills" : null,
+  "description" : "CNN/Transformers + GAN(LoRA-like+diffusers), GCN. Базовый опыт в Reinforcement <highlighttext>learning</highlighttext>. Env. Опыт работы с средой эмуляции, например: Unity... Разработка, а также доработка существующих ML алгоритмов. CV & RL & Dynamic programming.",
+  "url" : "https://hh.ru/vacancy/127600450",
+  "source" : "hh",
+  "publishedAt" : null,
+  "score" : 0
+}, {
+  "id" : null,
+  "title" : "Инженер машинного обучения (ML)",
+  "company" : "МФК Фордевинд",
+  "city" : "Москва",
+  "experience" : null,
+  "employment" : null,
+  "schedule" : null,
+  "salaryFrom" : 250000,
+  "salaryTo" : null,
+  "currency" : "RUR",
+  "skills" : null,
+  "description" : "Высшее техническое или экономическое образование одного из ведущих российских ВУЗов (ВШЭ, МГУ, МФТИ, РЭШ). Уверенные знания в области математических дисциплин... Участие в сборе, обработке и визуализации данных. Поддержание, оптимизация и мониторинг существующих ML-пайплайнов. Проведение полного цикла разработки новых ML...",
+  "url" : "https://hh.ru/vacancy/127956769",
+  "source" : "hh",
+  "publishedAt" : null,
+  "score" : 0
+}, {
+  "id" : null,
+  "title" : "Generative AI Engineer (to Yerevan)",
+  "company" : "BostonGene Technologies",
+  "city" : "Москва",
+  "experience" : null,
+  "employment" : null,
+  "schedule" : null,
+  "salaryFrom" : null,
+  "salaryTo" : null,
+  "currency" : null,
+  "skills" : null,
+  "description" : "Familiarity with image analysis techniques used in biological and medical research. Knowledge of <highlighttext>machine</highlighttext> <highlighttext>learning</highlighttext> algorithms and their application to... Stay updated with the latest advancements in computer vision, imaging, and deep <highlighttext>learning</highlighttext> technologies. Ensure all activities comply with GCP...",
+  "url" : "https://hh.ru/vacancy/127948053",
+  "source" : "hh",
+  "publishedAt" : null,
+  "score" : 0
+}, {
+  "id" : null,
+  "title" : "Junior AI/ML engineer / Младший AI/ML инженер / разработчик",
+  "company" : "Браво Софт",
+  "city" : "Нижний Новгород",
+  "experience" : null,
+  "employment" : null,
+  "schedule" : null,
+  "salaryFrom" : 55000,
+  "salaryTo" : 65000,
+  "currency" : "RUR",
+  "skills" : null,
+  "description" : "Fine‑tuning. - Знаешь Python, Flask. - Знаешь Pandas, NumPy. - имеешь опыт работы с LLM, LangChain + FAISS. -имеешь опыт работы с... Разработка проектов на Python, программная поддержка. И развитие существующих проектов в части: - создание RAG-систем. - создание и дообучение моделей. - ",
+  "url" : "https://hh.ru/vacancy/128372717",
+  "source" : "hh",
+  "publishedAt" : null,
+  "score" : 0
+}, {
+  "id" : null,
+  "title" : "Junior ML инженер",
+  "company" : "Your CodeReview",
+  "city" : "Москва",
+  "experience" : null,
+  "employment" : null,
+  "schedule" : null,
+  "salaryFrom" : 80000,
+  "salaryTo" : null,
+  "currency" : "RUR",
+  "skills" : null,
+  "description" : "Хорошее знание Python и уверенное владение библиотеками pandas, scikit-<highlighttext>learn</highlighttext>, numpy. Понимание основных алгоритмов машинного обучения (линейные модели, ансамбли, основы... ...science и <highlighttext>machine</highlighttext> <highlighttext>learning</highlighttext>. Конкурентная заработная плата. Быстрая профессиональная эволюция. Реальный путь от Junior до Middle ML-<highlighttext>инженера</highlighttext> за 6...",
+  "url" : "https://hh.ru/vacancy/128372643",
+  "source" : "hh",
+  "publishedAt" : null,
+  "score" : 0
+}, {
+  "id" : null,
+  "title" : "Lead Credit Risk Manager (Fintech BNPL) – Dubai, UAE",
+  "company" : "Apex Recruitment",
+  "city" : "Москва",
+  "experience" : null,
+  "employment" : null,
+  "schedule" : null,
+  "salaryFrom" : null,
+  "salaryTo" : 8000,
+  "currency" : "USD",
+  "skills" : null,
+  "description" : "Proficiency in Python or R for statistical analysis, data manipulation (e.g., Pandas/NumPy), and developing <highlighttext>machine</highlighttext> <highlighttext>learning</highlighttext>-based risk... Collaborate closely with product, <highlighttext>engineering</highlighttext>, and business functions to translate strategic company goals into executable risk policies. - Work hands-on...",
+  "url" : "https://hh.ru/vacancy/128369800",
+  "source" : "hh",
+  "publishedAt" : null,
+  "score" : 0
+}, {
+  "id" : null,
+  "title" : "Математик-аналитик (моделирование биологических систем)",
+  "company" : "ФГБУ ЦСП ФМБА России",
+  "city" : "Москва",
+  "experience" : null,
+  "employment" : null,
+  "schedule" : null,
+  "salaryFrom" : null,
+  "salaryTo" : null,
+  "currency" : null,
+  "skills" : null,
+  "description" : "Высшее образование в области прикладной математики, математической статистики, экономики, биостатистики, эпидемиологии или смежных наук. Опыт математического моделирования (детерминированные, стохастические модели... Моделирование экономического эффекта внедрения новых медицинских технологий (вакцин, препаратов, диагностических методов). Подготовка экономико-математических обоснований для исследовательских проектов, программ внедрения...",
+  "url" : "https://hh.ru/vacancy/127925991",
+  "source" : "hh",
+  "publishedAt" : null,
+  "score" : 0
 }, {
   "id" : null,
   "title" : "Data analyst (Quantitative analyst)",
@@ -153,11 +281,12 @@
   "salaryFrom" : null,
   "salaryTo" : null,
   "currency" : null,
-  "skills" : [ ],
+  "skills" : null,
   "description" : "Высшее математическое образование. Будет плюсом: Опыт с <highlighttext>Machine</highlighttext> <highlighttext>Learning</highlighttext> (XGBoost, scikit-<highlighttext>learn</highlighttext> и др.). Навыки работы с BI-инструментами и... Ключевым экспертом по data analysis, дашбордам и инсайтам для трейдинговой команды. Развивать дашборды, отчётные пайплайны и систему метрик для всей...",
   "url" : "https://hh.ru/vacancy/127928243",
   "source" : "hh",
-  "publishedAt" : null
+  "publishedAt" : null,
+  "score" : 0
 }, {
   "id" : null,
   "title" : "Data analyst (Quantitative analyst)",
@@ -169,11 +298,12 @@
   "salaryFrom" : null,
   "salaryTo" : null,
   "currency" : null,
-  "skills" : [ ],
+  "skills" : null,
   "description" : "Высшее математическое образование. Будет плюсом: Опыт с <highlighttext>Machine</highlighttext> <highlighttext>Learning</highlighttext> (XGBoost, scikit-<highlighttext>learn</highlighttext> и др.). Навыки работы с BI-инструментами и... Ключевым экспертом по data analysis, дашбордам и инсайтам для трейдинговой команды. Развивать дашборды, отчётные пайплайны и систему метрик для всей...",
   "url" : "https://hh.ru/vacancy/127928244",
   "source" : "hh",
-  "publishedAt" : null
+  "publishedAt" : null,
+  "score" : 0
 }, {
   "id" : null,
   "title" : "Senior Data Scientist (NLP, AI-агент)",
@@ -185,43 +315,12 @@
   "salaryFrom" : null,
   "salaryTo" : null,
   "currency" : null,
-  "skills" : [ ],
+  "skills" : null,
   "description" : "Высшее образование в области компьютерных наук, математики или сопутствующих областях. Практический опыт работы с NLP-моделями на базе глубоких нейросетей... Создание и оптимизация AI-агентов и интеллектуальных чат-ботов с использованием фреймворка LangChain и методов Context <highlighttext>Engineering</highlighttext>. Проектирование систем диалогового...",
   "url" : "https://hh.ru/vacancy/128328717",
   "source" : "hh",
-  "publishedAt" : null
-}, {
-  "id" : null,
-  "title" : "Middle/Senior Data Scientist (Классический ML)",
-  "company" : "СБЕР",
-  "city" : "Москва",
-  "experience" : null,
-  "employment" : null,
-  "schedule" : null,
-  "salaryFrom" : null,
-  "salaryTo" : null,
-  "currency" : null,
-  "skills" : [ ],
-  "description" : "Опыт построения пайплайнов данных на Python с использованием NumPy, Pandas, SciPy, Scikit-<highlighttext>learn</highlighttext>, а также автоматизации процессов обучения и оценки.  Внедрение автоматизированных пайплайнов обучения и оценки, интеграция моделей с продакшеном совместно с DevOps-<highlighttext>инженерами</highlighttext>. Подготовка отчетов и презентаций для технических...",
-  "url" : "https://hh.ru/vacancy/128328466",
-  "source" : "hh",
-  "publishedAt" : null
-}, {
-  "id" : null,
-  "title" : "Middle/Senior Data Scientist (Deep Learning)",
-  "company" : "СБЕР",
-  "city" : "Москва",
-  "experience" : null,
-  "employment" : null,
-  "schedule" : null,
-  "salaryFrom" : null,
-  "salaryTo" : null,
-  "currency" : null,
-  "skills" : [ ],
-  "description" : "Опыт применения Transfer <highlighttext>Learning</highlighttext>, Fine-Tuning, Curriculum <highlighttext>Learning</highlighttext>, Contrastive <highlighttext>Learning</highlighttext>. Знание методов Explainable AI (SHAP, LIME, attention visualization).  ...младшими DS/ML <highlighttext>инженеров</highlighttext>. Исследование новых архитектур и технологий (Neural Architecture Search, self-supervised <highlighttext>learning</highlighttext>, few-shot <highlighttext>learning</highlighttext>). ",
-  "url" : "https://hh.ru/vacancy/128327741",
-  "source" : "hh",
-  "publishedAt" : null
+  "publishedAt" : null,
+  "score" : 0
 }, {
   "id" : null,
   "title" : "Head of Data Science",
@@ -233,11 +332,12 @@
   "salaryFrom" : null,
   "salaryTo" : null,
   "currency" : null,
-  "skills" : [ ],
+  "skills" : null,
   "description" : "Deep understanding of <highlighttext>machine</highlighttext> <highlighttext>learning</highlighttext>, deep <highlighttext>learning</highlighttext>, and statistical modeling. Strong hands-on experience with model development and deployment in... Lead, mentor, and develop a multidisciplinary team of Data Scientists, <highlighttext>Machine</highlighttext> <highlighttext>Learning</highlighttext> <highlighttext>Engineers</highlighttext>, and Computer Vision <highlighttext>Engineers</highlighttext>. Define the Data...",
   "url" : "https://hh.ru/vacancy/128095146",
   "source" : "hh",
-  "publishedAt" : null
+  "publishedAt" : null,
+  "score" : 0
 }, {
   "id" : null,
   "title" : "Product Analyst / Продуктовый аналитик",
@@ -249,11 +349,12 @@
   "salaryFrom" : null,
   "salaryTo" : null,
   "currency" : null,
-  "skills" : [ ],
+  "skills" : null,
   "description" : "Proactive, resourceful, and results-driven approach with keen eye for details. Continuous <highlighttext>learning</highlighttext> mindset for evolving fintech landscape.  User behaviour analysis and cohort studies. Customer lifetime value (LTV) and churn modelling. Conversion funnel optimization. Product performance metrics control...",
   "url" : "https://hh.ru/vacancy/127321976",
   "source" : "hh",
-  "publishedAt" : null
+  "publishedAt" : null,
+  "score" : 0
 }, {
   "id" : null,
   "title" : "Middle+ OpenShift / DevOps Engineer (ONSITE Dubai)",
@@ -265,11 +366,12 @@
   "salaryFrom" : null,
   "salaryTo" : null,
   "currency" : null,
-  "skills" : [ ],
+  "skills" : null,
   "description" : "Уверенные навыки Python programming. Опыт работы с Data или <highlighttext>Machine</highlighttext> <highlighttext>Learning</highlighttext> CI/CD pipelines. Знание Linux OS, включая shell scripting. ",
   "url" : "https://hh.ru/vacancy/128319419",
   "source" : "hh",
-  "publishedAt" : null
+  "publishedAt" : null,
+  "score" : 0
 }, {
   "id" : null,
   "title" : "Data Scientist",
@@ -281,11 +383,12 @@
   "salaryFrom" : null,
   "salaryTo" : null,
   "currency" : null,
-  "skills" : [ ],
+  "skills" : null,
   "description" : "Опыт работы на позиции Data Scientist (<highlighttext>Machine</highlighttext> <highlighttext>Learning</highlighttext> или Deep <highlighttext>Learning</highlighttext> <highlighttext>Engineer</highlighttext>) от 3-4 лет. Уверенное знание и владение... Выявлять потребности бизнеса, анализировать бизнес-процессы и формулировать требования для постановки DS-задач. Собирать данные из разных источников, оценивать их...",
   "url" : "https://hh.ru/vacancy/128316418",
   "source" : "hh",
-  "publishedAt" : null
+  "publishedAt" : null,
+  "score" : 0
 }, {
   "id" : null,
   "title" : "Machine Learning Team Lead (Тбилиси/Лимасол)",
@@ -297,11 +400,12 @@
   "salaryFrom" : null,
   "salaryTo" : null,
   "currency" : null,
-  "skills" : [ ],
+  "skills" : null,
   "description" : "2+ года опыта управления техническими командами с умением организовывать рабочие процессы и выстраивать эффективные процессы. Глубокое понимание жизненного цикла... Проектирование систем мониторинга и оценка производительности систем машинного обучения. Руководство командой <highlighttext>инженеров</highlighttext> машинного обучения, работающих над проектами NLP и LLM. ",
   "url" : "https://hh.ru/vacancy/128315498",
   "source" : "hh",
-  "publishedAt" : null
+  "publishedAt" : null,
+  "score" : 0
 }, {
   "id" : null,
   "title" : "Senior Data Scientist",
@@ -313,89 +417,10 @@
   "salaryFrom" : null,
   "salaryTo" : null,
   "currency" : null,
-  "skills" : [ ],
+  "skills" : null,
   "description" : "3+ лет опыта в Data Science / <highlighttext>Machine</highlighttext> <highlighttext>Learning</highlighttext> / AI-ролях. Сильная математическая база: статистика, вероятность, линейная алгебра, оптимизация.  Создание прототипов и совместная работа с архитекторами/<highlighttext>инженерами</highlighttext> для вывода моделей в прод. Глубокая аналитика данных: выявление закономерностей, драйверов и...",
   "url" : "https://hh.ru/vacancy/128313353",
   "source" : "hh",
-  "publishedAt" : null
-}, {
-  "id" : null,
-  "title" : "Middle Bioinformatics Data Analyst (to Yerevan)",
-  "company" : "BostonGene Technologies",
-  "city" : "Москва",
-  "experience" : null,
-  "employment" : null,
-  "schedule" : null,
-  "salaryFrom" : null,
-  "salaryTo" : null,
-  "currency" : null,
-  "skills" : [ ],
-  "description" : "Knowledge and experience applying <highlighttext>machine</highlighttext> <highlighttext>learning</highlighttext> and deep <highlighttext>learning</highlighttext> methods for biomedical data analysis (e.g., sample classification by molecular... Independently analyze next-generation sequencing data (whole-exome and whole-genome sequencing, RNA-seq, etc.) within personalized medicine projects. ",
-  "url" : "https://hh.ru/vacancy/127907725",
-  "source" : "hh",
-  "publishedAt" : null
-}, {
-  "id" : null,
-  "title" : "Splunk инженер / архитектор / руководитель команды",
-  "company" : "WhyHappen",
-  "city" : "Москва",
-  "experience" : null,
-  "employment" : null,
-  "schedule" : null,
-  "salaryFrom" : null,
-  "salaryTo" : null,
-  "currency" : null,
-  "skills" : [ ],
-  "description" : "Опыт подключения к Splunk источников данных, организация предобработки и оптимизация хранения данных. Опыт разработки на SPL сложных логических правил, кастомных...",
-  "url" : "https://hh.ru/vacancy/127897236",
-  "source" : "hh",
-  "publishedAt" : null
-}, {
-  "id" : null,
-  "title" : "Senior Machine Learning Engineer (LLM, RL)",
-  "company" : "Intella",
-  "city" : "Екатеринбург",
-  "experience" : null,
-  "employment" : null,
-  "schedule" : null,
-  "salaryFrom" : null,
-  "salaryTo" : null,
-  "currency" : null,
-  "skills" : [ ],
-  "description" : "Коммерческий опыт тренировки и масштабирования LLM моделей: pre-train, fine-tune, обучение на нескольких GPU. Коммерческий опыт с RL ( RLHF... Разработка и масштабирование тонкой настройки обучения с подкреплением для LLM, включая подходы RLHF, RLVR и другие современные методы. ",
-  "url" : "https://hh.ru/vacancy/127892488",
-  "source" : "hh",
-  "publishedAt" : null
-}, {
-  "id" : null,
-  "title" : "Senior Machine Learning Engineer (LLM, RL)",
-  "company" : "Intella",
-  "city" : "Каменка (Ленинградская область)",
-  "experience" : null,
-  "employment" : null,
-  "schedule" : null,
-  "salaryFrom" : null,
-  "salaryTo" : null,
-  "currency" : null,
-  "skills" : [ ],
-  "description" : "Коммерческий опыт тренировки и масштабирования LLM моделей: pre-train, fine-tune, обучение на нескольких GPU. Коммерческий опыт с RL ( RLHF... Разработка и масштабирование тонкой настройки обучения с подкреплением для LLM, включая подходы RLHF, RLVR и другие современные методы. ",
-  "url" : "https://hh.ru/vacancy/127892490",
-  "source" : "hh",
-  "publishedAt" : null
-}, {
-  "id" : null,
-  "title" : "AI Engineer (web agents)",
-  "company" : "EmFi Technologies Limited",
-  "city" : "Москва",
-  "experience" : null,
-  "employment" : null,
-  "schedule" : null,
-  "salaryFrom" : 2700,
-  "salaryTo" : 3500,
-  "currency" : "USD",
-  "skills" : [ ],
-  "description" : "<highlighttext>Machine</highlighttext> <highlighttext>Learning</highlighttext> Frameworks: Familiarity with PyTorch, TensorFlow, Gym, or similar ML/RL frameworks. Reinforcement <highlighttext>Learning</highlighttext>: Understanding of RL concepts and... ...and NumPy to ensure high-quality inputs for <highlighttext>machine</highlighttext> <highlighttext>learning</highlighttext> algorithms. Reinforcement <highlighttext>Learning</highlighttext>: Lead or contribute to projects involving RL...",
-  "url" : "https://hh.ru/vacancy/128284503",
-  "source" : "hh",
-  "publishedAt" : null
+  "publishedAt" : null,
+  "score" : 0
 } ]
