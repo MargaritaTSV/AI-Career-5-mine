@@ -21,9 +21,7 @@ import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-/**
- * Builds a directed graph of skills based on co-occurrences in parsed vacancies.
- */
+
 public final class SkillGraphBuilder {
     private static final ObjectMapper MAPPER = new ObjectMapper();
     private static final String SKILLS_RESOURCE = "skills.json";
