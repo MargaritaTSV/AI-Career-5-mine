@@ -18,6 +18,7 @@ public final class RoadmapPromptBuilder {
     private static final String USER_MATRIX_RESOURCE = "matrices/user_skill_matrix.json";
     private static final String DESIRED_MATRIX_RESOURCE = "matrices/desired_role_matrix.json";
     private static final String SKILL_GRAPH_RESOURCE = "graphs/skills-graph.json";
+    private static final String VACANCIES_RESOURCE = "export/vacancies_top25_java_backend_developer.json";
 
     private RoadmapPromptBuilder() {
     }
@@ -30,6 +31,7 @@ public final class RoadmapPromptBuilder {
         Map<String, Integer> userMatrix = readSkillMatrix(USER_MATRIX_RESOURCE);
         Map<String, Integer> desiredMatrix = readSkillMatrix(DESIRED_MATRIX_RESOURCE);
         String graphJson = readResourceJson(SKILL_GRAPH_RESOURCE);
+        String vacanciesJson = readResourceJson(VACANCIES_RESOURCE);
 
         List<String> userSkills = flaggedSkills(userMatrix);
         List<String> targetSkills = flaggedSkills(desiredMatrix);
@@ -39,25 +41,19 @@ public final class RoadmapPromptBuilder {
 
         return String.join("\n", List.of(
                 "Ты — карьерный консультант и планировщик обучения. Используй модель deepseek-r1:8b.",
-                "Ниже данные: матрица навыков пользователя, требования роли и ориентированный граф зависимостей навыков.",
-                "Задача: на основе графа выдать конкретный и краткий маршрут, который быстрее всего ведёт к роли." +
-                        " Вес ребра = сила зависимости, ставь сильные переходы раньше.",
+                "Данные ниже: матрица навыков пользователя, требования роли, ориентированный граф зависимостей навыков и список вакансий роли.",
+                "Задача: выдать краткий маршрут, который быстрее всего закроет дефицит навыков для целевой роли; более сильные рёбра графа ставь раньше в очереди.",
                 "\nТекущие навыки пользователя (1 = владеет):\n" + formatJson(userMatrix)
                         + "\nСильные стороны: " + String.join(", ", userSkills),
                 "\nМатрица требуемых навыков роли (1 = критично важно):\n" + formatJson(desiredMatrix)
                         + "\nКлючевые цели: " + String.join(", ", targetSkills),
                 "\nНавыки, которых не хватает: " + (missingSkills.isEmpty() ? "нет" : String.join(", ", missingSkills)),
                 "\nОриентированный граф навыков (используй веса рёбер для приоритета шагов):\n" + graphJson,
-                "\nСформируй ответ в двух частях без Markdown и без лишних комментариев:",
-                "1) Roadmap — 6–9 шагов вида 'Шаг 1. Java: ООП, коллекции → Шаг 2. Алгоритмы и структуры данных'." +
-                        " В каждом шаге укажи конкретные темы/фреймворки/разделы и покажи зависимость ('на базе X изучи Y').",
-                "2) Краткое объяснение очередности (2–3 предложения максимум): что учим первым, что вторым, что далее.",
-                "Заверши строкой 'Итого вы будете обладать:' и перечисли ключевые навыки после прохождения шагов.",
-                "Правила:" +
-                        "\n- Сначала закрывай пробелы (missingSkills), опираясь на уже освоенные навыки." +
-                        "\n- Каждый шаг = одно предложение; максимум укажи, на базе чего строится следующий навык." +
-                        "\n- Разрешено перечислять фреймворки и разделы (например, Spring, Docker, SQL оптимизация, алгоритмы)." +
-                        "\n- Не повторяй освоенные навыки как отдельные шаги, только используй их как основу."
+                "\nВакансии для анализа стеков и узких тем (используй для выбора фреймворков и инструментов):\n" + vacanciesJson,
+                "\nФормат ответа:",
+                "Roadmap: 3–7 шагов. Каждый шаг — одно предложение вида 'Шаг 1. Java: ООП, коллекции → Шаг 2. Алгоритмы: асимптотика, разбиение.' или 'Шаг 2. Алгоритмы на Java: асимптотический анализ, толстое и тонкое разбиение.'",
+                "Ответ заверши строкой: 'Итого вы будете уметь: … (перечень ключевых навыков)'.",
+                "Правила: сначала закрывай пробелы в навыках, опираясь на уже освоенные; сильные рёбра графа = более важные зависимости, ставь их раньше; разрешено указывать фреймворки, темы, технологии; не повторяй уже освоенные навыки как отдельные шаги — только используй их как фундамент."
         ));
 
     }
