@@ -1,12 +1,22 @@
-[
-  "java",
-  "c++",
-  "python",
-  "javascript",
-  "sql",
-  "docker",
-  "c#",
-  "php",
-  "spring",
-  "machine_learning"
-]
+ [
+    "java",
+    "c++",
+    "python",
+    "javascript",
+    "sql",
+    "docker",
+    "c#",
+    "php",
+    "spring",
+    "machine_learning",
+    "react",
+    "typescript",
+    "kubernetes",
+    "terraform",
+    "linux",
+    "hibernate",
+    "spark",
+    "pandas",
+    "kafka",
+    "aws"
+  ]
