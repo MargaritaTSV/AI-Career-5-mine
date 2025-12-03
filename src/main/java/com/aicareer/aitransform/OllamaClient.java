@@ -4,6 +4,7 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import java.io.IOException;
 import java.net.URI;
+import java.net.URISyntaxException;
 import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
@@ -21,7 +22,34 @@ public class OllamaClient {
     private final URI endpoint;
 
     public OllamaClient(String baseUrl) {
-        this.endpoint = URI.create(baseUrl.endsWith("/") ? baseUrl : baseUrl + "/");
+        // Нормализуем URL и проверим, что подключение идёт только к локальным адресам, используемым при запуске через Docker.
+        if (baseUrl == null || baseUrl.isBlank()) {
+            throw new IllegalArgumentException("OLLAMA host is not set. Ollama must be run via Docker and OLLAMA_HOST should point to a local address (e.g. http://localhost:11434).");
+        }
+        URI uri;
+        try {
+            uri = URI.create(baseUrl.endsWith("/") ? baseUrl : baseUrl + "/");
+        } catch (IllegalArgumentException ex) {
+            throw new IllegalArgumentException("Invalid OLLAMA_HOST: " + baseUrl, ex);
+        }
+
+        String host = uri.getHost();
+        int port = uri.getPort();
+        // Разрешённые локальные хосты при запуске Ollama через Docker
+        boolean allowedHost = "localhost".equalsIgnoreCase(host)
+                || "127.0.0.1".equals(host)
+                || "0.0.0.0".equals(host)
+                || "host.docker.internal".equalsIgnoreCase(host);
+
+        // Разрешаем неуказанный порт или порт 11434 (стандартный для Ollama)
+        boolean allowedPort = (port == -1) || (port == 11434);
+
+        if (!allowedHost || !allowedPort) {
+            String hint = "Ollama must run via Docker and be reachable on a local address. Set OLLAMA_HOST to e.g. http://localhost:11434 or http://host.docker.internal:11434";
+            throw new IllegalArgumentException("Disallowed OLLAMA_HOST: " + baseUrl + ". " + hint);
+        }
+
+        this.endpoint = uri;
     }
 
     /**
