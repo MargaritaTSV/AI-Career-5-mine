@@ -1,34 +1,456 @@
 {
   "nodes" : [ {
     "id" : "java",
-    "vacancies" : 0
+    "vacancies" : 133
   }, {
     "id" : "c++",
-    "vacancies" : 0
+    "vacancies" : 3
   }, {
     "id" : "python",
-    "vacancies" : 0
+    "vacancies" : 384
   }, {
     "id" : "javascript",
-    "vacancies" : 0
+    "vacancies" : 181
   }, {
     "id" : "sql",
-    "vacancies" : 0
+    "vacancies" : 189
   }, {
     "id" : "docker",
-    "vacancies" : 0
+    "vacancies" : 90
   }, {
     "id" : "c#",
     "vacancies" : 0
   }, {
     "id" : "php",
-    "vacancies" : 0
+    "vacancies" : 74
   }, {
     "id" : "spring",
-    "vacancies" : 0
+    "vacancies" : 32
   }, {
     "id" : "machine_learning",
-    "vacancies" : 0
+    "vacancies" : 38
+  }, {
+    "id" : "react",
+    "vacancies" : 158
+  }, {
+    "id" : "typescript",
+    "vacancies" : 138
+  }, {
+    "id" : "kubernetes",
+    "vacancies" : 101
+  }, {
+    "id" : "terraform",
+    "vacancies" : 20
+  }, {
+    "id" : "linux",
+    "vacancies" : 133
+  }, {
+    "id" : "hibernate",
+    "vacancies" : 2
+  }, {
+    "id" : "spark",
+    "vacancies" : 44
+  }, {
+    "id" : "pandas",
+    "vacancies" : 49
+  }, {
+    "id" : "kafka",
+    "vacancies" : 36
+  }, {
+    "id" : "aws",
+    "vacancies" : 19
   } ],
-  "edges" : [ ]
+  "edges" : [ {
+    "from" : "python",
+    "to" : "sql",
+    "weight" : 82
+  }, {
+    "from" : "javascript",
+    "to" : "typescript",
+    "weight" : 79
+  }, {
+    "from" : "javascript",
+    "to" : "react",
+    "weight" : 67
+  }, {
+    "from" : "react",
+    "to" : "typescript",
+    "weight" : 62
+  }, {
+    "from" : "python",
+    "to" : "pandas",
+    "weight" : 43
+  }, {
+    "from" : "kubernetes",
+    "to" : "docker",
+    "weight" : 39
+  }, {
+    "from" : "linux",
+    "to" : "kubernetes",
+    "weight" : 36
+  }, {
+    "from" : "linux",
+    "to" : "docker",
+    "weight" : 30
+  }, {
+    "from" : "java",
+    "to" : "spring",
+    "weight" : 28
+  }, {
+    "from" : "python",
+    "to" : "javascript",
+    "weight" : 28
+  }, {
+    "from" : "javascript",
+    "to" : "php",
+    "weight" : 27
+  }, {
+    "from" : "python",
+    "to" : "react",
+    "weight" : 27
+  }, {
+    "from" : "sql",
+    "to" : "spark",
+    "weight" : 20
+  }, {
+    "from" : "python",
+    "to" : "linux",
+    "weight" : 18
+  }, {
+    "from" : "python",
+    "to" : "docker",
+    "weight" : 17
+  }, {
+    "from" : "python",
+    "to" : "java",
+    "weight" : 17
+  }, {
+    "from" : "python",
+    "to" : "spark",
+    "weight" : 16
+  }, {
+    "from" : "sql",
+    "to" : "pandas",
+    "weight" : 15
+  }, {
+    "from" : "python",
+    "to" : "typescript",
+    "weight" : 14
+  }, {
+    "from" : "react",
+    "to" : "php",
+    "weight" : 14
+  }, {
+    "from" : "typescript",
+    "to" : "php",
+    "weight" : 12
+  }, {
+    "from" : "python",
+    "to" : "kubernetes",
+    "weight" : 11
+  }, {
+    "from" : "python",
+    "to" : "machine_learning",
+    "weight" : 11
+  }, {
+    "from" : "sql",
+    "to" : "java",
+    "weight" : 11
+  }, {
+    "from" : "typescript",
+    "to" : "java",
+    "weight" : 11
+  }, {
+    "from" : "javascript",
+    "to" : "java",
+    "weight" : 9
+  }, {
+    "from" : "kubernetes",
+    "to" : "terraform",
+    "weight" : 9
+  }, {
+    "from" : "docker",
+    "to" : "php",
+    "weight" : 8
+  }, {
+    "from" : "kubernetes",
+    "to" : "kafka",
+    "weight" : 8
+  }, {
+    "from" : "linux",
+    "to" : "terraform",
+    "weight" : 8
+  }, {
+    "from" : "react",
+    "to" : "docker",
+    "weight" : 8
+  }, {
+    "from" : "sql",
+    "to" : "javascript",
+    "weight" : 8
+  }, {
+    "from" : "sql",
+    "to" : "kafka",
+    "weight" : 8
+  }, {
+    "from" : "java",
+    "to" : "docker",
+    "weight" : 7
+  }, {
+    "from" : "javascript",
+    "to" : "docker",
+    "weight" : 7
+  }, {
+    "from" : "sql",
+    "to" : "docker",
+    "weight" : 7
+  }, {
+    "from" : "sql",
+    "to" : "react",
+    "weight" : 7
+  }, {
+    "from" : "docker",
+    "to" : "terraform",
+    "weight" : 6
+  }, {
+    "from" : "kubernetes",
+    "to" : "aws",
+    "weight" : 6
+  }, {
+    "from" : "react",
+    "to" : "java",
+    "weight" : 6
+  }, {
+    "from" : "sql",
+    "to" : "linux",
+    "weight" : 6
+  }, {
+    "from" : "java",
+    "to" : "kafka",
+    "weight" : 5
+  }, {
+    "from" : "java",
+    "to" : "kubernetes",
+    "weight" : 5
+  }, {
+    "from" : "java",
+    "to" : "linux",
+    "weight" : 5
+  }, {
+    "from" : "java",
+    "to" : "spark",
+    "weight" : 5
+  }, {
+    "from" : "pandas",
+    "to" : "machine_learning",
+    "weight" : 5
+  }, {
+    "from" : "python",
+    "to" : "php",
+    "weight" : 5
+  }, {
+    "from" : "typescript",
+    "to" : "docker",
+    "weight" : 5
+  }, {
+    "from" : "docker",
+    "to" : "kafka",
+    "weight" : 4
+  }, {
+    "from" : "docker",
+    "to" : "pandas",
+    "weight" : 4
+  }, {
+    "from" : "linux",
+    "to" : "kafka",
+    "weight" : 4
+  }, {
+    "from" : "python",
+    "to" : "kafka",
+    "weight" : 4
+  }, {
+    "from" : "spark",
+    "to" : "kafka",
+    "weight" : 4
+  }, {
+    "from" : "sql",
+    "to" : "spring",
+    "weight" : 4
+  }, {
+    "from" : "java",
+    "to" : "php",
+    "weight" : 3
+  }, {
+    "from" : "javascript",
+    "to" : "linux",
+    "weight" : 3
+  }, {
+    "from" : "javascript",
+    "to" : "spring",
+    "weight" : 3
+  }, {
+    "from" : "pandas",
+    "to" : "kafka",
+    "weight" : 3
+  }, {
+    "from" : "python",
+    "to" : "terraform",
+    "weight" : 3
+  }, {
+    "from" : "sql",
+    "to" : "kubernetes",
+    "weight" : 3
+  }, {
+    "from" : "typescript",
+    "to" : "linux",
+    "weight" : 3
+  }, {
+    "from" : "docker",
+    "to" : "aws",
+    "weight" : 2
+  }, {
+    "from" : "docker",
+    "to" : "spring",
+    "weight" : 2
+  }, {
+    "from" : "java",
+    "to" : "hibernate",
+    "weight" : 2
+  }, {
+    "from" : "java",
+    "to" : "machine_learning",
+    "weight" : 2
+  }, {
+    "from" : "javascript",
+    "to" : "pandas",
+    "weight" : 2
+  }, {
+    "from" : "kafka",
+    "to" : "terraform",
+    "weight" : 2
+  }, {
+    "from" : "kubernetes",
+    "to" : "pandas",
+    "weight" : 2
+  }, {
+    "from" : "kubernetes",
+    "to" : "spring",
+    "weight" : 2
+  }, {
+    "from" : "linux",
+    "to" : "aws",
+    "weight" : 2
+  }, {
+    "from" : "linux",
+    "to" : "php",
+    "weight" : 2
+  }, {
+    "from" : "php",
+    "to" : "aws",
+    "weight" : 2
+  }, {
+    "from" : "python",
+    "to" : "aws",
+    "weight" : 2
+  }, {
+    "from" : "react",
+    "to" : "linux",
+    "weight" : 2
+  }, {
+    "from" : "react",
+    "to" : "spring",
+    "weight" : 2
+  }, {
+    "from" : "spring",
+    "to" : "hibernate",
+    "weight" : 2
+  }, {
+    "from" : "terraform",
+    "to" : "aws",
+    "weight" : 2
+  }, {
+    "from" : "docker",
+    "to" : "spark",
+    "weight" : 1
+  }, {
+    "from" : "java",
+    "to" : "aws",
+    "weight" : 1
+  }, {
+    "from" : "java",
+    "to" : "c++",
+    "weight" : 1
+  }, {
+    "from" : "javascript",
+    "to" : "hibernate",
+    "weight" : 1
+  }, {
+    "from" : "kafka",
+    "to" : "spring",
+    "weight" : 1
+  }, {
+    "from" : "linux",
+    "to" : "pandas",
+    "weight" : 1
+  }, {
+    "from" : "linux",
+    "to" : "spring",
+    "weight" : 1
+  }, {
+    "from" : "machine_learning",
+    "to" : "kafka",
+    "weight" : 1
+  }, {
+    "from" : "php",
+    "to" : "kafka",
+    "weight" : 1
+  }, {
+    "from" : "php",
+    "to" : "pandas",
+    "weight" : 1
+  }, {
+    "from" : "react",
+    "to" : "kafka",
+    "weight" : 1
+  }, {
+    "from" : "react",
+    "to" : "kubernetes",
+    "weight" : 1
+  }, {
+    "from" : "react",
+    "to" : "pandas",
+    "weight" : 1
+  }, {
+    "from" : "spark",
+    "to" : "machine_learning",
+    "weight" : 1
+  }, {
+    "from" : "spring",
+    "to" : "aws",
+    "weight" : 1
+  }, {
+    "from" : "sql",
+    "to" : "aws",
+    "weight" : 1
+  }, {
+    "from" : "sql",
+    "to" : "machine_learning",
+    "weight" : 1
+  }, {
+    "from" : "sql",
+    "to" : "php",
+    "weight" : 1
+  }, {
+    "from" : "sql",
+    "to" : "terraform",
+    "weight" : 1
+  }, {
+    "from" : "sql",
+    "to" : "typescript",
+    "weight" : 1
+  }, {
+    "from" : "typescript",
+    "to" : "kafka",
+    "weight" : 1
+  } ]
 }
