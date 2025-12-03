@@ -1,4 +1,4 @@
-package com.aicareer.recommendation;
+package com.aicareer.aitransform;
 
 import org.example.db.Database;
 

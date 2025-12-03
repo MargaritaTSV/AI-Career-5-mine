@@ -22,8 +22,6 @@ public final class SkillsExtraction {
 
     private static final String SKILLS_RESOURCE = "skills.json";
 
-    private static final List<String> SKILL_LIST = loadSkillList();
-
     private SkillsExtraction() {
     }
 
@@ -36,7 +34,7 @@ public final class SkillsExtraction {
     }
 
     public static List<String> skillList() {
-        return List.copyOf(SKILL_LIST);
+        return loadSkillList();
     }
 
     public static Map<String, Integer> fromResource(String resource) {
@@ -61,7 +59,9 @@ public final class SkillsExtraction {
     }
 
     private static Map<String, Integer> requestFromModel(String vacanciesJson) {
-        String prompt = ExtractionPrompt.build()
+        List<String> skills = skillList();
+
+        String prompt = ExtractionPrompt.build(skills)
                 + "\n\nVacancies JSON (analyze them together and return only the skills matrix):\n"
                 + vacanciesJson
                 + "\n\nReturn only the JSON object with the skill flags.";
@@ -73,7 +73,7 @@ public final class SkillsExtraction {
         try {
             JsonNode matrixNode = MAPPER.readTree(jsonResponse);
             Map<String, Integer> matrix = new LinkedHashMap<>();
-            for (String skill : SKILL_LIST) {
+            for (String skill : skills) {
                 int value = matrixNode.has(skill) && matrixNode.get(skill).isNumber()
                         ? matrixNode.get(skill).asInt()
                         : 0;
