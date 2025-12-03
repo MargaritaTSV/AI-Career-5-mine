@@ -1,10 +1,11 @@
 package com.aicareer.aitransform;
 
-import com.aicareer.hh.infrastructure.db.DbConnectionProvider;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
 import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
+import org.example.db.Database;
+
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -22,11 +23,12 @@ public class DbSampleExporter {
     }
 
     public static void export(Path output, int limit) throws Exception {
-        DbConnectionProvider provider = new DbConnectionProvider();
         ObjectMapper mapper = new ObjectMapper().enable(SerializationFeature.INDENT_OUTPUT);
         ArrayNode array = mapper.createArrayNode();
 
-        try (Connection connection = provider.getConnection();
+        Database.init();
+
+        try (Connection connection = Database.get();
              PreparedStatement ps = connection.prepareStatement(
                      "SELECT title, description FROM vacancy ORDER BY published_at DESC NULLS LAST LIMIT ?")) {
             ps.setInt(1, limit);

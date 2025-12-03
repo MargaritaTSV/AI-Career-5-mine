@@ -1,11 +1,11 @@
 package com.aicareer.hh.tools;
 
-import com.aicareer.hh.infrastructure.db.DbConnectionProvider;
 import com.aicareer.hh.model.OutVacancy;
 import com.aicareer.hh.model.Vacancy;
 import com.aicareer.hh.repository.JdbcVacancyRepository;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import org.example.db.Database;
 
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -21,8 +21,8 @@ public class ImportJsonToDb {
     public static void main(String[] args) throws Exception {
         System.out.println("=== Импорт JSON → PostgreSQL ===");
 
-        DbConnectionProvider provider = new DbConnectionProvider();
-        JdbcVacancyRepository repository = new JdbcVacancyRepository(provider);
+        Database.init();
+        JdbcVacancyRepository repository = new JdbcVacancyRepository();
 
         ObjectMapper mapper = new ObjectMapper();
         Path exportDir = Path.of("src/main/resources/export");

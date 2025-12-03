@@ -1,6 +1,5 @@
 package com.aicareer.hh.tools;
 
-import com.aicareer.hh.infrastructure.db.DbConnectionProvider;
 import com.aicareer.hh.infrastructure.export.JsonExporter;
 import com.aicareer.hh.infrastructure.fetcher.HhVacancyFetcher;
 import com.aicareer.hh.infrastructure.http.HhApiClient;
@@ -9,6 +8,7 @@ import com.aicareer.hh.repository.JdbcVacancyRepository;
 import com.aicareer.hh.repository.VacancyRepository;
 import com.aicareer.hh.service.DefaultVacancySearchService;
 import com.aicareer.hh.service.SearchService;
+import org.example.db.Database;
 
 import java.util.List;
 import java.util.Locale;
@@ -39,8 +39,8 @@ public class DemoFetch {
         SearchService service = new DefaultVacancySearchService(fetcher, mapper, exporter);
 
         // БД
-        var dbProvider = new DbConnectionProvider();
-        VacancyRepository vacancyRepository = new JdbcVacancyRepository(dbProvider);
+        Database.init();
+        VacancyRepository vacancyRepository = new JdbcVacancyRepository();
 
         // роли + навыки
         Map<String, List<String>> matrix = RoleMatrix.load("role_skill_matrix.json");

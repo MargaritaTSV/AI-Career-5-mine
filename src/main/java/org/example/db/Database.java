@@ -7,9 +7,17 @@ import java.sql.Statement;
 
 public class Database {
 
-    private static final String URL = "jdbc:postgresql://localhost:5432/aicareer?sslmode=disable&applicationName=AI-Career-Client";
-    private static final String USER = "aicareer";
-    private static final String PASSWORD = "aicareer";
+    private static final String URL = envOrDefault(
+            "DB_URL",
+            "jdbc:postgresql://localhost:5432/aicareer"
+    );
+    private static final String USER = envOrDefault("DB_USER", "aicareer");
+    private static final String PASSWORD = envOrDefault("DB_PASSWORD", "aicareer");
+
+    private static String envOrDefault(String key, String def) {
+        String value = System.getenv(key);
+        return (value == null || value.isBlank()) ? def : value;
+    }
 
     public static Connection get() {
         try {
@@ -40,6 +48,26 @@ public class Database {
                   experience_years INT,
                   skills           JSONB,
                   updated_at       TIMESTAMP
+                )
+            """);
+
+            st.execute("""
+                CREATE TABLE IF NOT EXISTS vacancy (
+                  id            TEXT PRIMARY KEY,
+                  title         TEXT,
+                  company       TEXT,
+                  city          TEXT,
+                  experience    TEXT,
+                  employment    TEXT,
+                  schedule      TEXT,
+                  salary_from   INTEGER,
+                  salary_to     INTEGER,
+                  currency      TEXT,
+                  description   TEXT,
+                  url           TEXT,
+                  source        TEXT,
+                  published_at  TEXT,
+                  score         INTEGER
                 )
             """);
 
