@@ -40,14 +40,26 @@ public class Comparison {
         Map<String, Integer> roleMatrix = readMatrix(roleMatrixPath);
         Map<String, Integer> userMatrix = readMatrix(userMatrixPath);
 
+        ComparisonResult result = compareAndSave(roleMatrix, userMatrix, statusOutputPath, summaryOutputPath);
+
+        System.out.println("Skill comparison saved to: " + statusOutputPath.toAbsolutePath());
+        System.out.println("Summary saved to: " + summaryOutputPath.toAbsolutePath());
+        System.out.println("Strong skills: " + String.join(", ", result.summary().get(STATUS_MATCH)));
+        System.out.println("Needs improvement: " + String.join(", ", result.summary().get(STATUS_IMPROVE)));
+    }
+
+    public static ComparisonResult compareAndSave(
+            Map<String, Integer> roleMatrix,
+            Map<String, Integer> userMatrix,
+            Path statusOutputPath,
+            Path summaryOutputPath) {
+
         Map<String, String> statuses = compareMatrices(roleMatrix, userMatrix);
         writeJson(statusOutputPath, statuses);
 
         Map<String, List<String>> summary = buildSummary(statuses);
         writeJson(summaryOutputPath, summary);
-
-        System.out.println("Skill comparison saved to: " + statusOutputPath.toAbsolutePath());
-        System.out.println("Summary saved to: " + summaryOutputPath.toAbsolutePath());
+        return new ComparisonResult(statuses, summary);
     }
 
     private static Map<String, Integer> readMatrix(Path path) {
@@ -59,7 +71,7 @@ public class Comparison {
         }
     }
 
-    private static Map<String, String> compareMatrices(
+    public static Map<String, String> compareMatrices(
             Map<String, Integer> roleMatrix, Map<String, Integer> userMatrix) {
         Set<String> allSkills = new LinkedHashSet<>(roleMatrix.keySet());
         allSkills.addAll(userMatrix.keySet());
@@ -81,7 +93,7 @@ public class Comparison {
         return statuses;
     }
 
-    private static Map<String, List<String>> buildSummary(Map<String, String> statuses) {
+    public static Map<String, List<String>> buildSummary(Map<String, String> statuses) {
         Map<String, List<String>> summary = new LinkedHashMap<>();
         summary.put(STATUS_MATCH, new ArrayList<>());
         summary.put(STATUS_IMPROVE, new ArrayList<>());
@@ -98,5 +110,11 @@ public class Comparison {
         } catch (IOException e) {
             throw new UncheckedIOException("Failed to write JSON to: " + outputPath, e);
         }
+    }
+
+    public record ComparisonResult(
+            Map<String, String> statuses,
+            Map<String, List<String>> summary
+    ) {
     }
 }

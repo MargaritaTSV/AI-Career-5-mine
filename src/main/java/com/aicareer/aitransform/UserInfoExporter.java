@@ -1,21 +1,28 @@
 package com.aicareer.aitransform;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.SerializationFeature;
 import org.example.db.Database;
+import org.example.profile.Profile;
+import org.example.profile.ProfileRepository;
 
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.StandardCopyOption;
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.LinkedHashMap;
 import java.util.Locale;
+import java.util.Map;
 import java.util.stream.Stream;
 
 public final class UserInfoExporter {
+    private static final ObjectMapper MAPPER = new ObjectMapper()
+            .enable(SerializationFeature.INDENT_OUTPUT);
+
     private static final Path EXPORT_DIR = Path.of("src/main/resources/export");
     private static final Path OUTPUT_FILE = Path.of("src/main/resources/matrices/vacancies.json");
+    private static final Path USER_MATRIX_FILE = Path.of("src/main/resources/matrices/user_skill_matrix.json");
     private static final String FILE_PREFIX = "vacancies_top25_";
     private static final String FILE_SUFFIX = ".json";
 
@@ -27,34 +34,34 @@ public final class UserInfoExporter {
             System.err.println("Usage: UserInfoExporter <user-id>");
             System.exit(1);
         }
-        exportVacancies(args[0]);
+        Profile profile = exportUserData(args[0]);
+        System.out.printf("Vacancies and skills exported for user %s (%s)%n", args[0], profile.getTargetRole());
     }
 
-    public static void exportVacancies(String userId) {
+    public static Profile exportUserData(String userId) {
         Database.init();
-        String desiredRole = loadDesiredRole(userId);
-        Path source = resolveVacancyFile(desiredRole);
+        Profile profile = loadProfile(userId);
+
+        Path source = resolveVacancyFile(profile.getTargetRole());
         copyVacancyFile(source);
+        writeUserMatrix(profile.getSkills());
+
+        return profile;
     }
 
-    private static String loadDesiredRole(String userId) {
-        String sql = "SELECT target_role FROM user_profiles WHERE user_id = ?";
-        try (Connection connection = Database.get();
-             PreparedStatement ps = connection.prepareStatement(sql)) {
-
-            ps.setString(1, userId);
-            try (ResultSet rs = ps.executeQuery()) {
-                if (rs.next()) {
-                    String role = rs.getString("target_role");
-                    if (role != null && !role.isBlank()) {
-                        return role;
-                    }
-                }
+    private static Profile loadProfile(String userId) {
+        try {
+            ProfileRepository repository = new ProfileRepository();
+            return repository.findByUserId(userId)
+                    .orElseThrow(() -> new IllegalArgumentException(
+                            "Не удалось найти профиль пользователя " + userId + ". Сохраните профиль перед запуском."));
+        } catch (RuntimeException e) {
+            Throwable cause = e.getCause();
+            if (cause instanceof SQLException sqlException) {
+                throw new IllegalStateException("Не удалось прочитать профиль пользователя", sqlException);
             }
-        } catch (SQLException e) {
-            throw new IllegalStateException("Не удалось прочитать профиль пользователя", e);
+            throw e;
         }
-        throw new IllegalArgumentException("Не удалось найти желаемую роль для пользователя " + userId);
     }
 
     private static Path resolveVacancyFile(String desiredRole) {
@@ -95,6 +102,19 @@ public final class UserInfoExporter {
             System.out.println("Vacancies saved to: " + OUTPUT_FILE.toAbsolutePath());
         } catch (IOException e) {
             throw new IllegalStateException("Не удалось сохранить вакансии в матрицу", e);
+        }
+    }
+
+    private static void writeUserMatrix(Map<String, Integer> skills) {
+        Map<String, Integer> normalized = new LinkedHashMap<>();
+        skills.forEach((skill, level) -> normalized.put(skill, level != null && level > 0 ? 1 : 0));
+
+        try {
+            Files.createDirectories(USER_MATRIX_FILE.getParent());
+            MAPPER.writeValue(USER_MATRIX_FILE.toFile(), normalized);
+            System.out.println("User skills saved to: " + USER_MATRIX_FILE.toAbsolutePath());
+        } catch (IOException e) {
+            throw new IllegalStateException("Не удалось сохранить навыки пользователя", e);
         }
     }
 }
