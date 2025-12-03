@@ -22,12 +22,13 @@ public final class DeepseekRoadmapClient {
     }
 
     public static void main(String[] args) {
+        System.out.println(generateRoadmap());
+    }
+
+    public static String generateRoadmap() {
         String prompt = RoadmapPromptBuilder.build();
-
         savePrompt(prompt);
-
-        String response = executeInference(prompt);
-        System.out.println(response);
+        return executeInference(prompt);
     }
 
     private static void savePrompt(String prompt) {

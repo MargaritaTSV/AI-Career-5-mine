@@ -48,10 +48,7 @@ public class ProfileRepository {
             ResultSet rs = ps.executeQuery();
 
             if (rs.next()) {
-                Map<String, Integer> skills = mapper.readValue(
-                        rs.getString("skills"),
-                        mapper.getTypeFactory().constructMapType(Map.class, String.class, Integer.class)
-                );
+                Map<String, Integer> skills = readSkills(rs.getString("skills"));
 
                 return Optional.of(new Profile(
                         rs.getString("user_id"),
@@ -77,10 +74,7 @@ public class ProfileRepository {
              ResultSet rs = st.executeQuery(sql)) {
 
             while (rs.next()) {
-                Map<String, Integer> skills = mapper.readValue(
-                        rs.getString("skills"),
-                        mapper.getTypeFactory().constructMapType(Map.class, String.class, Integer.class)
-                );
+                Map<String, Integer> skills = readSkills(rs.getString("skills"));
 
                 profiles.add(new Profile(
                         rs.getString("user_id"),
@@ -94,5 +88,15 @@ public class ProfileRepository {
         }
 
         return profiles;
+    }
+
+    private Map<String, Integer> readSkills(String json) throws JsonProcessingException {
+        if (json == null || json.isBlank()) {
+            return Map.of();
+        }
+        return mapper.readValue(
+                json,
+                mapper.getTypeFactory().constructMapType(Map.class, String.class, Integer.class)
+        );
     }
 }
