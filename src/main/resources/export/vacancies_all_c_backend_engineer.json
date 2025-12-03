@@ -1,5 +1,22 @@
 [ {
   "id" : null,
+  "title" : "IT ресечер / Сорсер",
+  "company" : "Яндекс",
+  "city" : "Москва",
+  "experience" : null,
+  "employment" : null,
+  "schedule" : null,
+  "salaryFrom" : null,
+  "salaryTo" : 50000,
+  "currency" : "RUR",
+  "skills" : null,
+  "description" : "имеют от 6 месяцев опыта в техническом подборе (<highlighttext>Backend</highlighttext>: <highlighttext>C++</highlighttext>, Go, Python; ML; системная разработка. - уверенно работают с разными источниками... Поиск и выстраивание долгосрочных отношений с кандидатами уровня Middle/Senior в областях <highlighttext>C++</highlighttext>, системной разработки и Analyst developer. ",
+  "url" : "https://hh.ru/vacancy/128394698",
+  "source" : "hh",
+  "publishedAt" : null,
+  "score" : 0
+}, {
+  "id" : null,
   "title" : "Web security researcher",
   "company" : "Positive Technologies",
   "city" : "Москва",

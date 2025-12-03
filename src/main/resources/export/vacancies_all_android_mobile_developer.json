@@ -1,5 +1,22 @@
 [ {
   "id" : null,
+  "title" : "Middle QA Engineer (Web/Mobile)",
+  "company" : "KTS",
+  "city" : "Москва",
+  "experience" : null,
+  "employment" : null,
+  "schedule" : null,
+  "salaryFrom" : null,
+  "salaryTo" : null,
+  "currency" : null,
+  "skills" : null,
+  "description" : "Опыт работы в QA от 3 лет. Уверенное владение английским - можешь не только читать документацию, но и на дейлике пообщаться.  Web-портал по интерьерному дизайну. Международный проект с интеграцией LLM. Поощряем написание статей и участие с докладами в конференциях.",
+  "url" : "https://hh.ru/vacancy/128395287",
+  "source" : "hh",
+  "publishedAt" : null,
+  "score" : 0
+}, {
+  "id" : null,
   "title" : "Junior QA Engineer (Ручное тестирование Web + Mobile)",
   "company" : "Х3",
   "city" : "Москва",

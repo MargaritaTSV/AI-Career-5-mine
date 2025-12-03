@@ -34,6 +34,23 @@
   "score" : 1
 }, {
   "id" : null,
+  "title" : "Middle QA Engineer (Web/Mobile)",
+  "company" : "KTS",
+  "city" : "Москва",
+  "experience" : null,
+  "employment" : null,
+  "schedule" : null,
+  "salaryFrom" : null,
+  "salaryTo" : null,
+  "currency" : null,
+  "skills" : null,
+  "description" : "Опыт работы в QA от 3 лет. Уверенное владение английским - можешь не только читать документацию, но и на дейлике пообщаться.  Web-портал по интерьерному дизайну. Международный проект с интеграцией LLM. Поощряем написание статей и участие с докладами в конференциях.",
+  "url" : "https://hh.ru/vacancy/128395287",
+  "source" : "hh",
+  "publishedAt" : null,
+  "score" : 0
+}, {
+  "id" : null,
   "title" : "Junior QA Engineer (Ручное тестирование Web + Mobile)",
   "company" : "Х3",
   "city" : "Москва",
@@ -403,23 +420,6 @@
   "skills" : null,
   "description" : "Опыт работы на проектах с микросервисной архитектурой. Опыт работы с SQL, REST API. Понимание, как работает БД. Опыт моделирования бизнес... ...можно видеть результаты своей работы, когда сами заказываете что-то на Озоне. Ставим задачи back, front, QA, <highlighttext>mobile</highlighttext> (<highlighttext>android</highlighttext>\\ios).",
   "url" : "https://hh.ru/vacancy/126189611",
-  "source" : "hh",
-  "publishedAt" : null,
-  "score" : 0
-}, {
-  "id" : null,
-  "title" : "Mobile Developer",
-  "company" : "БПМСОФТ",
-  "city" : "Москва",
-  "experience" : null,
-  "employment" : null,
-  "schedule" : null,
-  "salaryFrom" : null,
-  "salaryTo" : null,
-  "currency" : null,
-  "skills" : null,
-  "description" : "Навыки эффективной коммуникации и командной работы. Экспертиза <highlighttext>Android</highlighttext>: Хорошее понимание и владение Kotlin. Знание <highlighttext>Android</highlighttext> SDK, жизненного цикла компонентов, принципов... ...мобильных приложений (<highlighttext>Android</highlighttext> и iOS), защита их перед менеджментом, а также активное участие в их реализации. Проектирование и <highlighttext>разработка</highlighttext> новой...",
-  "url" : "https://hh.ru/vacancy/127206430",
   "source" : "hh",
   "publishedAt" : null,
   "score" : 0

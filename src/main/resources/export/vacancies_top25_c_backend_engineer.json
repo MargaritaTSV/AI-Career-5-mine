@@ -34,6 +34,23 @@
   "score" : 1
 }, {
   "id" : null,
+  "title" : "IT ресечер / Сорсер",
+  "company" : "Яндекс",
+  "city" : "Москва",
+  "experience" : null,
+  "employment" : null,
+  "schedule" : null,
+  "salaryFrom" : null,
+  "salaryTo" : 50000,
+  "currency" : "RUR",
+  "skills" : null,
+  "description" : "имеют от 6 месяцев опыта в техническом подборе (<highlighttext>Backend</highlighttext>: <highlighttext>C++</highlighttext>, Go, Python; ML; системная разработка. - уверенно работают с разными источниками... Поиск и выстраивание долгосрочных отношений с кандидатами уровня Middle/Senior в областях <highlighttext>C++</highlighttext>, системной разработки и Analyst developer. ",
+  "url" : "https://hh.ru/vacancy/128394698",
+  "source" : "hh",
+  "publishedAt" : null,
+  "score" : 0
+}, {
+  "id" : null,
   "title" : "Web security researcher",
   "company" : "Positive Technologies",
   "city" : "Москва",
@@ -403,23 +420,6 @@
   "skills" : null,
   "description" : "Проектировали распределённые системы, работающие под большой нагрузкой. Хорошо знаете <highlighttext>C++</highlighttext> и Python. Умеете работать с базами данных, например с PostgreSQL.  Запуск крупных интеграций. Архитектурная проработка и реализация платформенных компонентов. Используем классические технологии городских сервисов Яндекса: PostgreSQL и YT — для хранения...",
   "url" : "https://hh.ru/vacancy/127310370",
-  "source" : "hh",
-  "publishedAt" : null,
-  "score" : 0
-}, {
-  "id" : null,
-  "title" : "Embedded Software Engineer",
-  "company" : "ПЛОНК",
-  "city" : "Москва",
-  "experience" : null,
-  "employment" : null,
-  "schedule" : null,
-  "salaryFrom" : null,
-  "salaryTo" : null,
-  "currency" : null,
-  "skills" : null,
-  "description" : "Опыт разработки встраиваемых систем для микроконтроллеров на базе Cortex-M ядер (например, stm32) на языке <highlighttext>C++</highlighttext>14.  ...на языке <highlighttext>C++</highlighttext>14. Взаимодействие с SDK для микроконтроллера от производителя. Написание тестов (gtest) для бизнес логики. Совмещение <highlighttext>backend</highlighttext>-а...",
-  "url" : "https://hh.ru/vacancy/127307553",
   "source" : "hh",
   "publishedAt" : null,
   "score" : 0

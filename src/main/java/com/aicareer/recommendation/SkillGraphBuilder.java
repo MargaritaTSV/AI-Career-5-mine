@@ -21,9 +21,7 @@ import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-/**
- * Builds a directed graph of skills based on co-occurrences in parsed vacancies.
- */
+
 public final class SkillGraphBuilder {
     private static final ObjectMapper MAPPER = new ObjectMapper();
     private static final String SKILLS_RESOURCE = "skills.json";
@@ -42,7 +40,7 @@ public final class SkillGraphBuilder {
     }
 
     public static void main(String[] args) {
-        Path baseDir = Path.of(args.length > 0 ? args[0] : ".");
+        Path baseDir = Path.of(args.length > 0 ? args[0] : "src/main/resources/export");
         Path output = Path.of("src/main/resources/graphs/skills-graph.json");
 
         SkillGraph graph = build(baseDir);
@@ -60,6 +58,9 @@ public final class SkillGraphBuilder {
         Map<String, Integer> frequency = initFrequency(skills);
 
         List<Path> vacancyFiles = resolveVacancyFiles(vacanciesDir);
+        if (vacancyFiles.isEmpty()) {
+            throw new IllegalStateException("No vacancy files found in " + vacanciesDir.toAbsolutePath());
+        }
         List<Set<String>> vacancySkills = new ArrayList<>();
 
         for (Path file : vacancyFiles) {
@@ -189,7 +190,7 @@ public final class SkillGraphBuilder {
                     .filter(Files::isRegularFile)
                     .filter(path -> {
                         String name = path.getFileName().toString();
-                        return name.startsWith("vacancies_") && name.endsWith(".json");
+                        return name.startsWith("vacancies_all_") && name.endsWith(".json");
                     })
                     .sorted()
                     .toList();
