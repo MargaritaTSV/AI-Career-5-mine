@@ -24,14 +24,26 @@ public final class RoadmapPromptBuilder {
     }
 
     public static void main(String[] args) {
-        System.out.println(build());
+        String vacanciesResource = args.length > 0 ? args[0] : VACANCIES_RESOURCE;
+        System.out.println(build(vacanciesResource));
     }
 
     public static String build() {
-        Map<String, Integer> userMatrix = readSkillMatrix(USER_MATRIX_RESOURCE);
-        Map<String, Integer> desiredMatrix = readSkillMatrix(DESIRED_MATRIX_RESOURCE);
-        String graphJson = readResourceJson(SKILL_GRAPH_RESOURCE);
-        String vacanciesJson = readResourceJson(VACANCIES_RESOURCE);
+        return build(VACANCIES_RESOURCE, USER_MATRIX_RESOURCE, DESIRED_MATRIX_RESOURCE, SKILL_GRAPH_RESOURCE);
+    }
+
+    public static String build(String vacanciesResource) {
+        return build(vacanciesResource, USER_MATRIX_RESOURCE, DESIRED_MATRIX_RESOURCE, SKILL_GRAPH_RESOURCE);
+    }
+
+    public static String build(String vacanciesResource,
+                               String userMatrixResource,
+                               String desiredMatrixResource,
+                               String skillGraphResource) {
+        Map<String, Integer> userMatrix = readSkillMatrix(userMatrixResource);
+        Map<String, Integer> desiredMatrix = readSkillMatrix(desiredMatrixResource);
+        String graphJson = readResourceJson(skillGraphResource);
+        String vacanciesJson = readResourceJson(vacanciesResource);
 
         List<String> userSkills = flaggedSkills(userMatrix);
         List<String> targetSkills = flaggedSkills(desiredMatrix);

@@ -30,7 +30,7 @@ public final class DeepseekRoadmapClient {
         System.out.println(response);
     }
 
-    private static void savePrompt(String prompt) {
+    public static void savePrompt(String prompt) {
         try {
             if (PROMPT_OUTPUT_PATH.getParent() != null) {
                 Files.createDirectories(PROMPT_OUTPUT_PATH.getParent());
@@ -40,6 +40,11 @@ public final class DeepseekRoadmapClient {
         } catch (IOException e) {
             throw new IllegalStateException("Failed to save prompt to file", e);
         }
+    }
+
+    public static String generateRoadmap(String prompt) {
+        savePrompt(prompt);
+        return executeInference(prompt);
     }
 
     private static String executeInference(String prompt) {

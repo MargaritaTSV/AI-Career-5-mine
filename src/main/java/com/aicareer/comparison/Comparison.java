@@ -40,14 +40,23 @@ public class Comparison {
         Map<String, Integer> roleMatrix = readMatrix(roleMatrixPath);
         Map<String, Integer> userMatrix = readMatrix(userMatrixPath);
 
-        Map<String, String> statuses = compareMatrices(roleMatrix, userMatrix);
-        writeJson(statusOutputPath, statuses);
-
-        Map<String, List<String>> summary = buildSummary(statuses);
-        writeJson(summaryOutputPath, summary);
+        ComparisonResult result = calculate(roleMatrix, userMatrix);
+        writeOutputs(result, statusOutputPath, summaryOutputPath);
 
         System.out.println("Skill comparison saved to: " + statusOutputPath.toAbsolutePath());
         System.out.println("Summary saved to: " + summaryOutputPath.toAbsolutePath());
+    }
+
+    public static ComparisonResult calculate(Map<String, Integer> roleMatrix,
+                                             Map<String, Integer> userMatrix) {
+        Map<String, String> statuses = compareMatrices(roleMatrix, userMatrix);
+        Map<String, List<String>> summary = buildSummary(statuses);
+        return new ComparisonResult(roleMatrix, userMatrix, statuses, summary);
+    }
+
+    public static void writeOutputs(ComparisonResult result, Path statusOutputPath, Path summaryOutputPath) {
+        writeJson(statusOutputPath, result.statuses());
+        writeJson(summaryOutputPath, result.summary());
     }
 
     private static Map<String, Integer> readMatrix(Path path) {
@@ -98,5 +107,13 @@ public class Comparison {
         } catch (IOException e) {
             throw new UncheckedIOException("Failed to write JSON to: " + outputPath, e);
         }
+    }
+
+    public record ComparisonResult(
+            Map<String, Integer> roleMatrix,
+            Map<String, Integer> userMatrix,
+            Map<String, String> statuses,
+            Map<String, List<String>> summary
+    ) {
     }
 }
