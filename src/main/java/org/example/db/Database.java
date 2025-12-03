@@ -7,9 +7,13 @@ import java.sql.Statement;
 
 public class Database {
 
+    private static final String HOST = envOrDefault("DB_HOST", "postgres");
+    private static final String PORT = envOrDefault("DB_PORT", "5432");
+    private static final String NAME = envOrDefault("DB_NAME", "aicareer");
+
     private static final String URL = envOrDefault(
             "DB_URL",
-            "jdbc:postgresql://localhost:5432/aicareer"
+            String.format("jdbc:postgresql://%s:%s/%s", HOST, PORT, NAME)
     );
     private static final String USER = envOrDefault("DB_USER", "aicareer");
     private static final String PASSWORD = envOrDefault("DB_PASSWORD", "aicareer");
