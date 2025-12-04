@@ -12,6 +12,7 @@ import java.nio.file.Path;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Locale;
 
 public final class SkillsExtraction {
     private static final ObjectMapper MAPPER = new ObjectMapper();
@@ -22,8 +23,6 @@ public final class SkillsExtraction {
     );
 
     private static final String SKILLS_RESOURCE = "skills.json";
-    private static final String DEFAULT_VACANCIES_RESOURCE =
-            "export/vacancies_top25_java_backend_developer.json";
 
     private static final List<String> SKILL_LIST = loadSkillList();
 
@@ -144,14 +143,42 @@ public final class SkillsExtraction {
         }
     }
 
-    public static void main(String[] args) {
-        String resource = args.length > 0 && !args[0].isBlank()
-                ? args[0]
-                : DEFAULT_VACANCIES_RESOURCE; // путь к файлу с вакансиями
+    public static String resolveVacanciesResource(String roleName) {
+        if (roleName == null || roleName.isBlank()) {
+            throw new IllegalArgumentException("Название роли не может быть пустым");
+        }
 
-        Map<String, Integer> matrix = resource.startsWith("export/")
-                ? fromResource(resource)
-                : fromFile(Path.of(resource));
+        String safe = roleName.toLowerCase(Locale.ROOT)
+                .replaceAll("[^a-z0-9]+", "_")
+                .replaceAll("^_+|_+$", "");
+        String resource = "export/vacancies_top25_" + safe + ".json";
+
+        if (resourceExists(resource)) {
+            return resource;
+        }
+
+        throw new IllegalArgumentException("Файл вакансий top25 не найден для роли: " + roleName);
+    }
+
+    private static boolean resourceExists(String resource) {
+        return Thread.currentThread()
+                .getContextClassLoader()
+                .getResource(resource) != null;
+    }
+
+    public static void main(String[] args) {
+        if (args.length == 0 || args[0].isBlank()) {
+            throw new IllegalArgumentException("Укажите название роли или путь к JSON с вакансиями");
+        }
+
+        Path providedPath = Path.of(args[0]);
+        String source = Files.exists(providedPath)
+                ? providedPath.toString()
+                : resolveVacanciesResource(args[0]);
+
+        Map<String, Integer> matrix = source.startsWith("export/")
+                ? fromResource(source)
+                : fromFile(Path.of(source));
         try {
             System.out.println(MAPPER.writerWithDefaultPrettyPrinter().writeValueAsString(matrix));
         } catch (JsonProcessingException e) {
