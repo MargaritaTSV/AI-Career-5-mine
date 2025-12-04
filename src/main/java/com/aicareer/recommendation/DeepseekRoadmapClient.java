@@ -1,6 +1,6 @@
 package com.aicareer.recommendation;
 
-import com.aicareer.aitransform.OpenRouterClient;
+import com.aicareer.aitransform.OpenAIClient;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import java.io.IOException;
@@ -8,14 +8,14 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 
 /**
- * Invokes the DeepSeek model with the generated roadmap prompt
+ * Invokes the OpenAI model with the generated roadmap prompt
  * and prints the model's roadmap response.
  */
 public final class DeepseekRoadmapClient {
     private static final ObjectMapper MAPPER = new ObjectMapper();
     private static final String DEFAULT_MODEL_PATH = System.getenv().getOrDefault(
-            "OPENROUTER_MODEL",
-            "qwen/qwen3-4b:free"
+            "OPENAI_MODEL",
+            "gpt-4o-mini"
     );
     private static final Path PROMPT_OUTPUT_PATH = Path.of("target", "roadmap-prompt.txt");
 
@@ -51,14 +51,14 @@ public final class DeepseekRoadmapClient {
 
     private static String executeInference(String prompt) {
         try {
-            String raw = new OpenRouterClient()
+            String raw = new OpenAIClient()
                     .generate(DEFAULT_MODEL_PATH, prompt);
             System.out.println("[AI] Ответ по плану получен, извлекаем текст...");
             return extractContent(raw);
         } catch (IllegalStateException e) {
             throw e;
         } catch (Exception e) {
-            throw new IllegalStateException("Failed to invoke DeepSeek model", e);
+            throw new IllegalStateException("Failed to invoke OpenAI model", e);
         }
     }
 

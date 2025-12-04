@@ -17,8 +17,8 @@ public final class SkillsExtraction {
     private static final ObjectMapper MAPPER = new ObjectMapper();
 
     private static final String DEFAULT_MODEL_PATH = System.getenv().getOrDefault(
-            "OPENROUTER_MODEL",
-            "qwen/qwen3-4b:free"
+            "OPENAI_MODEL",
+            "gpt-4o-mini"
     );
 
     private static final String SKILLS_RESOURCE = "skills.json";
@@ -68,8 +68,8 @@ public final class SkillsExtraction {
                 + "\n\nVacancies JSON (analyze them together and return only the skills matrix):\n"
                 + vacanciesJson
                 + "\n\nReturn only the JSON object with the skill flags.";
-        System.out.println("[AI] Строим матрицу навыков через модель...");
-        String rawResponse = new OpenRouterClient()
+        System.out.println("[AI] Строим матрицу навыков через модель OpenAI...");
+        String rawResponse = new OpenAIClient()
                 .generate(DEFAULT_MODEL_PATH, prompt);
         System.out.println("[AI] Ответ по навыкам получен, разбираем...");
 

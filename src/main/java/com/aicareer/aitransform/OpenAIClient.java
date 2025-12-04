@@ -15,23 +15,15 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * Lightweight client for sending prompts to the OpenRouter chat completion API.
+ * Lightweight client for sending prompts to the OpenAI chat completion API.
  */
-public class OpenRouterClient {
+public class OpenAIClient {
     private static final ObjectMapper MAPPER = new ObjectMapper();
 
-    private static final String ENDPOINT = "https://openrouter.ai/api/v1/chat/completions";
+    private static final String ENDPOINT = "https://api.openai.com/v1/chat/completions";
     private static final String DEFAULT_MODEL = System.getenv().getOrDefault(
-            "OPENROUTER_MODEL",
-            "mistralai/mistral-small-3.1-24b-instruct:free"
-    );
-    private static final String DEFAULT_REFERER = System.getenv().getOrDefault(
-            "OPENROUTER_REFERER",
-            "https://example.com"
-    );
-    private static final String DEFAULT_TITLE = System.getenv().getOrDefault(
-            "OPENROUTER_TITLE",
-            "AI-Career-5"
+            "OPENAI_MODEL",
+            "gpt-4o-mini"
     );
 
     private static final int MAX_RETRIES_ON_419 = 2;
@@ -59,8 +51,7 @@ public class OpenRouterClient {
             HttpRequest request = HttpRequest.newBuilder(URI.create(ENDPOINT))
                     .header("Authorization", "Bearer " + apiKey)
                     .header("Content-Type", "application/json")
-                    .header("HTTP-Referer", DEFAULT_REFERER)
-                    .header("X-Title", DEFAULT_TITLE)
+                    .header("OpenAI-Beta", "assistants=v2")
                     .timeout(Duration.ofSeconds(60))
                     .POST(HttpRequest.BodyPublishers.ofString(body, StandardCharsets.UTF_8))
                     .build();
@@ -97,7 +88,7 @@ public class OpenRouterClient {
             Thread.currentThread().interrupt();
             throw new IllegalStateException("Model call was interrupted", e);
         } catch (IOException e) {
-            throw new IllegalStateException("Failed to call OpenRouter model", e);
+            throw new IllegalStateException("Failed to call OpenAI model", e);
         }
     }
 }
