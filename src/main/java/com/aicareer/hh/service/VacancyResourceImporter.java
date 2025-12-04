@@ -5,6 +5,7 @@ import com.aicareer.hh.model.OutVacancy;
 import com.aicareer.hh.model.Vacancy;
 import com.aicareer.hh.repository.JdbcVacancyRepository;
 import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import java.io.IOException;
@@ -20,7 +21,8 @@ import java.util.stream.Stream;
  */
 public class VacancyResourceImporter {
 
-    private static final ObjectMapper MAPPER = new ObjectMapper();
+    private static final ObjectMapper MAPPER = new ObjectMapper()
+            .configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
 
     private final JdbcVacancyRepository repository;
     private final Path exportDir;
@@ -77,9 +79,7 @@ public class VacancyResourceImporter {
                     .map(VacancyMapper::fromOutVacancy)
                     .filter(Objects::nonNull)
                     .peek(v -> {
-                        if (v.getSource() == null || v.getSource().isBlank()) {
-                            v.setSource(file.getFileName().toString());
-                        }
+                        v.setSource(file.getFileName().toString());
                     })
                     .toList();
 

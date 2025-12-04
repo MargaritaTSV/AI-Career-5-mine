@@ -1,10 +1,12 @@
 package com.aicareer.hh.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 
 import java.util.ArrayList;
 import java.util.List;
 
+@JsonIgnoreProperties(ignoreUnknown = true)
 @JsonPropertyOrder({
         "id", "title", "company", "city",
         "experience", "employment", "schedule",
@@ -32,6 +34,8 @@ public class OutVacancy {
     public String  url;
     public String  source;
     public String  publishedAt;
+
+    public Integer score;
 
     public static OutVacancy from(Vacancy v) {
         OutVacancy o = new OutVacancy();

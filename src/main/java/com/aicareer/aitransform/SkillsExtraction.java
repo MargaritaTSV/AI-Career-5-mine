@@ -4,6 +4,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.aicareer.hh.model.Vacancy;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.UncheckedIOException;
@@ -59,6 +60,23 @@ public final class SkillsExtraction {
             return requestFromModel(json);
         } catch (JsonProcessingException e) {
             throw new IllegalArgumentException("Invalid JSON provided for vacancies", e);
+        }
+    }
+
+    public static Map<String, Integer> fromVacancies(List<Vacancy> vacancies) {
+        try {
+            String json = MAPPER.writeValueAsString(vacancies);
+            return fromJson(json);
+        } catch (JsonProcessingException e) {
+            throw new IllegalArgumentException("Failed to serialize vacancies for extraction", e);
+        }
+    }
+
+    public static String toJson(List<Vacancy> vacancies) {
+        try {
+            return MAPPER.writerWithDefaultPrettyPrinter().writeValueAsString(vacancies);
+        } catch (JsonProcessingException e) {
+            throw new IllegalArgumentException("Failed to serialize vacancies", e);
         }
     }
 

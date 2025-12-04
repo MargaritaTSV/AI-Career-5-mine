@@ -30,6 +30,7 @@ public final class VacancyMapper {
         v.setSource(o.source);
         v.setPublishedAt(o.publishedAt);
         v.setSkills(o.skills);
+        v.setScore(o.score != null ? o.score : 0);
         return v;
     }
 }

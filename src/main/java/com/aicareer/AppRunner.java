@@ -7,6 +7,8 @@ import com.aicareer.aitransform.UserInfoExporter;
 import com.aicareer.comparison.Comparison;
 import com.aicareer.comparison.Comparison.ComparisonResult;
 import com.aicareer.hh.infrastructure.db.DbConnectionProvider;
+import com.aicareer.hh.model.Vacancy;
+import com.aicareer.hh.repository.JdbcVacancyRepository;
 import com.aicareer.recommendation.DeepseekRoadmapClient;
 import com.aicareer.recommendation.RoadmapPromptBuilder;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -88,7 +90,7 @@ public class AppRunner {
 
     System.out.println("[USER] loaded profile for: " + profile.name() + " (" + targetRole + ")");
 
-    runPipeline(exporter, profile, targetRole);
+    runPipeline(provider, exporter, profile, targetRole);
   }
 
   // ===== ИНТЕРАКТИВНЫЙ РЕЖИМ =====
@@ -110,7 +112,7 @@ public class AppRunner {
       String targetRole = quickstart.targetRole();
       System.out.println("[ROLE] Используем целевую роль QuickStart без вопросов: " + targetRole);
       System.out.println("\n[PIPELINE] Старт анализа для роли: " + targetRole);
-      runPipeline(exporter, quickstart, targetRole);
+      runPipeline(provider, exporter, quickstart, targetRole);
       return;
     }
 
@@ -118,7 +120,7 @@ public class AppRunner {
       System.out.println("[MODE] Ручной ввод с сохранением в БД");
       UserInfoExporter.ProfileSnapshot newProfile = createUserInteractive(provider, exporter, in);
       System.out.println("\n[PIPELINE] Старт анализа для роли: " + newProfile.targetRole());
-      runPipeline(exporter, newProfile, newProfile.targetRole());
+      runPipeline(provider, exporter, newProfile, newProfile.targetRole());
       return;
     }
 
@@ -135,7 +137,7 @@ public class AppRunner {
     String targetRole = chooseTargetRole(in, profile.targetRole());
 
     System.out.println("\n[PIPELINE] Старт анализа для роли: " + targetRole);
-    runPipeline(exporter, profile, targetRole);
+    runPipeline(provider, exporter, profile, targetRole);
   }
 
   private static UserInfoExporter.ProfileSnapshot prepareQuickstartProfile(
@@ -421,7 +423,8 @@ public class AppRunner {
 
   // ===== ОБЩИЙ ПАЙПЛАЙН (как был, но вынесен в отдельный метод) =====
 
-  private static void runPipeline(UserInfoExporter exporter,
+  private static void runPipeline(DbConnectionProvider provider,
+      UserInfoExporter exporter,
       UserInfoExporter.ProfileSnapshot profile,
       String targetRole) {
 
@@ -432,9 +435,17 @@ public class AppRunner {
     exporter.writeUserSkillMatrix(profile.skills(), USER_MATRIX_PATH);
 
     String vacanciesResource = SkillsExtraction.resolveVacanciesResource(targetRole);
-    System.out.println("[ROLE] using vacancies resource: " + vacanciesResource);
+    String datasetName = Path.of(vacanciesResource).getFileName().toString();
+    System.out.println("[ROLE] using vacancies dataset from DB: " + datasetName);
 
-    Map<String, Integer> roleMatrix = SkillsExtraction.fromResource(vacanciesResource);
+    JdbcVacancyRepository vacancies = new JdbcVacancyRepository(provider);
+    List<Vacancy> roleVacancies = vacancies.findBySource(datasetName);
+    if (roleVacancies.isEmpty()) {
+      throw new IllegalStateException("В БД нет вакансий для набора: " + datasetName
+          + " — импортируйте экспортные файлы перед запуском");
+    }
+
+    Map<String, Integer> roleMatrix = SkillsExtraction.fromVacancies(roleVacancies);
     writeJson(ROLE_MATRIX_PATH, roleMatrix);
 
     ComparisonResult comparison = Comparison.calculate(roleMatrix, profile.skills());
@@ -445,8 +456,8 @@ public class AppRunner {
     System.out.println("[COMPARE] Weak sides:   " +
         comparison.summary().getOrDefault("требует улучшения", List.of()));
 
-    String prompt = RoadmapPromptBuilder.build(
-        vacanciesResource,
+    String prompt = RoadmapPromptBuilder.buildFromVacanciesJson(
+        SkillsExtraction.toJson(roleVacancies),
         "matrices/user_skill_matrix.json",
         "matrices/desired_role_matrix.json",
         "graphs/skills-graph.json"
