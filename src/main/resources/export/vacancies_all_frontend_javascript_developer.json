@@ -1,5 +1,22 @@
 [ {
   "id" : null,
+  "title" : "Frontend-разработчик (Vue + TypeScript)",
+  "company" : "Мамаева Ирина Анатольевна",
+  "city" : "Москва",
+  "experience" : null,
+  "employment" : null,
+  "schedule" : null,
+  "salaryFrom" : 200000,
+  "salaryTo" : 230000,
+  "currency" : "RUR",
+  "skills" : null,
+  "description" : "Опыт коммерческой <highlighttext>разработки</highlighttext> на VueJS - от 3 лет. Отличное знание Vue 3 и Typescript. Понимание основ сетевого взаимодействия компонентов в... Создавать lowcode и nocode инструменты. Создавать интерфейсы для визуализации данных. Участвовать в <highlighttext>разработке</highlighttext> архитектуры приложения. Покрывать функционал тестами. ",
+  "url" : "https://hh.ru/vacancy/127962694",
+  "source" : "hh",
+  "publishedAt" : null,
+  "score" : 2
+}, {
+  "id" : null,
   "title" : "Front-end (React) разработчик Senior",
   "company" : "Хьюнет",
   "city" : "Санкт-Петербург",
@@ -32,23 +49,6 @@
   "source" : "hh",
   "publishedAt" : null,
   "score" : 0
-}, {
-  "id" : null,
-  "title" : "Fullstack разработчик .Net + React",
-  "company" : "ФИНАМ",
-  "city" : "Москва",
-  "experience" : null,
-  "employment" : null,
-  "schedule" : null,
-  "salaryFrom" : null,
-  "salaryTo" : null,
-  "currency" : null,
-  "skills" : null,
-  "description" : "<highlighttext>Frontend</highlighttext>- React(<highlighttext>JS</highlighttext>)+Redux, верстка CSS+HTML. Будет большим плюсом: redux-saga, MaterialUI, Webpack, Next.js, Typescript, опыт написания unit тестов, jQuery... <highlighttext>Разработка</highlighttext> личных кабинетов клиентов холдинга. <highlighttext>Разработка</highlighttext> многоязыкового web интерфейса и бэкэнда клиентских сервисов. Интеграции с внутренними и внешними информационными системами. ",
-  "url" : "https://hh.ru/vacancy/128394273",
-  "source" : "hh",
-  "publishedAt" : null,
-  "score" : 1
 }, {
   "id" : null,
   "title" : "Team lead команды frontend разработчиков (направление \"игры\")",
@@ -2822,23 +2822,6 @@
   "score" : 0
 }, {
   "id" : null,
-  "title" : "Frontend-разработчик (Vue + TypeScript)",
-  "company" : "Мамаева Ирина Анатольевна",
-  "city" : "Москва",
-  "experience" : null,
-  "employment" : null,
-  "schedule" : null,
-  "salaryFrom" : 200000,
-  "salaryTo" : 230000,
-  "currency" : "RUR",
-  "skills" : null,
-  "description" : "Опыт коммерческой <highlighttext>разработки</highlighttext> на VueJS - от 3 лет. Отличное знание Vue 3 и Typescript. Понимание основ сетевого взаимодействия компонентов в... Создавать lowcode и nocode инструменты. Создавать интерфейсы для визуализации данных. Участвовать в <highlighttext>разработке</highlighttext> архитектуры приложения. Покрывать функционал тестами. ",
-  "url" : "https://hh.ru/vacancy/127962694",
-  "source" : "hh",
-  "publishedAt" : null,
-  "score" : 2
-}, {
-  "id" : null,
   "title" : "Разработчик Битрикс24",
   "company" : "Правительство Москвы",
   "city" : "Москва",
@@ -5098,4 +5081,21 @@
   "source" : "hh",
   "publishedAt" : null,
   "score" : 2
+}, {
+  "id" : null,
+  "title" : "Frontend-разработчик",
+  "company" : "WILDBERRIES",
+  "city" : "Москва",
+  "experience" : null,
+  "employment" : null,
+  "schedule" : null,
+  "salaryFrom" : null,
+  "salaryTo" : null,
+  "currency" : null,
+  "skills" : null,
+  "description" : "Отличные знания React, можешь использовать функциональные компоненты и хуки. Знания <highlighttext>JavaScript</highlighttext> и TypeScript на высоком уровне. Умение строить архитектуры современных... Проводить code review и тестировать свой код. Быть вовлеченным в процесс <highlighttext>разработки</highlighttext> и развивать существующую кодовую базу it-продуктов команды. ",
+  "url" : "https://hh.ru/vacancy/127912199",
+  "source" : "hh",
+  "publishedAt" : null,
+  "score" : 1
 } ]

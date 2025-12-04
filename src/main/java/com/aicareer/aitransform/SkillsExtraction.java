@@ -16,11 +16,14 @@ import java.util.Map;
 public final class SkillsExtraction {
     private static final ObjectMapper MAPPER = new ObjectMapper();
 
-    private static final String DEFAULT_MODEL_PATH = "deepseek-r1:8b";
-    private static final String DEFAULT_OLLAMA_HOST =
-            System.getenv().getOrDefault("OLLAMA_HOST", "http://localhost:11434");
+    private static final String DEFAULT_MODEL_PATH = System.getenv().getOrDefault(
+            "OPENAI_MODEL",
+            "gpt-4o-mini"
+    );
 
     private static final String SKILLS_RESOURCE = "skills.json";
+    private static final String DEFAULT_VACANCIES_RESOURCE =
+            "export/vacancies_top25_java_backend_developer.json";
 
     private static final List<String> SKILL_LIST = loadSkillList();
 
@@ -65,18 +68,17 @@ public final class SkillsExtraction {
                 + "\n\nVacancies JSON (analyze them together and return only the skills matrix):\n"
                 + vacanciesJson
                 + "\n\nReturn only the JSON object with the skill flags.";
-
-        String rawResponse = new OllamaClient(DEFAULT_OLLAMA_HOST)
+        System.out.println("[AI] Строим матрицу навыков через модель OpenAI...");
+        String rawResponse = new OpenAIClient()
                 .generate(DEFAULT_MODEL_PATH, prompt);
+        System.out.println("[AI] Ответ по навыкам получен, разбираем...");
 
         String jsonResponse = extractJson(rawResponse);
         try {
             JsonNode matrixNode = MAPPER.readTree(jsonResponse);
             Map<String, Integer> matrix = new LinkedHashMap<>();
             for (String skill : SKILL_LIST) {
-                int value = matrixNode.has(skill) && matrixNode.get(skill).isNumber()
-                        ? matrixNode.get(skill).asInt()
-                        : 0;
+                int value = readInt(matrixNode, skill);
                 matrix.put(skill, value == 0 ? 0 : 1);
             }
             return matrix;
@@ -85,7 +87,41 @@ public final class SkillsExtraction {
         }
     }
 
+    private static int readInt(JsonNode node, String field) {
+        if (!node.has(field)) {
+            return 0;
+        }
+        JsonNode valueNode = node.get(field);
+        if (valueNode.isInt() || valueNode.isLong()) {
+            return valueNode.asInt();
+        }
+        if (valueNode.isTextual()) {
+            try {
+                return Integer.parseInt(valueNode.asText().trim());
+            } catch (NumberFormatException ignored) {
+                return 0;
+            }
+        }
+        return 0;
+    }
+
     private static String extractJson(String text) {
+        try {
+            MAPPER.readTree(text);
+            return text;
+        } catch (IOException ignored) {
+        }
+
+        int fenceStart = text.indexOf("```json");
+        if (fenceStart >= 0) {
+            int afterFence = text.indexOf('`', fenceStart + 7);
+            int fenceEnd = text.indexOf("```", afterFence + 1);
+            if (afterFence >= 0 && fenceEnd > afterFence) {
+                String body = text.substring(afterFence + 1, fenceEnd);
+                return body.trim();
+            }
+        }
+
         int start = text.indexOf('{');
         int end = text.lastIndexOf('}');
         if (start == -1 || end == -1 || end <= start) {
@@ -109,22 +145,13 @@ public final class SkillsExtraction {
     }
 
     public static void main(String[] args) {
-        String defaultPath = "src/main/resources/samples/skills-extraction-sample.json";
-        String pathString;
-        if (args.length == 0) {
-            System.err.println("No arguments provided, using default sample file:");
-            System.err.println("  " + defaultPath);
-            pathString = defaultPath;
-        } else if (args.length == 1) {
-            pathString = args[0];
-        } else {
-            System.err.println("Usage: SkillsExtraction <path-to-vacancies-json>");
-            System.exit(1);
-            return;
-        }
+        String resource = args.length > 0 && !args[0].isBlank()
+                ? args[0]
+                : DEFAULT_VACANCIES_RESOURCE; // путь к файлу с вакансиями
 
-        Path path = Path.of(pathString);
-        Map<String, Integer> matrix = fromFile(path);
+        Map<String, Integer> matrix = resource.startsWith("export/")
+                ? fromResource(resource)
+                : fromFile(Path.of(resource));
         try {
             System.out.println(MAPPER.writerWithDefaultPrettyPrinter().writeValueAsString(matrix));
         } catch (JsonProcessingException e) {

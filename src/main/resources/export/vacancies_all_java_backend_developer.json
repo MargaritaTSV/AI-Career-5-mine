@@ -1,5 +1,22 @@
 [ {
   "id" : null,
+  "title" : "Senior Java Developer | Ведущий Java разработчик",
+  "company" : "ИТ-Экспертиза",
+  "city" : "Москва",
+  "experience" : null,
+  "employment" : null,
+  "schedule" : null,
+  "salaryFrom" : null,
+  "salaryTo" : null,
+  "currency" : null,
+  "skills" : null,
+  "description" : "Опыт работы с <highlighttext>Java</highlighttext> от 5 лет. Глубокое понимание Spring Boot 3, Spring Data, Spring JDBC. Опыт работы с реляционными... Разрабатывать <highlighttext>backend</highlighttext>-часть системы мониторинга на <highlighttext>Java</highlighttext> 17 + Spring Boot 3. Оптимизировать работу с PostgreSQL. Разрабатывать и улучшать механизмы...",
+  "url" : "https://hh.ru/vacancy/128396465",
+  "source" : "hh",
+  "publishedAt" : null,
+  "score" : 1
+}, {
+  "id" : null,
   "title" : "Стажер Java/Kotlin Developer",
   "company" : "Ecom.tech",
   "city" : "Москва",

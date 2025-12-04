@@ -136,6 +136,23 @@
   "score" : 3
 }, {
   "id" : null,
+  "title" : "Frontend-разработчик (Vue + TypeScript)",
+  "company" : "Мамаева Ирина Анатольевна",
+  "city" : "Москва",
+  "experience" : null,
+  "employment" : null,
+  "schedule" : null,
+  "salaryFrom" : 200000,
+  "salaryTo" : 230000,
+  "currency" : "RUR",
+  "skills" : null,
+  "description" : "Опыт коммерческой <highlighttext>разработки</highlighttext> на VueJS - от 3 лет. Отличное знание Vue 3 и Typescript. Понимание основ сетевого взаимодействия компонентов в... Создавать lowcode и nocode инструменты. Создавать интерфейсы для визуализации данных. Участвовать в <highlighttext>разработке</highlighttext> архитектуры приложения. Покрывать функционал тестами. ",
+  "url" : "https://hh.ru/vacancy/127962694",
+  "source" : "hh",
+  "publishedAt" : null,
+  "score" : 2
+}, {
+  "id" : null,
   "title" : "Javascript (Vue3) Frontend разработчик (senior)",
   "company" : "Проммайнер",
   "city" : "Москва",
@@ -403,23 +420,6 @@
   "skills" : null,
   "description" : "Понимание асинхронности и работы event loop в <highlighttext>JavaScript</highlighttext>. Опыт самостоятельного выполнения сложных задач. Опыт <highlighttext>разработки</highlighttext> SPA бизнес-приложений.  Оптимизация производительности и улучшение UI/UX.",
   "url" : "https://hh.ru/vacancy/128248906",
-  "source" : "hh",
-  "publishedAt" : null,
-  "score" : 2
-}, {
-  "id" : null,
-  "title" : "Frontend-разработчик (Vue + TypeScript)",
-  "company" : "Мамаева Ирина Анатольевна",
-  "city" : "Москва",
-  "experience" : null,
-  "employment" : null,
-  "schedule" : null,
-  "salaryFrom" : 200000,
-  "salaryTo" : 230000,
-  "currency" : "RUR",
-  "skills" : null,
-  "description" : "Опыт коммерческой <highlighttext>разработки</highlighttext> на VueJS - от 3 лет. Отличное знание Vue 3 и Typescript. Понимание основ сетевого взаимодействия компонентов в... Создавать lowcode и nocode инструменты. Создавать интерфейсы для визуализации данных. Участвовать в <highlighttext>разработке</highlighttext> архитектуры приложения. Покрывать функционал тестами. ",
-  "url" : "https://hh.ru/vacancy/127962694",
   "source" : "hh",
   "publishedAt" : null,
   "score" : 2

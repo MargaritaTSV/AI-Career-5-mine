@@ -7,16 +7,33 @@ import java.sql.Statement;
 
 public class Database {
 
-    private static final String URL = "jdbc:postgresql://localhost:5432/aicareer?sslmode=disable&applicationName=AI-Career-Client";
+    private static final String URL = System.getenv().getOrDefault(
+            "DB_URL",
+            "jdbc:postgresql://localhost:5433/aicareer"
+    );
     private static final String USER = "aicareer";
     private static final String PASSWORD = "aicareer";
 
     public static Connection get() {
         try {
-            Class.forName("org.postgresql.Driver");
+            try {
+                Class.forName("org.postgresql.Driver");
+            } catch (ClassNotFoundException ignored) {
+            }
+
             return DriverManager.getConnection(URL, USER, PASSWORD);
-        } catch (ClassNotFoundException | SQLException e) {
-            throw new RuntimeException("PostgreSQL connection failed", e);
+        } catch (SQLException e) {
+            String msg = e.getMessage() == null ? e.toString() : e.getMessage();
+            String help = "PostgreSQL connection failed: " + msg + "\n\n"
+                    + "This application requires the role/user 'aicareer' and connects with that identity.\n"
+                    + "Checked connection settings:\n"
+                    + "  DB_URL=" + URL + "\n"
+                    + "  DB_USER=" + USER + "\n\n"
+                    + "If you see 'role \"aicareer\" does not exist' — create the role and the database, for example:\n"
+                    + "  sudo -u postgres createuser -P aicareer\n"
+                    + "  sudo -u postgres createdb -O aicareer aicareer\n\n"
+                    + "Or configure your Postgres to have a role 'aicareer' and password 'aicareer'.\n";
+            throw new RuntimeException(help, e);
         }
     }
 
@@ -40,6 +57,26 @@ public class Database {
                   experience_years INT,
                   skills           JSONB,
                   updated_at       TIMESTAMP
+                )
+            """);
+
+            st.execute("""
+                CREATE TABLE IF NOT EXISTS vacancy (
+                  id            TEXT PRIMARY KEY,
+                  title         TEXT,
+                  company       TEXT,
+                  city          TEXT,
+                  experience    TEXT,
+                  employment    TEXT,
+                  schedule      TEXT,
+                  salary_from   INT,
+                  salary_to     INT,
+                  currency      TEXT,
+                  description   TEXT,
+                  url           TEXT,
+                  source        TEXT,
+                  published_at  TEXT,
+                  score         INT
                 )
             """);
 

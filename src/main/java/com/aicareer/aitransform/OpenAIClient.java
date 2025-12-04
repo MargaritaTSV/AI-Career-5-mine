@@ -1,0 +1,95 @@
+package com.aicareer.aitransform;
+
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import java.io.IOException;
+import java.net.URI;
+import java.net.http.HttpClient;
+import java.net.http.HttpRequest;
+import java.net.http.HttpResponse;
+import java.nio.charset.StandardCharsets;
+import java.time.Duration;
+import java.util.concurrent.TimeUnit;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+/**
+ * Lightweight client for sending prompts to the OpenAI chat completion API.
+ */
+public class OpenAIClient {
+    private static final ObjectMapper MAPPER = new ObjectMapper();
+
+    private static final String ENDPOINT = "https://api.openai.com/v1/chat/completions";
+    private static final String DEFAULT_MODEL = System.getenv().getOrDefault(
+            "OPENAI_MODEL",
+            "gpt-4o-mini"
+    );
+
+    private static final int MAX_RETRIES_ON_419 = 2;
+    private static final long RETRY_DELAY_SECONDS = 10_000;
+
+    private final HttpClient client = HttpClient.newBuilder()
+            .connectTimeout(Duration.ofSeconds(10))
+            .build();
+
+    public String generate(String model, String prompt) {
+        String apiKey = Config.getApiKey();
+
+        String resolvedModel = (model == null || model.isBlank()) ? DEFAULT_MODEL : model.trim();
+
+        Map<String, Object> payload = new HashMap<>();
+        payload.put("model", resolvedModel);
+        payload.put("max_tokens", 2048);
+        payload.put("messages", List.of(Map.of(
+                "role", "user",
+                "content", prompt
+        )));
+
+        try {
+            String body = MAPPER.writeValueAsString(payload);
+            HttpRequest request = HttpRequest.newBuilder(URI.create(ENDPOINT))
+                    .header("Authorization", "Bearer " + apiKey)
+                    .header("Content-Type", "application/json")
+                    .header("OpenAI-Beta", "assistants=v2")
+                    .timeout(Duration.ofSeconds(60))
+                    .POST(HttpRequest.BodyPublishers.ofString(body, StandardCharsets.UTF_8))
+                    .build();
+
+            for (int attempt = 0; attempt <= MAX_RETRIES_ON_419; attempt++) {
+                HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
+
+                if (response.statusCode() == 419 && attempt < MAX_RETRIES_ON_419) {
+                    System.err.println("[AI] Получен 419, повторяем запрос через "
+                            + RETRY_DELAY_SECONDS + " секунд (попытка " + (attempt + 2) + "/"
+                            + (MAX_RETRIES_ON_419 + 1) + ")");
+                    TimeUnit.SECONDS.sleep(RETRY_DELAY_SECONDS);
+                    continue;
+                }
+
+                if (response.statusCode() >= 300) {
+                    throw new IllegalStateException("Model call failed: HTTP " + response.statusCode()
+                            + " -> " + response.body());
+                }
+
+                JsonNode json = MAPPER.readTree(response.body());
+                JsonNode choices = json.path("choices");
+                if (choices.isArray() && !choices.isEmpty()) {
+                    JsonNode content = choices.get(0).path("message").path("content");
+                    if (!content.isMissingNode()) {
+                        return content.asText();
+                    }
+                }
+                return response.body();
+            }
+
+            throw new IllegalStateException("Model call failed after retries with 419 errors");
+        } catch (InterruptedException e) {
+            Thread.currentThread().interrupt();
+            throw new IllegalStateException("Model call was interrupted", e);
+        } catch (IOException e) {
+            throw new IllegalStateException("Failed to call OpenAI model", e);
+        }
+    }
+}
+

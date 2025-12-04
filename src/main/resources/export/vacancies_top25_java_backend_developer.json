@@ -51,6 +51,23 @@
   "score" : 2
 }, {
   "id" : null,
+  "title" : "Senior Java Developer | Ведущий Java разработчик",
+  "company" : "ИТ-Экспертиза",
+  "city" : "Москва",
+  "experience" : null,
+  "employment" : null,
+  "schedule" : null,
+  "salaryFrom" : null,
+  "salaryTo" : null,
+  "currency" : null,
+  "skills" : null,
+  "description" : "Опыт работы с <highlighttext>Java</highlighttext> от 5 лет. Глубокое понимание Spring Boot 3, Spring Data, Spring JDBC. Опыт работы с реляционными... Разрабатывать <highlighttext>backend</highlighttext>-часть системы мониторинга на <highlighttext>Java</highlighttext> 17 + Spring Boot 3. Оптимизировать работу с PostgreSQL. Разрабатывать и улучшать механизмы...",
+  "url" : "https://hh.ru/vacancy/128396465",
+  "source" : "hh",
+  "publishedAt" : null,
+  "score" : 1
+}, {
+  "id" : null,
   "title" : "Стажер Java/Kotlin Developer",
   "company" : "Ecom.tech",
   "city" : "Москва",
@@ -403,23 +420,6 @@
   "skills" : null,
   "description" : "Владение английским языком на уровне чтения технической документации. Опыт нативной <highlighttext>разработки</highlighttext> под iOS или Android. Знание SwiftUI/Jetpack Compose.  <highlighttext>Разработка</highlighttext> и поддержка существующего кроссплатформенного мобильного приложения на Flutter. Работа в команде (7 человек): Product Owner, <highlighttext>Backend</highlighttext>-<highlighttext>разработчики</highlighttext>, Frontend-<highlighttext>разработчик</highlighttext>...",
   "url" : "https://hh.ru/vacancy/128385618",
-  "source" : "hh",
-  "publishedAt" : null,
-  "score" : 0
-}, {
-  "id" : null,
-  "title" : "Backend-разработчик",
-  "company" : "СМТТех",
-  "city" : "Москва",
-  "experience" : null,
-  "employment" : null,
-  "schedule" : null,
-  "salaryFrom" : 120000,
-  "salaryTo" : null,
-  "currency" : "RUR",
-  "skills" : null,
-  "description" : "Опыт работы с <highlighttext>Java</highlighttext>, IntelliJ IDEA. Хорошее знание реляционных БД (PostgreSQL): проектирование, оптимизация запросов. Уверенные навыки <highlighttext>разработки</highlighttext> под Linux (CLI... Реализация бизнес-логики с использованием декларативного синтаксиса lsFusion. <highlighttext>Разработка</highlighttext> и поддержка модулей обмена с внешними системами (1С, ERP, SCADA. ",
-  "url" : "https://hh.ru/vacancy/127598943",
   "source" : "hh",
   "publishedAt" : null,
   "score" : 0
