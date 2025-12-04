@@ -1,20 +1,13 @@
 package com.aicareer.hh.tools;
 
 import com.aicareer.hh.infrastructure.db.DbConnectionProvider;
-import com.aicareer.hh.model.OutVacancy;
-import com.aicareer.hh.model.Vacancy;
-import com.aicareer.hh.repository.JdbcVacancyRepository;
-import com.fasterxml.jackson.core.type.TypeReference;
-import com.fasterxml.jackson.databind.ObjectMapper;
 
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.util.List;
-import java.util.stream.Collectors;
 
 /**
- * Импорт существующего vacancies_all.json в PostgreSQL.
- * Работает с OutVacancy независимо от наличия геттеров.
+ * Утилита для импорта локальных файлов вакансий в PostgreSQL.
+ * Без аргументов импортирует все vacancies_*.json из каталога export.
  */
 public class ImportJsonToDb {
 
@@ -22,52 +15,18 @@ public class ImportJsonToDb {
         System.out.println("=== Импорт JSON → PostgreSQL ===");
 
         DbConnectionProvider provider = new DbConnectionProvider();
-        JdbcVacancyRepository repository = new JdbcVacancyRepository(provider);
+        VacancyResourceImporter importer = new VacancyResourceImporter(provider);
 
-        ObjectMapper mapper = new ObjectMapper();
         Path exportDir = Path.of("src/main/resources/export");
+
+        if (args.length == 0) {
+            System.out.println("Импорт всех файлов vacancies_* из каталога: " + exportDir.toAbsolutePath());
+            importer.importAllFromDirectory(exportDir);
+            return;
+        }
+
         Path source = resolveSourcePath(args, exportDir);
-
-        System.out.println("Импорт из файла: " + source.toAbsolutePath());
-
-        List<OutVacancy> outVacancies = mapper.readValue(
-                source.toFile(),
-                new TypeReference<List<OutVacancy>>() {}
-        );
-
-        // Преобразование OutVacancy → Vacancy
-        List<Vacancy> vacancies = outVacancies.stream().map(o -> {
-            Vacancy v = new Vacancy();
-
-            // если поля публичные — прямое обращение
-            try {
-                v.setId((String) OutVacancy.class.getField("id").get(o));
-                v.setTitle((String) OutVacancy.class.getField("title").get(o));
-                v.setCompany((String) OutVacancy.class.getField("company").get(o));
-                v.setCity((String) OutVacancy.class.getField("city").get(o));
-                v.setExperience((String) OutVacancy.class.getField("experience").get(o));
-                v.setEmployment((String) OutVacancy.class.getField("employment").get(o));
-                v.setSchedule((String) OutVacancy.class.getField("schedule").get(o));
-                v.setSalaryFrom((Integer) OutVacancy.class.getField("salaryFrom").get(o));
-                v.setSalaryTo((Integer) OutVacancy.class.getField("salaryTo").get(o));
-                v.setCurrency((String) OutVacancy.class.getField("currency").get(o));
-                v.setDescription((String) OutVacancy.class.getField("description").get(o));
-                v.setUrl((String) OutVacancy.class.getField("url").get(o));
-                v.setSource((String) OutVacancy.class.getField("source").get(o));
-                v.setPublishedAt((String) OutVacancy.class.getField("publishedAt").get(o));
-                Object skillsObj = OutVacancy.class.getField("skills").get(o);
-                if (skillsObj instanceof List<?> skillsList) {
-                    v.setSkills((List<String>) skillsList);
-                }
-            } catch (Exception ignore) {
-                // если нет нужного поля — просто пропускаем
-            }
-            return v;
-        }).collect(Collectors.toList());
-
-        repository.saveAll(vacancies);
-
-        System.out.println("✅ Импорт JSON → БД завершён. Всего записей: " + vacancies.size());
+        importer.importFile(source);
     }
 
     private static Path resolveSourcePath(String[] args, Path exportDir) throws Exception {

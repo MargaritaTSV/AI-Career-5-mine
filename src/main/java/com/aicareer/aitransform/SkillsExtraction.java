@@ -22,8 +22,7 @@ public final class SkillsExtraction {
     );
 
     private static final String SKILLS_RESOURCE = "skills.json";
-    private static final String DEFAULT_VACANCIES_RESOURCE =
-            "export/vacancies_top25_java_backend_developer.json";
+    private static final String DEFAULT_ROLE_NAME = "java backend developer";
 
     private static final List<String> SKILL_LIST = loadSkillList();
 
@@ -145,9 +144,11 @@ public final class SkillsExtraction {
     }
 
     public static void main(String[] args) {
-        String resource = args.length > 0 && !args[0].isBlank()
+        String targetRole = args.length > 0 && !args[0].isBlank()
                 ? args[0]
-                : DEFAULT_VACANCIES_RESOURCE; // путь к файлу с вакансиями
+                : DEFAULT_ROLE_NAME; // человекочитаемое название роли
+
+        String resource = resolveVacanciesResource(targetRole);
 
         Map<String, Integer> matrix = resource.startsWith("export/")
                 ? fromResource(resource)
@@ -157,6 +158,28 @@ public final class SkillsExtraction {
         } catch (JsonProcessingException e) {
             throw new IllegalStateException("Failed to serialize matrix", e);
         }
+    }
+
+    /**
+     * Находит файл вида export/vacancies_top25_{role}.json для указанной роли.
+     * Преобразует название роли в формат с подчёркиваниями и валидирует наличие ресурса.
+     */
+    public static String resolveVacanciesResource(String roleName) {
+        String safe = roleName.toLowerCase()
+                .replaceAll("[^a-z0-9]+", "_")
+                .replaceAll("^_+|_+$", "");
+        String resource = "export/vacancies_top25_" + safe + ".json";
+
+        if (resourceExists(resource)) {
+            return resource;
+        }
+        throw new IllegalArgumentException("No vacancies_top25 resource found for role: " + roleName);
+    }
+
+    private static boolean resourceExists(String resource) {
+        return Thread.currentThread()
+                .getContextClassLoader()
+                .getResource(resource) != null;
     }
 
 }
