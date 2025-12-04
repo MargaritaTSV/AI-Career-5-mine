@@ -5,9 +5,12 @@ import com.aicareer.hh.model.Vacancy;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Types;
 import java.util.Collection;
+import java.util.LinkedList;
+import java.util.List;
 
 public class JdbcVacancyRepository implements VacancyRepository {
 
@@ -113,5 +116,47 @@ public class JdbcVacancyRepository implements VacancyRepository {
         } catch (SQLException e) {
             throw new RuntimeException("Ошибка при сохранении вакансий в БД", e);
         }
+    }
+
+    @Override
+    public List<Vacancy> findBySource(String source) {
+        String sql = """
+                SELECT id, title, company, city, experience, employment, schedule,
+                       salary_from, salary_to, currency, description, url, source, published_at, score
+                FROM vacancy
+                WHERE source = ?
+                ORDER BY score DESC NULLS LAST, published_at DESC
+                """;
+
+        List<Vacancy> vacancies = new LinkedList<>();
+        try (Connection conn = connectionProvider.getConnection();
+             PreparedStatement stmt = conn.prepareStatement(sql)) {
+
+            stmt.setString(1, source);
+            try (ResultSet rs = stmt.executeQuery()) {
+                while (rs.next()) {
+                    Vacancy v = new Vacancy();
+                    v.setId(rs.getString("id"));
+                    v.setTitle(rs.getString("title"));
+                    v.setCompany(rs.getString("company"));
+                    v.setCity(rs.getString("city"));
+                    v.setExperience(rs.getString("experience"));
+                    v.setEmployment(rs.getString("employment"));
+                    v.setSchedule(rs.getString("schedule"));
+                    v.setSalaryFrom((Integer) rs.getObject("salary_from"));
+                    v.setSalaryTo((Integer) rs.getObject("salary_to"));
+                    v.setCurrency(rs.getString("currency"));
+                    v.setDescription(rs.getString("description"));
+                    v.setUrl(rs.getString("url"));
+                    v.setSource(rs.getString("source"));
+                    v.setPublishedAt(rs.getString("published_at"));
+                    v.setScore(rs.getInt("score"));
+                    vacancies.add(v);
+                }
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException("Ошибка при загрузке вакансий из БД", e);
+        }
+        return vacancies;
     }
 }
