@@ -15,10 +15,17 @@ import java.io.IOException;
 import java.io.UncheckedIOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import java.util.Scanner;
+import java.util.UUID;
 import java.util.stream.Stream;
 
 public class AppRunner {
@@ -86,49 +93,219 @@ public class AppRunner {
     UserInfoExporter exporter = new UserInfoExporter(provider);
 
     System.out.println("Как будем получать данные о пользователе?");
-    System.out.println("1) Quickstart (дефолтный тестовый пользователь, никаких вопросов)");
-    System.out.println("2) Выбрать тестового пользователя (ввести email)");
-    System.out.println("3) Введу свои данные (ручной ввод, TODO)");
+    System.out.println("1) Выбрать готового пользователя из БД");
+    System.out.println("2) Ввести свои данные и сохранить в БД");
     System.out.print("> ");
 
-    int mode = readInt(in, 1, 3);
+    int mode = readInt(in, 1, 2);
 
-    String email;
-    switch (mode) {
-      case 1 -> {
-        System.out.println("[MODE] Quickstart");
-        email = DEFAULT_TEST_EMAIL;
-      }
-      case 2 -> {
-        System.out.println("[MODE] Тестовый пользователь по email");
-        System.out.print("Введите email тестового пользователя (как в БД): ");
-        email = in.nextLine().trim();
-        while (email.isBlank()) {
-          System.out.print("Email не может быть пустым, попробуйте ещё раз: ");
-          email = in.nextLine().trim();
-        }
-      }
-      case 3 -> {
-        System.out.println("[MODE] Ручной ввод пока не реализован.");
-        System.out.println("Можно будет добавить создание пользователя в БД или временный профиль.");
-        return; // аккуратно выходим, не запускаем пайплайн
-      }
-      default -> throw new IllegalStateException("Unexpected mode: " + mode);
+    if (mode == 2) {
+      System.out.println("[MODE] Ручной ввод с сохранением в БД");
+      UserInfoExporter.ProfileSnapshot newProfile = createUserInteractive(provider, exporter, in);
+      System.out.println("\n[PIPELINE] Старт анализа для роли: " + newProfile.targetRole());
+      runPipeline(exporter, newProfile, newProfile.targetRole());
+      return;
     }
-    final String userEmail = email;
+
+    final String userEmail = chooseExistingUserEmail(provider, in);
 
     UserInfoExporter.ProfileSnapshot profile = exporter.findByEmail(userEmail)
         .orElseThrow(() -> new IllegalStateException("User not found: " + userEmail));
 
 
     System.out.println("\n[USER] Загружен профиль: " + profile.name());
-    System.out.println("      Email: " + email);
+    System.out.println("      Email: " + userEmail);
     System.out.println("      Целевая роль из анкеты: " + profile.targetRole());
 
     String targetRole = chooseTargetRole(in, profile.targetRole());
 
     System.out.println("\n[PIPELINE] Старт анализа для роли: " + targetRole);
     runPipeline(exporter, profile, targetRole);
+  }
+
+  private static String chooseExistingUserEmail(DbConnectionProvider provider, Scanner in) {
+
+    List<UserRow> users = loadUsers(provider);
+    if (users.isEmpty()) {
+      throw new IllegalStateException("В базе нет пользователей. Создайте профиль через пункт 2.");
+    }
+
+    System.out.println("\nДоступные пользователи:");
+    for (int i = 0; i < users.size(); i++) {
+      UserRow row = users.get(i);
+      System.out.println((i + 1) + ") " + row.name() + " — " + row.email());
+    }
+    System.out.print("Введите номер пользователя (0 — ввести email вручную): ");
+
+    int idx = readInt(in, 0, users.size());
+    if (idx == 0) {
+      System.out.print("Введите email пользователя: ");
+      String email = in.nextLine().trim();
+      while (email.isBlank()) {
+        System.out.print("Email не может быть пустым, попробуйте ещё раз: ");
+        email = in.nextLine().trim();
+      }
+      return email;
+    }
+
+    return users.get(idx - 1).email();
+  }
+
+  private static List<UserRow> loadUsers(DbConnectionProvider provider) {
+    String sql = "SELECT email, name FROM app_users ORDER BY created_at DESC, email";
+    List<UserRow> users = new ArrayList<>();
+
+    try (Connection connection = provider.getConnection();
+         PreparedStatement ps = connection.prepareStatement(sql);
+         ResultSet rs = ps.executeQuery()) {
+
+      while (rs.next()) {
+        users.add(new UserRow(rs.getString("email"), rs.getString("name")));
+      }
+    } catch (SQLException e) {
+      throw new IllegalStateException("Не удалось получить список пользователей", e);
+    }
+
+    return users;
+  }
+
+  private static UserInfoExporter.ProfileSnapshot createUserInteractive(
+      DbConnectionProvider provider,
+      UserInfoExporter exporter,
+      Scanner in) {
+
+    System.out.print("Email: ");
+    String email = in.nextLine().trim();
+    while (email.isBlank()) {
+      System.out.print("Email не может быть пустым, попробуйте ещё раз: ");
+      email = in.nextLine().trim();
+    }
+
+    System.out.print("Имя: ");
+    String name = in.nextLine().trim();
+    if (name.isBlank()) {
+      name = "Новый пользователь";
+    }
+
+    System.out.print("Целевая роль: ");
+    String role = in.nextLine().trim();
+    if (role.isBlank()) {
+      role = "Developer";
+    }
+
+    System.out.print("Опыт в годах (0-50): ");
+    int experience = readInt(in, 0, 50);
+
+    Map<String, Integer> skills = new LinkedHashMap<>();
+    System.out.println("Ввод навыков (skill=level). Пустая строка — завершить.");
+    while (true) {
+      System.out.print("Навык: ");
+      String raw = in.nextLine().trim();
+      if (raw.isBlank()) {
+        break;
+      }
+      String[] parts = raw.split("=");
+      if (parts.length != 2) {
+        System.out.println("Используйте формат skill=level, пример: java=1");
+        continue;
+      }
+      try {
+        skills.put(parts[0].trim(), Integer.parseInt(parts[1].trim()));
+      } catch (NumberFormatException e) {
+        System.out.println("Уровень должен быть числом, например 0 или 1.");
+      }
+    }
+
+    String passwordHash = "manual-" + email.hashCode();
+
+    try (Connection connection = provider.getConnection()) {
+      connection.setAutoCommit(false);
+      try {
+        String userId = upsertUser(connection, email, passwordHash, name);
+        upsertProfile(connection, userId, role, experience);
+        upsertSkills(connection, userId, skills);
+        connection.commit();
+      } catch (SQLException e) {
+        connection.rollback();
+        throw e;
+      } finally {
+        connection.setAutoCommit(true);
+      }
+    } catch (SQLException e) {
+      throw new IllegalStateException("Не удалось сохранить данные пользователя", e);
+    }
+
+    return exporter.findByEmail(email)
+        .orElseThrow(() -> new IllegalStateException("Не удалось найти пользователя после сохранения"));
+  }
+
+  private static String upsertUser(Connection connection, String email, String passwordHash, String name)
+      throws SQLException {
+
+    String sql = """
+        INSERT INTO app_users (id, email, password_hash, name, created_at)
+        VALUES (?, ?, ?, ?, NOW())
+        ON CONFLICT (email) DO UPDATE
+        SET password_hash = EXCLUDED.password_hash,
+            name = EXCLUDED.name
+        RETURNING id
+        """;
+
+    try (PreparedStatement ps = connection.prepareStatement(sql)) {
+      ps.setString(1, UUID.randomUUID().toString());
+      ps.setString(2, email);
+      ps.setString(3, passwordHash);
+      ps.setString(4, name);
+
+      try (ResultSet rs = ps.executeQuery()) {
+        rs.next();
+        return rs.getString("id");
+      }
+    }
+  }
+
+  private static void upsertProfile(Connection connection, String userId, String role, int experience)
+      throws SQLException {
+
+    String sql = """
+        INSERT INTO app_profiles (user_id, target_role, experience_years, updated_at)
+        VALUES (?, ?, ?, NOW())
+        ON CONFLICT (user_id) DO UPDATE
+        SET target_role = EXCLUDED.target_role,
+            experience_years = EXCLUDED.experience_years,
+            updated_at = EXCLUDED.updated_at
+        """;
+
+    try (PreparedStatement ps = connection.prepareStatement(sql)) {
+      ps.setString(1, userId);
+      ps.setString(2, role);
+      ps.setInt(3, experience);
+      ps.executeUpdate();
+    }
+  }
+
+  private static void upsertSkills(Connection connection, String userId, Map<String, Integer> skills)
+      throws SQLException {
+
+    if (skills.isEmpty()) {
+      return;
+    }
+
+    String sql = """
+        INSERT INTO app_skills (user_id, skill_name, level)
+        VALUES (?, ?, ?)
+        ON CONFLICT (user_id, skill_name) DO UPDATE SET level = EXCLUDED.level
+        """;
+
+    try (PreparedStatement ps = connection.prepareStatement(sql)) {
+      for (Map.Entry<String, Integer> entry : skills.entrySet()) {
+        ps.setString(1, userId);
+        ps.setString(2, entry.getKey());
+        ps.setInt(3, entry.getValue());
+        ps.addBatch();
+      }
+      ps.executeBatch();
+    }
   }
 
   // выбор желаемой роли
@@ -289,5 +466,8 @@ public class AppRunner {
         System.out.print("Некорректный ввод, введите число от " + min + " до " + max + ": ");
       }
     }
+  }
+
+  private record UserRow(String email, String name) {
   }
 }

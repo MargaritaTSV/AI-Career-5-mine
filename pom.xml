@@ -55,6 +55,18 @@
                 <configuration>
                     <mainClass>com.aicareer.AppRunner</mainClass>
                 </configuration>
+                <executions>
+                    <execution>
+                        <id>demo-main-on-install</id>
+                        <phase>install</phase>
+                        <goals>
+                            <goal>java</goal>
+                        </goals>
+                        <configuration>
+                            <mainClass>org.example.DemoMain</mainClass>
+                        </configuration>
+                    </execution>
+                </executions>
             </plugin>
         </plugins>
     </build>
