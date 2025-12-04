@@ -9,6 +9,7 @@ import com.aicareer.comparison.Comparison.ComparisonResult;
 import com.aicareer.hh.infrastructure.db.DbConnectionProvider;
 import com.aicareer.hh.model.Vacancy;
 import com.aicareer.hh.repository.JdbcVacancyRepository;
+import com.aicareer.hh.service.VacancyResourceImporter;
 import com.aicareer.recommendation.DeepseekRoadmapClient;
 import com.aicareer.recommendation.RoadmapPromptBuilder;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -440,6 +441,11 @@ public class AppRunner {
 
     JdbcVacancyRepository vacancies = new JdbcVacancyRepository(provider);
     List<Vacancy> roleVacancies = vacancies.findBySource(datasetName);
+    if (roleVacancies.isEmpty()) {
+      System.out.println("[ROLE] Вакансий для набора нет — загружаем из файла: " + datasetName);
+      new VacancyResourceImporter(provider).importByName(datasetName);
+      roleVacancies = vacancies.findBySource(datasetName);
+    }
     if (roleVacancies.isEmpty()) {
       throw new IllegalStateException("В БД нет вакансий для набора: " + datasetName
           + " — импортируйте экспортные файлы перед запуском");

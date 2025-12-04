@@ -53,6 +53,18 @@ public class VacancyResourceImporter {
         }
     }
 
+    /**
+     * Импортирует один файл по его имени (например, "vacancies_top25_java_backend_developer.json").
+     * Удобно, когда нужно дозагрузить конкретный датасет на лету.
+     */
+    public void importByName(String filename) {
+        Path file = exportDir.resolve(filename);
+        if (!Files.isRegularFile(file)) {
+            throw new IllegalArgumentException("Файл не найден: " + file.toAbsolutePath());
+        }
+        importSingle(file);
+    }
+
     private List<Path> listVacancyFiles() {
         try (Stream<Path> stream = Files.list(exportDir)) {
             return stream
