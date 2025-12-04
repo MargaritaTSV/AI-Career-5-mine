@@ -1,12 +1,6 @@
 package com.aicareer.aitransform;
 
 import com.aicareer.hh.infrastructure.db.DbConnectionProvider;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.SerializationFeature;
-import java.io.IOException;
-import java.io.UncheckedIOException;
-import java.nio.file.Files;
-import java.nio.file.Path;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -17,12 +11,9 @@ import java.util.Map;
 import java.util.Optional;
 
 /**
- * Loads user info from the database and saves it as JSON for the AI pipeline.
+ * Loads user info from the database for the AI pipeline.
  */
 public class UserInfoExporter {
-
-    private static final ObjectMapper MAPPER = new ObjectMapper()
-            .enable(SerializationFeature.INDENT_OUTPUT);
 
     private final DbConnectionProvider connectionProvider;
 
@@ -61,16 +52,6 @@ public class UserInfoExporter {
             }
         } catch (SQLException e) {
             throw new IllegalStateException("Failed to load user from DB", e);
-        }
-    }
-
-    public Path writeUserSkillMatrix(Map<String, Integer> skills, Path outputPath) {
-        try {
-            Files.createDirectories(outputPath.toAbsolutePath().getParent());
-            MAPPER.writeValue(outputPath.toFile(), skills);
-            return outputPath;
-        } catch (IOException e) {
-            throw new UncheckedIOException("Failed to write user skill matrix", e);
         }
     }
 

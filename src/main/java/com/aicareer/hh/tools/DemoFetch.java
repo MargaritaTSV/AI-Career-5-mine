@@ -1,7 +1,6 @@
 package com.aicareer.hh.tools;
 
 import com.aicareer.hh.infrastructure.db.DbConnectionProvider;
-import com.aicareer.hh.infrastructure.export.JsonExporter;
 import com.aicareer.hh.infrastructure.fetcher.HhVacancyFetcher;
 import com.aicareer.hh.infrastructure.http.HhApiClient;
 import com.aicareer.hh.infrastructure.mapper.DefaultVacancyMapper;
@@ -35,14 +34,12 @@ public class DemoFetch {
         var fetcher = new HhVacancyFetcher(client);
         var mapper  = new DefaultVacancyMapper();
 
-        SearchService service = new DefaultVacancySearchService(fetcher, mapper, new JsonExporter());
-
-        // БД
         var dbProvider = new DbConnectionProvider();
         VacancyRepository vacancyRepository = new JdbcVacancyRepository(dbProvider);
+        SearchService service = new DefaultVacancySearchService(fetcher, mapper, vacancyRepository);
 
         // роли + навыки
-        Map<String, List<String>> matrix = RoleMatrix.load("role_skill_matrix.json");
+        Map<String, List<String>> matrix = RoleMatrix.defaultMatrix();
 
         String area = "1";  // Москва
         int perPage = 100;

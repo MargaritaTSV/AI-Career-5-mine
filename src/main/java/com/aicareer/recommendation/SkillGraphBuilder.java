@@ -1,10 +1,10 @@
 package com.aicareer.recommendation;
 
+import com.aicareer.aitransform.SkillsExtraction;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import java.io.IOException;
-import java.io.InputStream;
 import java.io.UncheckedIOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -24,7 +24,6 @@ import java.util.stream.Stream;
 
 public final class SkillGraphBuilder {
     private static final ObjectMapper MAPPER = new ObjectMapper();
-    private static final String SKILLS_RESOURCE = "skills.json";
 
     private static final Map<String, Pattern> SKILL_PATTERNS = Map.of(
             "c++", Pattern.compile("\\bc\\s*\\+\\s*\\+\\b", Pattern.CASE_INSENSITIVE),
@@ -40,8 +39,8 @@ public final class SkillGraphBuilder {
     }
 
     public static void main(String[] args) {
-        Path baseDir = Path.of(args.length > 0 ? args[0] : "src/main/resources/export");
-        Path output = Path.of("src/main/resources/graphs/skills-graph.json");
+        Path baseDir = Path.of(args.length > 0 ? args[0] : "target/export");
+        Path output = Path.of("target/graphs/skills-graph.json");
 
         SkillGraph graph = build(baseDir);
         writeGraph(output, graph);
@@ -200,19 +199,10 @@ public final class SkillGraphBuilder {
     }
 
     private static List<String> loadSkillList() {
-        try (InputStream is = Thread.currentThread()
-                .getContextClassLoader()
-                .getResourceAsStream(SKILLS_RESOURCE)) {
-            if (is == null) {
-                throw new IllegalStateException("Skills resource not found: " + SKILLS_RESOURCE);
-            }
-            List<String> skills = MAPPER.readValue(is, MAPPER.getTypeFactory().constructCollectionType(List.class, String.class));
-            return skills.stream()
-                    .map(SkillGraphBuilder::normalize)
-                    .collect(Collectors.toCollection(ArrayList::new));
-        } catch (IOException e) {
-            throw new UncheckedIOException("Failed to load skills list from resource: " + SKILLS_RESOURCE, e);
-        }
+        return SkillsExtraction.skillList()
+                .stream()
+                .map(SkillGraphBuilder::normalize)
+                .collect(Collectors.toCollection(ArrayList::new));
     }
 
     private static String normalize(String text) {

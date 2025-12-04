@@ -16,7 +16,7 @@ public class DbSampleExporter {
     public static void main(String[] args) throws Exception {
         Path output = args.length > 0
                 ? Paths.get(args[0])
-                : Paths.get("src/main/resources/samples/skills-extraction-db-sample.json");
+                : Paths.get("target/samples/skills-extraction-db-sample.json");
         int limit = args.length > 1 ? Integer.parseInt(args[1]) : 50;
         export(output, limit);
     }

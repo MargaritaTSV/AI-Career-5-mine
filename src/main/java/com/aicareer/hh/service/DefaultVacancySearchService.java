@@ -1,11 +1,11 @@
 package com.aicareer.hh.service;
 
-import com.aicareer.hh.infrastructure.export.JsonExporter;
 import com.aicareer.hh.infrastructure.mapper.VacancyMapper;
 import com.aicareer.hh.infrastructure.ranking.SimpleRanker; // <-- ВАЖНО: правильный пакет
 import com.aicareer.hh.model.HhVacancy;
 import com.aicareer.hh.model.Vacancy;
 import com.aicareer.hh.ports.VacancyFetcher;
+import com.aicareer.hh.repository.VacancyRepository;
 
 import java.util.Collection;
 import java.util.Comparator;
@@ -15,14 +15,14 @@ import java.util.stream.Collectors;
 public final class DefaultVacancySearchService implements SearchService {
     private final VacancyFetcher fetcher;
     private final VacancyMapper mapper;
-    private final JsonExporter exporter;
+    private final VacancyRepository vacancyRepository;
 
     public DefaultVacancySearchService(VacancyFetcher fetcher,
                                        VacancyMapper mapper,
-                                       JsonExporter exporter) {
+                                       VacancyRepository vacancyRepository) {
         this.fetcher = fetcher;
         this.mapper = mapper;
-        this.exporter = exporter;
+        this.vacancyRepository = vacancyRepository;
     }
 
     @Override
@@ -47,6 +47,6 @@ public final class DefaultVacancySearchService implements SearchService {
 
     @Override
     public void saveAll(Collection<Vacancy> items, String fileName) {
-        exporter.writeJson(items, fileName);
+        vacancyRepository.saveAll(items);
     }
 }
