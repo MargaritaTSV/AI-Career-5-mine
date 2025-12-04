@@ -22,7 +22,7 @@ public class OpenRouterClient {
     private static final String ENDPOINT = "https://openrouter.ai/api/v1/chat/completions";
     private static final String DEFAULT_MODEL = System.getenv().getOrDefault(
             "OPENROUTER_MODEL",
-            "qwen/qwen3-4b:free"
+            "mistralai/mistral-7b-instruct:free"
     );
     private static final String DEFAULT_REFERER = System.getenv().getOrDefault(
             "OPENROUTER_REFERER",

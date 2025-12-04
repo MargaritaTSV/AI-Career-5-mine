@@ -119,6 +119,23 @@
   "score" : 0
 }, {
   "id" : null,
+  "title" : "Инженер по автоматизации тестирования, Мобильное приложение Ozon",
+  "company" : "Ozon",
+  "city" : "Москва",
+  "experience" : null,
+  "employment" : null,
+  "schedule" : null,
+  "salaryFrom" : null,
+  "salaryTo" : null,
+  "currency" : null,
+  "skills" : null,
+  "description" : "Опыт тестирования мобильных приложений (более 50% времени). Знание подходов и практик тестирования. Практические навыки программирования (желательно на Python, но готовы... Тестировать мобильное приложение на iOS и <highlighttext>Android</highlighttext>. Писать тест-кейсы и автоматизировать сценарии. Работать с командами <highlighttext>разработки</highlighttext>, дизайна и продукта. ",
+  "url" : "https://hh.ru/vacancy/128375237",
+  "source" : "hh",
+  "publishedAt" : null,
+  "score" : 0
+}, {
+  "id" : null,
   "title" : "Android Developer | Middle+ - Senior",
   "company" : "Effective",
   "city" : "Москва",
@@ -403,23 +420,6 @@
   "skills" : null,
   "description" : "Опыт работы на проектах с микросервисной архитектурой. Опыт работы с SQL, REST API. Понимание, как работает БД. Опыт моделирования бизнес... ...можно видеть результаты своей работы, когда сами заказываете что-то на Озоне. Ставим задачи back, front, QA, <highlighttext>mobile</highlighttext> (<highlighttext>android</highlighttext>\\ios).",
   "url" : "https://hh.ru/vacancy/128174239",
-  "source" : "hh",
-  "publishedAt" : null,
-  "score" : 0
-}, {
-  "id" : null,
-  "title" : "Старший продуктовый аналитик, Группа продукта Заказы в ЛК покупателя",
-  "company" : "Ozon",
-  "city" : "Москва",
-  "experience" : null,
-  "employment" : null,
-  "schedule" : null,
-  "salaryFrom" : null,
-  "salaryTo" : null,
-  "currency" : null,
-  "skills" : null,
-  "description" : "Опыт работы на проектах с микросервисной архитектурой. Опыт работы с SQL, REST API. Понимание, как работает БД. Опыт моделирования бизнес... ...можно видеть результаты своей работы, когда сами заказываете что-то на Озоне. Ставим задачи back, front, QA, <highlighttext>mobile</highlighttext> (<highlighttext>android</highlighttext>\\ios).",
-  "url" : "https://hh.ru/vacancy/126189611",
   "source" : "hh",
   "publishedAt" : null,
   "score" : 0

@@ -1,12 +1,5 @@
 {
-  "java": 1,
-  "c++": 0,
-  "python": 1,
-  "javascript": 1,
-  "sql": 1,
-  "docker": 0,
-  "c#": 0,
-  "php": 0,
-  "spring": 0,
-  "machine_learning": 0
+  "java" : 1,
+  "spring" : 1,
+  "sql" : 1
 }

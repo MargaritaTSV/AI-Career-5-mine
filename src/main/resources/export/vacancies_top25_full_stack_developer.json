@@ -323,23 +323,6 @@
   "score" : 2
 }, {
   "id" : null,
-  "title" : "Fullstack разработчик .Net + React",
-  "company" : "ФИНАМ",
-  "city" : "Москва",
-  "experience" : null,
-  "employment" : null,
-  "schedule" : null,
-  "salaryFrom" : null,
-  "salaryTo" : null,
-  "currency" : null,
-  "skills" : null,
-  "description" : "Frontend- React(JS)+Redux, верстка CSS+HTML. Будет большим плюсом: redux-saga, MaterialUI, Webpack, Next.js, Typescript, опыт написания unit тестов, jQuery... <highlighttext>Разработка</highlighttext> личных кабинетов клиентов холдинга. <highlighttext>Разработка</highlighttext> многоязыкового web интерфейса и бэкэнда клиентских сервисов. Интеграции с внутренними и внешними информационными системами. ",
-  "url" : "https://hh.ru/vacancy/128394273",
-  "source" : "hh",
-  "publishedAt" : null,
-  "score" : 1
-}, {
-  "id" : null,
   "title" : "Старший разработчик Python / Senior Python Developer (XData)",
   "company" : "Группа компаний Астра",
   "city" : "Москва",
@@ -420,6 +403,23 @@
   "skills" : null,
   "description" : "React. .js и. Node. .js (. Express. ) от 2 лет. Опыт <highlighttext>разработки</highlighttext> и интеграции API. Опыт работы с БД (MongoDB и... <highlighttext>Разработка</highlighttext> и развитие функционала веб-продукта (. React. ). Создание и поддержка backend-сервисов на. Node. .js. <highlighttext>Разработка</highlighttext> и интеграция API. ",
   "url" : "https://hh.ru/vacancy/127822782",
+  "source" : "hh",
+  "publishedAt" : null,
+  "score" : 1
+}, {
+  "id" : null,
+  "title" : "Fullstack-разработчик (Python + ETL + Frontend)",
+  "company" : "Камешкова Екатерина Александровна",
+  "city" : "Москва",
+  "experience" : null,
+  "employment" : null,
+  "schedule" : null,
+  "salaryFrom" : null,
+  "salaryTo" : null,
+  "currency" : null,
+  "skills" : null,
+  "description" : "Ключевой стек технологий: Будет большим плюсом опыт с: Уровень дохода готовы рассмотреть от опыта. Инфраструктура и DevOps: настройка и поддержка CI/CD, внедрение практик наблюдаемости (мониторинг, логирование). Инструментами мониторинга: Prometheus, Grafana, ELK <highlighttext>Stack</highlighttext>. ",
+  "url" : "https://hh.ru/vacancy/127335870",
   "source" : "hh",
   "publishedAt" : null,
   "score" : 1

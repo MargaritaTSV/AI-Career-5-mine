@@ -23,7 +23,7 @@ public final class SkillsExtraction {
 
     private static final String SKILLS_RESOURCE = "skills.json";
     private static final String DEFAULT_VACANCIES_RESOURCE =
-            "export/vacancies_top25_java_backend_developer.json"; // фиксированный файл вакансий
+            "export/vacancies_top25_java_backend_developer.json";
 
     private static final List<String> SKILL_LIST = loadSkillList();
 
