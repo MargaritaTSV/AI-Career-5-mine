@@ -1,6 +1,7 @@
 package com.aicareer.aitransform;
 
 import com.aicareer.hh.infrastructure.db.DbConnectionProvider;
+import com.aicareer.hh.tools.VacancyResourceImporter;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.UncheckedIOException;
@@ -25,6 +26,7 @@ public class AppDatabaseInitializer {
     public void applySchemaAndData() {
         executeSqlResource("db/schema.sql");
         executeSqlResource("db/data.sql");
+        new VacancyResourceImporter(connectionProvider).importAllFromResources();
     }
 
     private void executeSqlResource(String resourcePath) {
