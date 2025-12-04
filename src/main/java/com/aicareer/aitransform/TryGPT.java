@@ -6,7 +6,7 @@ import java.net.URL;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
-public class TryQwen {
+public class TryGPT {
 
   private static final ObjectMapper MAPPER = new ObjectMapper();
 
@@ -14,20 +14,19 @@ public class TryQwen {
 
     String apiKey = Config.API_KEY;
     System.out.println("Using API Key: " + apiKey);
-    URL url = new URL("https://openrouter.ai/api/v1/chat/completions");
+    URL url = new URL("https://api.openai.com/v1/chat/completions");
     HttpURLConnection con = (HttpURLConnection) url.openConnection();
 
     con.setRequestMethod("POST");
     con.setRequestProperty("Authorization", "Bearer " + apiKey);
     con.setRequestProperty("Content-Type", "application/json");
-    con.setRequestProperty("HTTP-Referer", "https://example.com");
-    con.setRequestProperty("X-Title", "AI-Career-5");
+    con.setRequestProperty("OpenAI-Beta", "assistants=v2");
 
     con.setDoOutput(true);
 
     String body = """
         {
-          "model": "mistralai/mistral-7b-instruct:free",
+          "model": "gpt-4o-mini",
           "max_tokens": 512,
           "messages": [
             { "role": "user", "content": "You extract required programming skills for a specific job role.

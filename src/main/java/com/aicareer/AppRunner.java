@@ -105,7 +105,8 @@ public class AppRunner {
     if (mode == 1) {
       System.out.println("[MODE] QuickStart");
       UserInfoExporter.ProfileSnapshot quickstart = prepareQuickstartProfile(provider, exporter);
-      String targetRole = chooseTargetRole(in, quickstart.targetRole());
+      String targetRole = quickstart.targetRole();
+      System.out.println("[ROLE] Используем целевую роль QuickStart без вопросов: " + targetRole);
       System.out.println("\n[PIPELINE] Старт анализа для роли: " + targetRole);
       runPipeline(exporter, quickstart, targetRole);
       return;

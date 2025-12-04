@@ -9,7 +9,7 @@ public class Database {
 
     private static final String URL = System.getenv().getOrDefault(
             "DB_URL",
-            "jdbc:postgresql://localhost:5432/aicareer?sslmode=disable&applicationName=AI-Career-Client"
+            "jdbc:postgresql://localhost:5433/aicareer"
     );
     // Прямо требуем использовать роль/пользователя aicareer
     private static final String USER = "aicareer";
@@ -59,6 +59,26 @@ public class Database {
                   experience_years INT,
                   skills           JSONB,
                   updated_at       TIMESTAMP
+                )
+            """);
+
+            st.execute("""
+                CREATE TABLE IF NOT EXISTS vacancy (
+                  id            TEXT PRIMARY KEY,
+                  title         TEXT,
+                  company       TEXT,
+                  city          TEXT,
+                  experience    TEXT,
+                  employment    TEXT,
+                  schedule      TEXT,
+                  salary_from   INT,
+                  salary_to     INT,
+                  currency      TEXT,
+                  description   TEXT,
+                  url           TEXT,
+                  source        TEXT,
+                  published_at  TEXT,
+                  score         INT
                 )
             """);
 

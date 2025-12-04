@@ -31,12 +31,11 @@ public class DemoFetch {
     }
 
     public static void main(String[] args) throws Exception {
-        var client   = new HhApiClient(USER_AGENT, TOKEN);
-        var fetcher  = new HhVacancyFetcher(client);
-        var mapper   = new DefaultVacancyMapper();
-        var exporter = new JsonExporter();
+        var client  = new HhApiClient(USER_AGENT, TOKEN);
+        var fetcher = new HhVacancyFetcher(client);
+        var mapper  = new DefaultVacancyMapper();
 
-        SearchService service = new DefaultVacancySearchService(fetcher, mapper, exporter);
+        SearchService service = new DefaultVacancySearchService(fetcher, mapper, new JsonExporter());
 
         // БД
         var dbProvider = new DbConnectionProvider();
@@ -66,12 +65,8 @@ public class DemoFetch {
                     nz(v.getScore()), nz(v.getTitle()), nz(v.getCompany()), nz(v.getCity()),
                     nz(v.getSalaryFrom()), nz(v.getSalaryTo()), nz(v.getCurrency()), nz(v.getUrl())
             ));
-
-            // JSON в resources/export
-            exporter.writeJson(items,  "vacancies_all_"   + safe(role) + ".json");
-            exporter.writeJson(top25,  "vacancies_top25_" + safe(role) + ".json");
         }
 
-        System.out.println("\n✅ Готово: вакансии в БД, JSON в src/main/resources/export");
+        System.out.println("\n✅ Готово: все полученные вакансии сохранены в БД");
     }
 }
