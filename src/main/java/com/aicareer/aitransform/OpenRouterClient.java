@@ -23,7 +23,7 @@ public class OpenRouterClient {
     private static final String ENDPOINT = "https://openrouter.ai/api/v1/chat/completions";
     private static final String DEFAULT_MODEL = System.getenv().getOrDefault(
             "OPENROUTER_MODEL",
-            "mistralai/mistral-7b-instruct:free"
+            "qwen/qwen3-4b:free"
     );
     private static final String DEFAULT_REFERER = System.getenv().getOrDefault(
             "OPENROUTER_REFERER",
@@ -35,7 +35,7 @@ public class OpenRouterClient {
     );
 
     private static final int MAX_RETRIES_ON_419 = 2;
-    private static final long RETRY_DELAY_SECONDS = 10L;
+    private static final long RETRY_DELAY_SECONDS = 10_000;
 
     private final HttpClient client = HttpClient.newBuilder()
             .connectTimeout(Duration.ofSeconds(10))

@@ -1,5 +1,10 @@
 {
   "java" : 1,
   "spring" : 1,
-  "sql" : 1
+  "sql" : 1,
+  "docker" : 1,
+  "kafka" : 0,
+  "microservices" : 1,
+  "testing" : 1,
+  "cloud" : 0
 }
