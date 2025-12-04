@@ -1,6 +1,7 @@
 package com.aicareer;
 
 import com.aicareer.aitransform.AppDatabaseInitializer;
+import com.aicareer.aitransform.Config;
 import com.aicareer.aitransform.SkillsExtraction;
 import com.aicareer.aitransform.UserInfoExporter;
 import com.aicareer.comparison.Comparison;
@@ -50,17 +51,19 @@ public class AppRunner {
     System.out.println("      AI-Career Navigator CLI");
     System.out.println("=======================================\n");
 
-    System.out.println("[DB] applying schema and seeds...");
-    new AppDatabaseInitializer(provider).applySchemaAndData();
-
-    // старый режим: если есть аргументы — работаем как раньше, без диалогов
-    if (args.length > 0) {
-      runNonInteractive(provider, args);
-      return;
-    }
-
-    // новый режим: диалог с пользователем в терминале
     try (Scanner in = new Scanner(System.in)) {
+      Config.ensureApiKeyFromInput(in);
+
+      System.out.println("\n[DB] applying schema and seeds...");
+      new AppDatabaseInitializer(provider).applySchemaAndData();
+
+      // старый режим: если есть аргументы — работаем как раньше, без диалогов
+      if (args.length > 0) {
+        runNonInteractive(provider, args);
+        return;
+      }
+
+      // новый режим: диалог с пользователем в терминале
       runInteractive(provider, in);
     }
   }
