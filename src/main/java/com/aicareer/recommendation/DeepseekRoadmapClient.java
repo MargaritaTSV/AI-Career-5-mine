@@ -37,7 +37,7 @@ public final class DeepseekRoadmapClient {
                 Files.createDirectories(PROMPT_OUTPUT_PATH.getParent());
             }
             Files.writeString(PROMPT_OUTPUT_PATH, prompt);
-            System.err.println("Prompt saved to: " + PROMPT_OUTPUT_PATH.toAbsolutePath());
+//            System.err.println("Prompt saved to: " + PROMPT_OUTPUT_PATH.toAbsolutePath());
         } catch (IOException e) {
             throw new IllegalStateException("Failed to save prompt to file", e);
         }

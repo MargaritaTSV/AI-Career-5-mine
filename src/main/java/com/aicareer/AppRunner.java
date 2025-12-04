@@ -441,9 +441,11 @@ public class AppRunner {
     ComparisonResult comparison = Comparison.calculate(roleMatrix, profile.skills());
     Comparison.writeOutputs(comparison, STATUSES_PATH, SUMMARY_PATH);
 
-    System.out.println("[COMPARE] Strong sides: " +
+    System.out.println("Уже освоенные навыки: " +
+              comparison.summary().getOrDefault("соответствует", List.of()));
+    System.out.println("Ваши сильные стороны (навыки, которые по уровню лучше чем обычно требуются для данной должности): " +
         comparison.summary().getOrDefault("лучше ожидаемого", List.of()));
-    System.out.println("[COMPARE] Weak sides:   " +
+    System.out.println("Ваши слабые стороны (навыки, которых не хватает для достижения уровня желаемой должности):   " +
         comparison.summary().getOrDefault("требует улучшения", List.of()));
 
     String prompt = RoadmapPromptBuilder.build(
