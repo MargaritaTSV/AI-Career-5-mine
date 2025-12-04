@@ -3,7 +3,6 @@ package org.example;
 import org.example.db.Database;
 import org.example.profile.Profile;
 import org.example.profile.ProfileRepository;
-import org.example.user.LoginUser;
 import org.example.user.RegisterUser;
 import org.example.user.User;
 import org.example.user.UserRepository;
@@ -11,9 +10,9 @@ import org.example.user.UserRepository;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
-import java.util.HashMap;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
-import java.util.Scanner;
 
 public class DemoMain {
     public static void main(String[] args) {
@@ -30,134 +29,91 @@ public class DemoMain {
             return;
         }
 
-        try (Scanner scanner = new Scanner(System.in)) {
-            UserRepository userRepo = new UserRepository();
-            ProfileRepository profileRepo = new ProfileRepository();
-            RegisterUser register = new RegisterUser(userRepo);
-            LoginUser login = new LoginUser(userRepo);
+        UserRepository userRepo = new UserRepository();
+        ProfileRepository profileRepo = new ProfileRepository();
+        RegisterUser register = new RegisterUser(userRepo);
 
-            System.out.print("Очистить таблицы users и user_profiles перед заполнением? (y/N): ");
-            if (scanner.nextLine().trim().equalsIgnoreCase("y")) {
-                clearAllData();
-                System.out.println("[DB] Таблицы очищены");
-            }
+        clearAllData();
+        System.out.println("[DB] Таблицы users и user_profiles очищены");
 
-            boolean running = true;
-            while (running) {
-                System.out.println("\nВыберите действие:");
-                System.out.println("1) Добавить пользователя вручную и сохранить профиль");
-                System.out.println("2) Создать демо-пользователя (test@example.com) и профиль");
-                System.out.println("3) Показать все сохранённые профили");
-                System.out.println("0) Выход");
-                System.out.print("> ");
-
-                String action = scanner.nextLine().trim();
-                switch (action) {
-                    case "1" -> createUserInteractive(scanner, register, profileRepo, login, userRepo);
-                    case "2" -> seedDemoUser(register, profileRepo, login, userRepo);
-                    case "3" -> profileRepo.findAll().forEach(System.out::println);
-                    case "0" -> running = false;
-                    default -> System.out.println("Неизвестная команда, попробуйте ещё раз.");
-                }
-            }
+        List<SeedUser> samples = buildSamples();
+        for (SeedUser sample : samples) {
+            register.register(sample.email(), sample.password(), sample.name());
+            User user = userRepo.findByEmail(sample.email()).orElseThrow();
+            Profile profile = new Profile(user.getId(), sample.targetRole(), sample.skills(), sample.experience());
+            profileRepo.save(profile);
+            System.out.println("[PROFILE] Добавлен тестовый пользователь: " + sample.email());
         }
 
-        System.out.println("[DONE] Все операции завершены успешно");
+        System.out.println("[DONE] Загружено " + samples.size() + " тестовых пользователей без участия оператора");
     }
 
-    private static void createUserInteractive(
-            Scanner scanner,
-            RegisterUser register,
-            ProfileRepository profileRepo,
-            LoginUser login,
-            UserRepository userRepo
-    ) {
-        System.out.print("Email: ");
-        String email = scanner.nextLine().trim();
-        while (email.isBlank()) {
-            System.out.print("Email не может быть пустым, повторите: ");
-            email = scanner.nextLine().trim();
-        }
+    private static List<SeedUser> buildSamples() {
+        List<SeedUser> users = new ArrayList<>();
 
-        System.out.print("Пароль: ");
-        String password = scanner.nextLine().trim();
-        while (password.isBlank()) {
-            System.out.print("Пароль не может быть пустым, повторите: ");
-            password = scanner.nextLine().trim();
-        }
-
-        System.out.print("Имя: ");
-        String name = scanner.nextLine().trim();
-        if (name.isBlank()) {
-            name = "Без имени";
-        }
-
-        register.register(email, password, name);
-        login.login(email, password);
-
-        User user = userRepo.findByEmail(email).orElseThrow();
-
-        System.out.print("Целевая роль: ");
-        String role = scanner.nextLine().trim();
-        if (role.isBlank()) {
-            role = "Developer";
-        }
-
-        System.out.print("Опыт в годах (целое число): ");
-        int experience = parseIntWithDefault(scanner.nextLine().trim(), 0);
-
-        Map<String, Integer> skills = new HashMap<>();
-        System.out.println("Ввод навыков. Формат: название=уровень. Пустая строка — завершить.");
-        while (true) {
-            System.out.print("Навык: ");
-            String line = scanner.nextLine().trim();
-            if (line.isBlank()) {
-                break;
-            }
-            String[] parts = line.split("=");
-            if (parts.length != 2) {
-                System.out.println("Ожидается формат название=уровень. Пример: java=1");
-                continue;
-            }
-            try {
-                skills.put(parts[0].trim(), Integer.parseInt(parts[1].trim()));
-            } catch (NumberFormatException e) {
-                System.out.println("Уровень должен быть числом. Попробуйте ещё раз.");
-            }
-        }
-
-        Profile profile = new Profile(user.getId(), role, skills, experience);
-        profileRepo.save(profile);
-
-        System.out.println("[PROFILE] Сохранено: " + profileRepo.findByUserId(user.getId()).orElse(profile));
-    }
-
-    private static void seedDemoUser(
-            RegisterUser register,
-            ProfileRepository profileRepo,
-            LoginUser login,
-            UserRepository userRepo
-    ) {
-        register.register("test@example.com", "12345", "Мария");
-        login.login("test@example.com", "12345");
-
-        User user = userRepo.findByEmail("test@example.com").orElseThrow();
-        Profile profile = new Profile(
-                user.getId(),
-                "Java Developer",
-                Map.of("java", 1, "sql", 1),
-                2
+        Map<String, Integer> idealSkills = Map.of(
+                "java", 1,
+                "spring", 1,
+                "sql", 1,
+                "docker", 1,
+                "kafka", 1,
+                "microservices", 1,
+                "testing", 1,
+                "cloud", 1
         );
-        profileRepo.save(profile);
-        System.out.println("[PROFILE] Демо профиль обновлён");
-    }
 
-    private static int parseIntWithDefault(String raw, int def) {
-        try {
-            return Integer.parseInt(raw);
-        } catch (NumberFormatException e) {
-            return def;
-        }
+        Map<String, Integer> strongButMissingKafka = Map.of(
+                "java", 1,
+                "spring", 1,
+                "sql", 1,
+                "docker", 1,
+                "kafka", 0,
+                "microservices", 1,
+                "testing", 1,
+                "cloud", 0
+        );
+
+        Map<String, Integer> strongButMissingCloud = Map.of(
+                "java", 1,
+                "spring", 1,
+                "sql", 1,
+                "docker", 1,
+                "kafka", 1,
+                "microservices", 1,
+                "testing", 0,
+                "cloud", 0
+        );
+
+        Map<String, Integer> strongButMissingDocker = Map.of(
+                "java", 1,
+                "spring", 1,
+                "sql", 1,
+                "docker", 0,
+                "kafka", 1,
+                "microservices", 1,
+                "testing", 1,
+                "cloud", 0
+        );
+
+        Map<String, Integer> pythonOnly = Map.of(
+                "python", 1,
+                "git", 0
+        );
+
+        Map<String, Integer> basicsOnly = Map.of(
+                "python", 1,
+                "linux", 0
+        );
+
+        users.add(new SeedUser("alex.perfect@example.com", "12345", "Александр Идеальный", 6, "Java Backend Developer", idealSkills));
+        users.add(new SeedUser("olga.perfect@example.com", "12345", "Ольга Идеальная", 7, "Java Backend Developer", idealSkills));
+        users.add(new SeedUser("maria.solid@example.com", "12345", "Мария Опытная", 4, "Java Backend Developer", strongButMissingKafka));
+        users.add(new SeedUser("pavel.solid@example.com", "12345", "Павел Уверенный", 5, "Java Backend Developer", strongButMissingCloud));
+        users.add(new SeedUser("sergey.solid@example.com", "12345", "Сергей Развивающийся", 3, "Java Backend Developer", strongButMissingDocker));
+        users.add(new SeedUser("irina.junior@example.com", "12345", "Ирина Новичок", 1, "Java Backend Developer", pythonOnly));
+        users.add(new SeedUser("nikita.junior@example.com", "12345", "Никита Начинающий", 0, "Java Backend Developer", basicsOnly));
+
+        return users;
     }
 
     private static void clearAllData() {
@@ -170,5 +126,15 @@ public class DemoMain {
         } catch (SQLException e) {
             throw new RuntimeException("Не удалось очистить таблицы", e);
         }
+    }
+
+    private record SeedUser(
+            String email,
+            String password,
+            String name,
+            int experience,
+            String targetRole,
+            Map<String, Integer> skills
+    ) {
     }
 }

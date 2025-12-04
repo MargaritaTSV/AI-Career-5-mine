@@ -40,6 +40,8 @@ public class AppRunner {
 
   // дефолтный пользователь для quickstart
   private static final String DEFAULT_TEST_EMAIL = "test@example.com";
+  private static final String QUICKSTART_EMAIL = "quickstart@example.com";
+  private static final String QUICKSTART_NAME = "Quick Start Demo";
 
   public static void main(String[] args) {
     DbConnectionProvider provider = new DbConnectionProvider();
@@ -93,13 +95,23 @@ public class AppRunner {
     UserInfoExporter exporter = new UserInfoExporter(provider);
 
     System.out.println("Как будем получать данные о пользователе?");
-    System.out.println("1) Выбрать готового пользователя из БД");
-    System.out.println("2) Ввести свои данные и сохранить в БД");
+    System.out.println("1) QuickStart: использовать тестовый профиль со средними навыками");
+    System.out.println("2) Выбрать готового пользователя из БД");
+    System.out.println("3) Ввести свои данные и сохранить в БД");
     System.out.print("> ");
 
-    int mode = readInt(in, 1, 2);
+    int mode = readInt(in, 1, 3);
 
-    if (mode == 2) {
+    if (mode == 1) {
+      System.out.println("[MODE] QuickStart");
+      UserInfoExporter.ProfileSnapshot quickstart = prepareQuickstartProfile(provider, exporter);
+      String targetRole = chooseTargetRole(in, quickstart.targetRole());
+      System.out.println("\n[PIPELINE] Старт анализа для роли: " + targetRole);
+      runPipeline(exporter, quickstart, targetRole);
+      return;
+    }
+
+    if (mode == 3) {
       System.out.println("[MODE] Ручной ввод с сохранением в БД");
       UserInfoExporter.ProfileSnapshot newProfile = createUserInteractive(provider, exporter, in);
       System.out.println("\n[PIPELINE] Старт анализа для роли: " + newProfile.targetRole());
@@ -121,6 +133,42 @@ public class AppRunner {
 
     System.out.println("\n[PIPELINE] Старт анализа для роли: " + targetRole);
     runPipeline(exporter, profile, targetRole);
+  }
+
+  private static UserInfoExporter.ProfileSnapshot prepareQuickstartProfile(
+      DbConnectionProvider provider,
+      UserInfoExporter exporter
+  ) {
+    Map<String, Integer> skills = Map.ofEntries(
+        Map.entry("java", 1),
+        Map.entry("spring", 1),
+        Map.entry("sql", 1),
+        Map.entry("docker", 1),
+        Map.entry("kafka", 0),
+        Map.entry("testing", 1),
+        Map.entry("cloud", 0),
+        Map.entry("git", 1)
+    );
+
+    try (Connection connection = provider.getConnection()) {
+      connection.setAutoCommit(false);
+      try {
+        String userId = upsertUser(connection, QUICKSTART_EMAIL, "quickstart-hash", QUICKSTART_NAME);
+        upsertProfile(connection, userId, "Java Backend Developer", 3);
+        upsertSkills(connection, userId, skills);
+        connection.commit();
+      } catch (SQLException e) {
+        connection.rollback();
+        throw new IllegalStateException("Не удалось подготовить QuickStart пользователя", e);
+      } finally {
+        connection.setAutoCommit(true);
+      }
+    } catch (SQLException e) {
+      throw new IllegalStateException("Ошибка при сохранении QuickStart профиля", e);
+    }
+
+    return exporter.findByEmail(QUICKSTART_EMAIL)
+        .orElseThrow(() -> new IllegalStateException("QuickStart профиль не найден после сохранения"));
   }
 
   private static String chooseExistingUserEmail(DbConnectionProvider provider, Scanner in) {
@@ -187,33 +235,17 @@ public class AppRunner {
       name = "Новый пользователь";
     }
 
-    System.out.print("Целевая роль: ");
-    String role = in.nextLine().trim();
-    if (role.isBlank()) {
-      role = "Developer";
-    }
+    String role = pickTargetRole(in, "Java Backend Developer");
 
     System.out.print("Опыт в годах (0-50): ");
     int experience = readInt(in, 0, 50);
 
     Map<String, Integer> skills = new LinkedHashMap<>();
-    System.out.println("Ввод навыков (skill=level). Пустая строка — завершить.");
-    while (true) {
-      System.out.print("Навык: ");
-      String raw = in.nextLine().trim();
-      if (raw.isBlank()) {
-        break;
-      }
-      String[] parts = raw.split("=");
-      if (parts.length != 2) {
-        System.out.println("Используйте формат skill=level, пример: java=1");
-        continue;
-      }
-      try {
-        skills.put(parts[0].trim(), Integer.parseInt(parts[1].trim()));
-      } catch (NumberFormatException e) {
-        System.out.println("Уровень должен быть числом, например 0 или 1.");
-      }
+    System.out.println("\nОцените навыки: вводите 1 для тех, которыми владеете, и 0 для остальных.");
+    System.out.println("Навыки будут выводиться по одному:");
+    for (String skill : SkillsExtraction.skillList()) {
+      System.out.print(skill + " (1/0): ");
+      skills.put(skill, readInt(in, 0, 1));
     }
 
     String passwordHash = "manual-" + email.hashCode();
@@ -312,7 +344,7 @@ public class AppRunner {
   private static String chooseTargetRole(Scanner in, String profileRole) {
     System.out.println("\nВыберите целевую роль:");
     System.out.println("1) Использовать роль из анкеты: " + profileRole);
-    System.out.println("2) Выбрать из списка по вакансиям (vacancies_top25_*.json)");
+    System.out.println("2) Выбрать из списка по вакансиям (введите цифру из списка)");
     System.out.println("3) Ввести название роли вручную");
     System.out.print("> ");
 
@@ -323,22 +355,7 @@ public class AppRunner {
         return profileRole;
       }
       case 2 -> {
-        List<String> roles = listAvailableRoles();
-        if (roles.isEmpty()) {
-          System.out.println("[ROLE] Не удалось найти файлы vacancies_top25_*.json, используем роль из анкеты.");
-          return profileRole;
-        }
-        System.out.println("\nДоступные роли по данным о вакансиях:");
-        for (int i = 0; i < roles.size(); i++) {
-          System.out.println((i + 1) + ") " + roles.get(i));
-        }
-        System.out.print("Введите номер роли (0 — вернуться к роли из анкеты): ");
-
-        int idx = readInt(in, 0, roles.size());
-        if (idx == 0) {
-          return profileRole;
-        }
-        return roles.get(idx - 1);
+        return pickTargetRole(in, profileRole);
       }
       case 3 -> {
         System.out.print("Введите название роли (например, Java Developer): ");
@@ -351,6 +368,27 @@ public class AppRunner {
       }
       default -> throw new IllegalStateException("Unexpected value: " + choice);
     }
+  }
+
+  private static String pickTargetRole(Scanner in, String fallbackRole) {
+    List<String> roles = listAvailableRoles();
+    if (roles.isEmpty()) {
+      System.out.print("Доступных ролей в списке нет. Введите название роли: ");
+      String manual = in.nextLine().trim();
+      return manual.isBlank() ? fallbackRole : manual;
+    }
+
+    System.out.println("\nДоступные роли по данным о вакансиях:");
+    for (int i = 0; i < roles.size(); i++) {
+      System.out.println((i + 1) + ") " + roles.get(i));
+    }
+    System.out.print("Введите номер роли (0 — оставить текущую: " + fallbackRole + "): ");
+
+    int idx = readInt(in, 0, roles.size());
+    if (idx == 0) {
+      return fallbackRole;
+    }
+    return roles.get(idx - 1);
   }
 
   // поиск всех файлов vacancies_top25_*.json и превращение их в человекочитаемые названия ролей
