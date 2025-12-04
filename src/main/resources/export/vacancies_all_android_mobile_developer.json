@@ -85,6 +85,23 @@
   "score" : 0
 }, {
   "id" : null,
+  "title" : "Инженер по автоматизации тестирования, Мобильное приложение Ozon",
+  "company" : "Ozon",
+  "city" : "Москва",
+  "experience" : null,
+  "employment" : null,
+  "schedule" : null,
+  "salaryFrom" : null,
+  "salaryTo" : null,
+  "currency" : null,
+  "skills" : null,
+  "description" : "Опыт тестирования мобильных приложений (более 50% времени). Знание подходов и практик тестирования. Практические навыки программирования (желательно на Python, но готовы... Тестировать мобильное приложение на iOS и <highlighttext>Android</highlighttext>. Писать тест-кейсы и автоматизировать сценарии. Работать с командами <highlighttext>разработки</highlighttext>, дизайна и продукта. ",
+  "url" : "https://hh.ru/vacancy/128375237",
+  "source" : "hh",
+  "publishedAt" : null,
+  "score" : 0
+}, {
+  "id" : null,
   "title" : "Android Developer | Middle+ - Senior",
   "company" : "Effective",
   "city" : "Москва",
@@ -709,23 +726,6 @@
   "skills" : null,
   "description" : "...и наоборот, структурировать и довести до результата. Опыт в агентствах заказной <highlighttext>разработки</highlighttext>. Опыт ввода систем в эксплуатацию (обучение, инструкции, регламенты). ...кастомная <highlighttext>разработка</highlighttext>. Дооформить частичное ТЗ (справочники, роли, процессы, отчёты) → выбрать подход и подрядчика → согласовать план спринтов/релизы → фасилитация <highlighttext>разработки</highlighttext>→ ввод...",
   "url" : "https://hh.ru/vacancy/127845092",
-  "source" : "hh",
-  "publishedAt" : null,
-  "score" : 0
-}, {
-  "id" : null,
-  "title" : "QA-инженер мобильного приложения (Manual)",
-  "company" : "Московский метрополитен",
-  "city" : "Москва",
-  "experience" : null,
-  "employment" : null,
-  "schedule" : null,
-  "salaryFrom" : null,
-  "salaryTo" : null,
-  "currency" : null,
-  "skills" : null,
-  "description" : "...приложений (iOS / <highlighttext>Android</highlighttext>). Опыт работы с <highlighttext>Android</highlighttext> Studio и Xcode обязателен. Опыт работы с симулятором iOS и Logcat <highlighttext>Android</highlighttext>.  Проверка корректности взаимодействия клиента с backend-сервисами (в т.ч. REST API). <highlighttext>Разработка</highlighttext> и поддержка тестовой документации: чек-листы, тест...",
-  "url" : "https://hh.ru/vacancy/126739081",
   "source" : "hh",
   "publishedAt" : null,
   "score" : 0

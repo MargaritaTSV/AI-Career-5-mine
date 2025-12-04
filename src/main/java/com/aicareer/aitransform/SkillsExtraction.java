@@ -17,13 +17,13 @@ public final class SkillsExtraction {
     private static final ObjectMapper MAPPER = new ObjectMapper();
 
     private static final String DEFAULT_MODEL_PATH = System.getenv().getOrDefault(
-            "OPENROUTER_MODEL",
-            "qwen/qwen3-4b:free"
+            "OPENAI_MODEL",
+            "gpt-4o-mini"
     );
 
     private static final String SKILLS_RESOURCE = "skills.json";
     private static final String DEFAULT_VACANCIES_RESOURCE =
-            "export/vacancies_top25_java_backend_developer.json"; // фиксированный файл вакансий
+            "export/vacancies_top25_java_backend_developer.json";
 
     private static final List<String> SKILL_LIST = loadSkillList();
 
@@ -64,14 +64,12 @@ public final class SkillsExtraction {
     }
 
     private static Map<String, Integer> requestFromModel(String vacanciesJson) {
-        // Простой промпт без лишних пояснений
         String prompt = ExtractionPrompt.build()
                 + "\n\nVacancies JSON (analyze them together and return only the skills matrix):\n"
                 + vacanciesJson
                 + "\n\nReturn only the JSON object with the skill flags.";
-
-        System.out.println("[AI] Строим матрицу навыков через модель...");
-        String rawResponse = new OpenRouterClient()
+        System.out.println("[AI] Строим матрицу навыков через модель OpenAI...");
+        String rawResponse = new OpenAIClient()
                 .generate(DEFAULT_MODEL_PATH, prompt);
         System.out.println("[AI] Ответ по навыкам получен, разбираем...");
 
@@ -108,15 +106,12 @@ public final class SkillsExtraction {
     }
 
     private static String extractJson(String text) {
-        // Если модель прислала готовый JSON
         try {
             MAPPER.readTree(text);
             return text;
         } catch (IOException ignored) {
-            // идём дальше
         }
 
-        // Часто ответ приходит внутри ```json ... ```
         int fenceStart = text.indexOf("```json");
         if (fenceStart >= 0) {
             int afterFence = text.indexOf('`', fenceStart + 7);
@@ -127,7 +122,6 @@ public final class SkillsExtraction {
             }
         }
 
-        // Вытаскиваем первое и последнее вхождение фигурных скобок
         int start = text.indexOf('{');
         int end = text.lastIndexOf('}');
         if (start == -1 || end == -1 || end <= start) {

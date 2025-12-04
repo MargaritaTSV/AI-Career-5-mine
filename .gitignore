@@ -3,7 +3,8 @@ target/
 !**/src/main/**/target/
 !**/src/test/**/target/
 .kotlin
-
+src/main/java/com/aicareer/aitransform/Config.java
+src/main/java/com/aicareer/aitransform/config.java
 ### IntelliJ IDEA ###
 .idea/modules.xml
 .idea/jarRepositories.xml
