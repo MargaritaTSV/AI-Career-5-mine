@@ -11,7 +11,7 @@ public class DbConnectionProvider {
     private final String password;
 
     public DbConnectionProvider() {
-        this.url = getOrDefault("DB_URL", "jdbc:postgresql://localhost:5432/aicareer");
+        this.url = getOrDefault("DB_URL", "jdbc:postgresql://localhost:5433/aicareer");
         this.user = getOrDefault("DB_USER", "aicareer");
         this.password = getOrDefault("DB_PASSWORD", "aicareer");
     }

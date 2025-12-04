@@ -3,6 +3,7 @@ package com.aicareer.aitransform;
 import java.io.*;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.util.Scanner;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
@@ -12,7 +13,9 @@ public class TryGPT {
 
   public static void main(String[] args) throws Exception {
 
-    String apiKey = Config.API_KEY;
+    ensureApiKey();
+
+    String apiKey = Config.getApiKey();
     System.out.println("Using API Key: " + apiKey);
     URL url = new URL("https://api.openai.com/v1/chat/completions");
     HttpURLConnection con = (HttpURLConnection) url.openConnection();
@@ -543,5 +546,14 @@ public class TryGPT {
         .asText();
 
     System.out.println("ASSISTANT:\n" + content);
+  }
+
+  private static void ensureApiKey() {
+    if (Config.isApiKeySet()) {
+      return;
+    }
+
+    Scanner scanner = new Scanner(System.in);
+    Config.ensureApiKeyFromInput(scanner);
   }
 }

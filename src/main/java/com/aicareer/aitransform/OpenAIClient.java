@@ -34,7 +34,7 @@ public class OpenAIClient {
             .build();
 
     public String generate(String model, String prompt) {
-        String apiKey = Config.API_KEY;
+        String apiKey = Config.getApiKey();
 
         String resolvedModel = (model == null || model.isBlank()) ? DEFAULT_MODEL : model.trim();
 

@@ -11,9 +11,7 @@ public class Database {
             "DB_URL",
             "jdbc:postgresql://localhost:5433/aicareer"
     );
-    // Прямо требуем использовать роль/пользователя aicareer
     private static final String USER = "aicareer";
-    // По умолчанию пароль тоже aicareer; при желании можно поменять в коде или использовать окружение на уровне ОС
     private static final String PASSWORD = "aicareer";
 
     public static Connection get() {
