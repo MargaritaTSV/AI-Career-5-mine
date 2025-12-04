@@ -25,7 +25,7 @@ public class ImportJsonToDb {
         JdbcVacancyRepository repository = new JdbcVacancyRepository(provider);
 
         ObjectMapper mapper = new ObjectMapper();
-        Path exportDir = Path.of("src/main/resources/export");
+        Path exportDir = Path.of("target/export");
         Path source = resolveSourcePath(args, exportDir);
 
         System.out.println("Импорт из файла: " + source.toAbsolutePath());

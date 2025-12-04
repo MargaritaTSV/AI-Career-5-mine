@@ -1,14 +1,9 @@
 package com.aicareer.aitransform;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import java.io.IOException;
-import java.io.InputStream;
-import java.io.UncheckedIOException;
-import java.nio.file.Files;
-import java.nio.file.Path;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -21,33 +16,41 @@ public final class SkillsExtraction {
             "gpt-4o-mini"
     );
 
-    private static final String SKILLS_RESOURCE = "skills.json";
-    private static final String DEFAULT_VACANCIES_RESOURCE =
-            "export/vacancies_top25_java_backend_developer.json";
-
-    private static final List<String> SKILL_LIST = loadSkillList();
+    private static final List<String> SKILL_LIST = List.of(
+            "java",
+            "c++",
+            "python",
+            "javascript",
+            "sql",
+            "docker",
+            "c#",
+            "php",
+            "spring",
+            "machine_learning",
+            "react",
+            "typescript",
+            "kubernetes",
+            "terraform",
+            "linux",
+            "hibernate",
+            "spark",
+            "distributed_systems",
+            "kafka",
+            "aws"
+    );
 
     private SkillsExtraction() {
-    }
-
-    public static Map<String, Integer> fromFile(Path path) {
-        try {
-            return fromJson(Files.readString(path));
-        } catch (IOException e) {
-            throw new UncheckedIOException("Failed to read vacancies file: " + path, e);
-        }
     }
 
     public static List<String> skillList() {
         return List.copyOf(SKILL_LIST);
     }
 
-    public static Map<String, Integer> fromResource(String resource) {
-        try (InputStream is = Thread.currentThread().getContextClassLoader().getResourceAsStream(resource)) {
-            if (is == null) throw new IllegalArgumentException("Resource not found: " + resource);
-            return fromJson(new String(is.readAllBytes()));
-        } catch (IOException e) {
-            throw new UncheckedIOException("Failed to load vacancies resource: " + resource, e);
+    public static Map<String, Integer> fromVacancies(List<?> vacancies) {
+        try {
+            return fromJson(MAPPER.writeValueAsString(vacancies));
+        } catch (JsonProcessingException e) {
+            throw new IllegalArgumentException("Failed to serialize vacancies payload", e);
         }
     }
 
@@ -130,33 +133,8 @@ public final class SkillsExtraction {
         return text.substring(start, end + 1);
     }
 
-    private static List<String> loadSkillList() {
-        try (InputStream is = Thread.currentThread()
-                .getContextClassLoader()
-                .getResourceAsStream(SKILLS_RESOURCE)) {
-            if (is == null) {
-                throw new IllegalStateException("Skills resource not found: " + SKILLS_RESOURCE);
-            }
-            return MAPPER.readValue(is, new TypeReference<>() {
-            });
-        } catch (IOException e) {
-            throw new UncheckedIOException("Failed to load skills list from resource: " + SKILLS_RESOURCE, e);
-        }
-    }
-
     public static void main(String[] args) {
-        String resource = args.length > 0 && !args[0].isBlank()
-                ? args[0]
-                : DEFAULT_VACANCIES_RESOURCE; // путь к файлу с вакансиями
-
-        Map<String, Integer> matrix = resource.startsWith("export/")
-                ? fromResource(resource)
-                : fromFile(Path.of(resource));
-        try {
-            System.out.println(MAPPER.writerWithDefaultPrettyPrinter().writeValueAsString(matrix));
-        } catch (JsonProcessingException e) {
-            throw new IllegalStateException("Failed to serialize matrix", e);
-        }
+        throw new UnsupportedOperationException("Use the interactive pipeline to extract skills");
     }
 
 }

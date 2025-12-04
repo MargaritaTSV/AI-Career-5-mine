@@ -23,13 +23,13 @@ public class Comparison {
     private static final String STATUS_EXCEEDS = "лучше ожидаемого";
 
     private static final Path DEFAULT_ROLE_MATRIX =
-            Path.of("src/main/resources/matrices/desired_role_matrix.json");
+            Path.of("target/matrices/desired_role_matrix.json");
     private static final Path DEFAULT_USER_MATRIX =
-            Path.of("src/main/resources/matrices/user_skill_matrix.json");
+            Path.of("target/matrices/user_skill_matrix.json");
     private static final Path DEFAULT_STATUS_OUTPUT =
-            Path.of("src/main/resources/matrices/skill_comparison.json");
+            Path.of("target/matrices/skill_comparison.json");
     private static final Path DEFAULT_SUMMARY_OUTPUT =
-            Path.of("src/main/resources/matrices/summary.json");
+            Path.of("target/matrices/summary.json");
 
     public static void main(String[] args) {
         Path roleMatrixPath = args.length > 0 ? Path.of(args[0]) : DEFAULT_ROLE_MATRIX;

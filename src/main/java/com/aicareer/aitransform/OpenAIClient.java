@@ -29,12 +29,12 @@ public class OpenAIClient {
     private static final int MAX_RETRIES_ON_419 = 2;
     private static final long RETRY_DELAY_SECONDS = 10_000;
 
-    private final HttpClient client = HttpClient.newBuilder()
-            .connectTimeout(Duration.ofSeconds(10))
-            .build();
+  private final HttpClient client = HttpClient.newBuilder()
+          .connectTimeout(Duration.ofSeconds(10))
+          .build();
 
-    public String generate(String model, String prompt) {
-        String apiKey = Config.API_KEY;
+  public String generate(String model, String prompt) {
+        String apiKey = Config.getApiKey();
 
         String resolvedModel = (model == null || model.isBlank()) ? DEFAULT_MODEL : model.trim();
 

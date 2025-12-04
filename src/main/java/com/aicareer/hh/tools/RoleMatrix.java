@@ -13,6 +13,15 @@ import java.util.stream.StreamSupport;
 public final class RoleMatrix {
     private RoleMatrix() {}
 
+    public static Map<String, List<String>> defaultMatrix() {
+        Map<String, List<String>> roles = new LinkedHashMap<>();
+        roles.put("Java Backend Developer", List.of("java", "spring", "sql", "docker", "kafka", "microservices", "testing", "cloud"));
+        roles.put("Data Engineer", List.of("python", "spark", "kafka", "sql", "aws", "kubernetes", "terraform"));
+        roles.put("DevOps Engineer", List.of("linux", "docker", "kubernetes", "terraform", "aws", "monitoring"));
+        roles.put("Frontend Developer", List.of("javascript", "typescript", "react", "testing", "css"));
+        return roles;
+    }
+
     public static Map<String, List<String>> load(String resourceName) {
         try (InputStream is = Thread.currentThread()
                 .getContextClassLoader()

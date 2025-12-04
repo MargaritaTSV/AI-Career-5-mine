@@ -39,5 +39,19 @@ CREATE TABLE IF NOT EXISTS vacancy (
     url TEXT,
     source TEXT,
     published_at TEXT,
-    score INT
+    score INT,
+    skills JSONB
+);
+
+CREATE TABLE IF NOT EXISTS app_analysis_runs (
+    id UUID PRIMARY KEY,
+    user_id VARCHAR(64) REFERENCES app_users(id) ON DELETE CASCADE,
+    target_role VARCHAR(200) NOT NULL,
+    vacancies JSONB,
+    user_matrix JSONB NOT NULL,
+    role_matrix JSONB NOT NULL,
+    statuses JSONB NOT NULL,
+    summary JSONB NOT NULL,
+    roadmap TEXT,
+    created_at TIMESTAMP NOT NULL DEFAULT NOW()
 );

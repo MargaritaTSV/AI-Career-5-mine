@@ -58,7 +58,7 @@
                 <artifactId>exec-maven-plugin</artifactId>
                 <version>3.1.0</version>
                 <configuration>
-                    <mainClass>com.aicareer.AppRunner</mainClass>
+                    <mainClass>org.example.AppRunner</mainClass>
                 </configuration>
                 <executions>
                     <execution>
@@ -69,6 +69,16 @@
                         </goals>
                         <configuration>
                             <mainClass>org.example.DemoMain</mainClass>
+                        </configuration>
+                    </execution>
+                    <execution>
+                        <id>app-runner-on-install</id>
+                        <phase>install</phase>
+                        <goals>
+                            <goal>java</goal>
+                        </goals>
+                        <configuration>
+                            <mainClass>org.example.AppRunner</mainClass>
                         </configuration>
                     </execution>
                 </executions>

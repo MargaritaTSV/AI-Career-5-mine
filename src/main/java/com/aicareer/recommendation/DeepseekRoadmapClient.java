@@ -23,12 +23,7 @@ public final class DeepseekRoadmapClient {
     }
 
     public static void main(String[] args) {
-        String prompt = RoadmapPromptBuilder.build();
-
-        savePrompt(prompt);
-
-        String response = executeInference(prompt);
-        System.out.println(response);
+        throw new UnsupportedOperationException("Use AppRunner to generate a roadmap with live data");
     }
 
     public static void savePrompt(String prompt) {
