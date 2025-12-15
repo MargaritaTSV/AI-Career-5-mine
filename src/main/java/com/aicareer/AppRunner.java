@@ -461,6 +461,35 @@ public class AppRunner {
     } catch (Exception e) {
       System.err.println("[AI] Failed to get roadmap from model: " + e.getMessage());
     }
+
+    runVisualizationScript();
+  }
+
+  private static void runVisualizationScript() {
+    Path scriptPath = Path.of("Visualisation/Visualisation/plotskillsgraph.py");
+
+    if (!Files.exists(scriptPath)) {
+      System.err.println("[VIS] Visualization script not found at " + scriptPath.toAbsolutePath());
+      return;
+    }
+
+    ProcessBuilder processBuilder = new ProcessBuilder("python", scriptPath.toString());
+    processBuilder.inheritIO();
+
+    try {
+      Process process = processBuilder.start();
+      int exitCode = process.waitFor();
+      if (exitCode == 0) {
+        System.out.println("[VIS] Skill graph visualization generated successfully.");
+      } else {
+        System.err.println("[VIS] Visualization script exited with code " + exitCode);
+      }
+    } catch (IOException e) {
+      throw new UncheckedIOException("Failed to start visualization script", e);
+    } catch (InterruptedException e) {
+      Thread.currentThread().interrupt();
+      System.err.println("[VIS] Visualization script was interrupted");
+    }
   }
 
   // ===== СТАРЫЕ ВСПОМОГАТЕЛЬНЫЕ МЕТОДЫ =====
