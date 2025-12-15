@@ -340,8 +340,8 @@ def draw_graph(
     plt.title(title, fontsize=14, fontweight="bold", pad=20)
 
     plt.axis("off")
-    plt.margins(0.25)
-    plt.tight_layout(rect=(0, 0.1, 1, 1))
+    plt.margins(x=0.25, y=0.35)
+    plt.tight_layout(rect=(0, 0.15, 1, 0.93))
 
     output.parent.mkdir(parents=True, exist_ok=True)
     plt.savefig(output, dpi=300, bbox_inches="tight")
