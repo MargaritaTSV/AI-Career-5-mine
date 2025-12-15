@@ -4,6 +4,7 @@ import com.aicareer.hh.infrastructure.db.DbConnectionProvider;
 import com.aicareer.hh.model.OutVacancy;
 import com.aicareer.hh.model.Vacancy;
 import com.aicareer.hh.repository.JdbcVacancyRepository;
+import com.aicareer.hh.service.VacancyMapper;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
@@ -36,34 +37,9 @@ public class ImportJsonToDb {
         );
 
         // Преобразование OutVacancy → Vacancy
-        List<Vacancy> vacancies = outVacancies.stream().map(o -> {
-            Vacancy v = new Vacancy();
-
-            // если поля публичные — прямое обращение
-            try {
-                v.setId((String) OutVacancy.class.getField("id").get(o));
-                v.setTitle((String) OutVacancy.class.getField("title").get(o));
-                v.setCompany((String) OutVacancy.class.getField("company").get(o));
-                v.setCity((String) OutVacancy.class.getField("city").get(o));
-                v.setExperience((String) OutVacancy.class.getField("experience").get(o));
-                v.setEmployment((String) OutVacancy.class.getField("employment").get(o));
-                v.setSchedule((String) OutVacancy.class.getField("schedule").get(o));
-                v.setSalaryFrom((Integer) OutVacancy.class.getField("salaryFrom").get(o));
-                v.setSalaryTo((Integer) OutVacancy.class.getField("salaryTo").get(o));
-                v.setCurrency((String) OutVacancy.class.getField("currency").get(o));
-                v.setDescription((String) OutVacancy.class.getField("description").get(o));
-                v.setUrl((String) OutVacancy.class.getField("url").get(o));
-                v.setSource((String) OutVacancy.class.getField("source").get(o));
-                v.setPublishedAt((String) OutVacancy.class.getField("publishedAt").get(o));
-                Object skillsObj = OutVacancy.class.getField("skills").get(o);
-                if (skillsObj instanceof List<?> skillsList) {
-                    v.setSkills((List<String>) skillsList);
-                }
-            } catch (Exception ignore) {
-                // если нет нужного поля — просто пропускаем
-            }
-            return v;
-        }).collect(Collectors.toList());
+        List<Vacancy> vacancies = outVacancies.stream()
+                .map(VacancyMapper::fromOutVacancy)
+                .collect(Collectors.toList());
 
         repository.saveAll(vacancies);
 

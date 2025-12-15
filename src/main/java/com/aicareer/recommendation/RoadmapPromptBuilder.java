@@ -259,10 +259,21 @@ public final class RoadmapPromptBuilder {
                                String userMatrixResource,
                                String desiredMatrixResource,
                                String skillGraphResource) {
+        return buildFromVacanciesJson(
+                readResourceJson(vacanciesResource),
+                userMatrixResource,
+                desiredMatrixResource,
+                skillGraphResource
+        );
+    }
+
+    public static String buildFromVacanciesJson(String vacanciesJson,
+                                                String userMatrixResource,
+                                                String desiredMatrixResource,
+                                                String skillGraphResource) {
         Map<String, Integer> userMatrix = readSkillMatrix(userMatrixResource);
         Map<String, Integer> desiredMatrix = readSkillMatrix(desiredMatrixResource);
         String graphJson = readResourceJson(skillGraphResource);
-        String vacanciesJson = readResourceJson(vacanciesResource);
 
         List<String> userSkills = flaggedSkills(userMatrix);
         List<String> targetSkills = flaggedSkills(desiredMatrix);

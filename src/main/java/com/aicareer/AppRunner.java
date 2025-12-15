@@ -7,6 +7,9 @@ import com.aicareer.aitransform.UserInfoExporter;
 import com.aicareer.comparison.Comparison;
 import com.aicareer.comparison.Comparison.ComparisonResult;
 import com.aicareer.hh.infrastructure.db.DbConnectionProvider;
+import com.aicareer.hh.model.Vacancy;
+import com.aicareer.hh.repository.JdbcVacancyRepository;
+import com.aicareer.hh.service.VacancyResourceImporter;
 import com.aicareer.recommendation.DeepseekRoadmapClient;
 import com.aicareer.recommendation.RoadmapPromptBuilder;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -23,7 +26,6 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
-import java.util.Locale;
 import java.util.Map;
 import java.util.Scanner;
 import java.util.UUID;
@@ -89,7 +91,7 @@ public class AppRunner {
 
     System.out.println("[USER] loaded profile for: " + profile.name() + " (" + targetRole + ")");
 
-    runPipeline(exporter, profile, targetRole);
+    runPipeline(provider, exporter, profile, targetRole);
   }
 
   // ===== ИНТЕРАКТИВНЫЙ РЕЖИМ =====
@@ -111,7 +113,7 @@ public class AppRunner {
       String targetRole = quickstart.targetRole();
       System.out.println("[ROLE] Используем целевую роль QuickStart без вопросов: " + targetRole);
       System.out.println("\n[PIPELINE] Старт анализа для роли: " + targetRole);
-      runPipeline(exporter, quickstart, targetRole);
+      runPipeline(provider, exporter, quickstart, targetRole);
       return;
     }
 
@@ -119,7 +121,7 @@ public class AppRunner {
       System.out.println("[MODE] Ручной ввод с сохранением в БД");
       UserInfoExporter.ProfileSnapshot newProfile = createUserInteractive(provider, exporter, in);
       System.out.println("\n[PIPELINE] Старт анализа для роли: " + newProfile.targetRole());
-      runPipeline(exporter, newProfile, newProfile.targetRole());
+      runPipeline(provider, exporter, newProfile, newProfile.targetRole());
       return;
     }
 
@@ -136,7 +138,7 @@ public class AppRunner {
     String targetRole = chooseTargetRole(in, profile.targetRole());
 
     System.out.println("\n[PIPELINE] Старт анализа для роли: " + targetRole);
-    runPipeline(exporter, profile, targetRole);
+    runPipeline(provider, exporter, profile, targetRole);
   }
 
   private static UserInfoExporter.ProfileSnapshot prepareQuickstartProfile(
@@ -422,7 +424,8 @@ public class AppRunner {
 
   // ===== ОБЩИЙ ПАЙПЛАЙН (как был, но вынесен в отдельный метод) =====
 
-  private static void runPipeline(UserInfoExporter exporter,
+  private static void runPipeline(DbConnectionProvider provider,
+      UserInfoExporter exporter,
       UserInfoExporter.ProfileSnapshot profile,
       String targetRole) {
 
@@ -432,10 +435,23 @@ public class AppRunner {
 
     exporter.writeUserSkillMatrix(profile.skills(), USER_MATRIX_PATH);
 
-    String vacanciesResource = resolveVacanciesResource(targetRole);
-    System.out.println("[ROLE] using vacancies resource: " + vacanciesResource);
+    String vacanciesResource = SkillsExtraction.resolveVacanciesResource(targetRole);
+    String datasetName = Path.of(vacanciesResource).getFileName().toString();
+    System.out.println("[ROLE] using vacancies dataset from DB: " + datasetName);
 
-    Map<String, Integer> roleMatrix = SkillsExtraction.fromResource(vacanciesResource);
+    JdbcVacancyRepository vacancies = new JdbcVacancyRepository(provider);
+    List<Vacancy> roleVacancies = vacancies.findBySource(datasetName);
+    if (roleVacancies.isEmpty()) {
+      System.out.println("[ROLE] Вакансий для набора нет — загружаем из файла: " + datasetName);
+      new VacancyResourceImporter(provider).importByName(datasetName);
+      roleVacancies = vacancies.findBySource(datasetName);
+    }
+    if (roleVacancies.isEmpty()) {
+      throw new IllegalStateException("В БД нет вакансий для набора: " + datasetName
+          + " — импортируйте экспортные файлы перед запуском");
+    }
+
+    Map<String, Integer> roleMatrix = SkillsExtraction.fromVacancies(roleVacancies);
     writeJson(ROLE_MATRIX_PATH, roleMatrix);
 
     ComparisonResult comparison = Comparison.calculate(roleMatrix, profile.skills());
@@ -443,8 +459,8 @@ public class AppRunner {
 
     Path skillGraphImage = runVisualizationScript();
 
-    String prompt = RoadmapPromptBuilder.build(
-        vacanciesResource,
+    String prompt = RoadmapPromptBuilder.buildFromVacanciesJson(
+        SkillsExtraction.toJson(roleVacancies),
         "matrices/user_skill_matrix.json",
         "matrices/desired_role_matrix.json",
         "graphs/skills-graph.json"
@@ -541,24 +557,6 @@ public class AppRunner {
   }
 
   // ===== СТАРЫЕ ВСПОМОГАТЕЛЬНЫЕ МЕТОДЫ =====
-
-  private static String resolveVacanciesResource(String roleName) {
-    String safe = roleName.toLowerCase(Locale.ROOT)
-        .replaceAll("[^a-z0-9]+", "_")
-        .replaceAll("^_+|_+$", "");
-    String resource = "export/vacancies_top25_" + safe + ".json";
-
-    if (resourceExists(resource)) {
-      return resource;
-    }
-    throw new IllegalArgumentException("No vacancies_top25 resource found for role: " + roleName);
-  }
-
-  private static boolean resourceExists(String resource) {
-    return Thread.currentThread()
-        .getContextClassLoader()
-        .getResource(resource) != null;
-  }
 
   private static void writeJson(Path path, Object payload) {
     try {
