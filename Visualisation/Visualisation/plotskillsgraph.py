@@ -18,6 +18,7 @@ DESIRED_MATRIX_PATH = PROJECT_ROOT / "src" / "main" / "resources" / "matrices" /
 SKILLS_REFERENCE_PATH = PROJECT_ROOT / "src" / "main" / "resources" / "skills.json"
 USERS_PATH = PROJECT_ROOT / "src" / "main" / "resources" / "test_users.json"
 PARAMETERS_PATH = PROJECT_ROOT / "Parameters.json"
+MISSING_SKILLS_OUTPUT = PROJECT_ROOT / "src" / "main" / "resources" / "matrices" / "missing_skills.json"
 OUTPUT_DIR = VISUALISATION_ROOT / "target" / "visualisations"
 
 LIGHT_ORANGE = "#f4a261"
@@ -211,6 +212,13 @@ def classify_nodes(graph: nx.DiGraph) -> Dict[str, str]:
   return status
 
 
+def save_missing_skills(statuses: Dict[str, str]) -> None:
+  missing_skills = sorted([node for node, status in statuses.items() if status == "missing"])
+  MISSING_SKILLS_OUTPUT.parent.mkdir(parents=True, exist_ok=True)
+  with MISSING_SKILLS_OUTPUT.open("w", encoding="utf-8") as f:
+    json.dump(missing_skills, f, ensure_ascii=False, indent=2)
+
+
 def infer_user_name() -> str:
   users = load_users()
   if users:
@@ -374,6 +382,8 @@ def main() -> None:
     else LIGHT_ORANGE
     for node in pruned_graph.nodes()
   ]
+
+  save_missing_skills(statuses)
 
   node_color_lookup = {
     node: MASTERED_COLOR if statuses[node] == "mastered"

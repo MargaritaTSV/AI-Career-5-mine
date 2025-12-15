@@ -7,6 +7,8 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.UncheckedIOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -19,6 +21,7 @@ public final class RoadmapPromptBuilder {
     private static final String DESIRED_MATRIX_RESOURCE = "matrices/desired_role_matrix.json";
     private static final String SKILL_GRAPH_RESOURCE = "graphs/skills-graph.json";
     private static final String VACANCIES_RESOURCE = "export/vacancies_top25_java_backend_developer.json";
+    private static final Path MISSING_SKILLS_PATH = Path.of("src/main/resources/matrices/missing_skills.json");
     private static final String RESOURCES_FOR_RECOMMENDATIONS = """
             ## Computer Science (Harvard)
 
@@ -248,17 +251,18 @@ public final class RoadmapPromptBuilder {
     }
 
     public static String build() {
-        return build(VACANCIES_RESOURCE, USER_MATRIX_RESOURCE, DESIRED_MATRIX_RESOURCE, SKILL_GRAPH_RESOURCE);
+        return build(VACANCIES_RESOURCE, USER_MATRIX_RESOURCE, DESIRED_MATRIX_RESOURCE, SKILL_GRAPH_RESOURCE, MISSING_SKILLS_PATH);
     }
 
     public static String build(String vacanciesResource) {
-        return build(vacanciesResource, USER_MATRIX_RESOURCE, DESIRED_MATRIX_RESOURCE, SKILL_GRAPH_RESOURCE);
+        return build(vacanciesResource, USER_MATRIX_RESOURCE, DESIRED_MATRIX_RESOURCE, SKILL_GRAPH_RESOURCE, MISSING_SKILLS_PATH);
     }
 
     public static String build(String vacanciesResource,
                                String userMatrixResource,
                                String desiredMatrixResource,
-                               String skillGraphResource) {
+                               String skillGraphResource,
+                               Path missingSkillsFile) {
         Map<String, Integer> userMatrix = readSkillMatrix(userMatrixResource);
         Map<String, Integer> desiredMatrix = readSkillMatrix(desiredMatrixResource);
         String graphJson = readResourceJson(skillGraphResource);
@@ -266,9 +270,7 @@ public final class RoadmapPromptBuilder {
 
         List<String> userSkills = flaggedSkills(userMatrix);
         List<String> targetSkills = flaggedSkills(desiredMatrix);
-        List<String> missingSkills = targetSkills.stream()
-                .filter(skill -> !userSkills.contains(skill))
-                .toList();
+        List<String> missingSkills = readMissingSkills(missingSkillsFile, userSkills, targetSkills);
 
         return String.join("\n", List.of(
                 "Ты — карьерный консультант и планировщик обучения. Тебе дан граф навыков, на котором стрелками показана связь навыков в программировании. ",
@@ -332,5 +334,23 @@ public final class RoadmapPromptBuilder {
         } catch (JsonProcessingException e) {
             throw new IllegalStateException("Failed to format JSON payload", e);
         }
+    }
+
+    private static List<String> readMissingSkills(Path missingSkillsFile, List<String> userSkills, List<String> targetSkills) {
+        if (missingSkillsFile != null && Files.exists(missingSkillsFile)) {
+            try (InputStream is = Files.newInputStream(missingSkillsFile)) {
+                List<String> skills = MAPPER.readValue(is, new TypeReference<List<String>>() {
+                });
+                if (!skills.isEmpty()) {
+                    return skills;
+                }
+            } catch (IOException e) {
+                System.err.println("[PROMPT] Failed to read missing skills file, falling back to calculation: " + e.getMessage());
+            }
+        }
+
+        return targetSkills.stream()
+                .filter(skill -> !userSkills.contains(skill))
+                .toList();
     }
 }
