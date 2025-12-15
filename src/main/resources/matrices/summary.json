@@ -1,5 +1,5 @@
 {
-  "соответствует" : [ "java", "c++", "python", "javascript", "sql", "c#", "php", "spring", "machine_learning", "react", "typescript", "kubernetes", "terraform", "hibernate", "spark", "pandas", "cloud" ],
-  "требует улучшения" : [ "linux", "kafka", "aws" ],
-  "лучше ожидаемого" : [ "docker", "git", "testing" ]
+  "соответствует" : [ "java", "c++", "python", "javascript", "sql", "c#", "php", "spring", "react", "typescript", "terraform", "linux", "hibernate", "spark", "aws" ],
+  "требует улучшения" : [ "docker", "machine_learning", "kubernetes", "pandas", "kafka" ],
+  "лучше ожидаемого" : [ ]
 }
