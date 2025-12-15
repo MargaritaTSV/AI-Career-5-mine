@@ -38,6 +38,7 @@ public class AppRunner {
   private static final Path ROLE_MATRIX_PATH = Path.of("src/main/resources/matrices/desired_role_matrix.json");
   private static final Path STATUSES_PATH = Path.of("src/main/resources/matrices/skill_comparison.json");
   private static final Path SUMMARY_PATH = Path.of("src/main/resources/matrices/summary.json");
+  private static final Path MISSING_SKILLS_PATH = Path.of("src/main/resources/matrices/missing_skills.json");
 
   // дефолтный пользователь для quickstart
   private static final String DEFAULT_TEST_EMAIL = "test@example.com";
@@ -447,7 +448,8 @@ public class AppRunner {
         vacanciesResource,
         "matrices/user_skill_matrix.json",
         "matrices/desired_role_matrix.json",
-        "graphs/skills-graph.json"
+        "graphs/skills-graph.json",
+        MISSING_SKILLS_PATH
     );
 
     List<String> masteredSkills = profile.skills().entrySet().stream()
