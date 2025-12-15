@@ -133,7 +133,7 @@ def compute_positions(level: Dict[str, int]) -> Dict[str, Tuple[float, float]]:
     for lvl, nodes_on_level in levels_to_nodes.items():
         count = len(nodes_on_level)
         for i, node in enumerate(sorted(nodes_on_level)):
-            x = 0.0 if count == 1 else -2.0 + 4.0 * i / (count - 1)
+            x = 0.0 if count == 1 else -2.5 + 5.0 * i / (count - 1)
             y = -lvl
             positions[node] = (x, y)
 
@@ -257,7 +257,7 @@ def draw_graph(
 ) -> None:
     node_sizes = [280 for _ in graph.nodes()]
 
-    widths = [2.4 for _ in graph.edges()]
+    widths = [1.8 for _ in graph.edges()]
 
     plt.figure(figsize=(10, 8))
 
@@ -300,7 +300,7 @@ def draw_graph(
             markersize=10,
             markerfacecolor=MISSING_COLOR,
             markeredgecolor="none",
-            label="навык, требующий освоения",
+            label="Навык, требующий освоения",
         ),
         plt.Line2D(
             [],
@@ -310,7 +310,7 @@ def draw_graph(
             markersize=10,
             markerfacecolor=MASTERED_COLOR,
             markeredgecolor="none",
-            label="освоенный навык",
+            label="Освоенный навык",
         ),
         plt.Line2D(
             [],
@@ -320,7 +320,7 @@ def draw_graph(
             markersize=10,
             markerfacecolor=LIGHT_ORANGE,
             markeredgecolor="none",
-            label="навыки не требующиеся для выбранной должности",
+            label="Навыки, не требующиеся для выбранной должности",
         ),
     ]
 
