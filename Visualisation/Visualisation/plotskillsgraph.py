@@ -198,6 +198,16 @@ def classify_nodes(graph: nx.DiGraph) -> Dict[str, str]:
       status[node] = "missing"
     else:
       status[node] = "neutral"
+
+  missing_with_prerequisites: set[str] = set(missing)
+  for target in missing:
+    for ancestor in nx.ancestors(graph, target):
+      if ancestor not in mastered:
+        missing_with_prerequisites.add(ancestor)
+
+  for node in missing_with_prerequisites:
+    if status.get(node) != "mastered":
+      status[node] = "missing"
   return status
 
 
@@ -235,6 +245,7 @@ def draw_graph(
     positions: Dict[str, Tuple[float, float]],
     *,
     node_colors: Iterable[str],
+    edge_colors: Iterable[str],
     output: Path,
     title: str,
 ) -> None:
@@ -267,7 +278,7 @@ def draw_graph(
     arrowstyle='-|>',
     arrowsize=20,
     connectionstyle="arc3,rad=0.12",
-    edge_color=ORANGE_BORDER,
+    edge_color=edge_colors,
   )
 
   label_positions = {node: (coords[0], coords[1] - 0.18) for node, coords in positions.items()}
@@ -337,12 +348,15 @@ def main() -> None:
   pruned_graph = build_pruned_graph(full_graph, sorted_edges)
   levels = compute_levels(pruned_graph)
   positions = compute_positions(levels)
-  title = "Java Backend Developer"
+  title = infer_role_title()
 
+  neutral_colors = [LIGHT_ORANGE for _ in pruned_graph.nodes()]
+  neutral_edge_colors = [LIGHT_ORANGE for _ in pruned_graph.edges()]
   draw_graph(
     pruned_graph,
     positions,
-    node_colors=[LIGHT_ORANGE for _ in pruned_graph.nodes()],
+    node_colors=neutral_colors,
+    edge_colors=neutral_edge_colors,
     output=OUTPUT_DIR / "skills_graph.png",
     title=title,
   )
@@ -355,10 +369,28 @@ def main() -> None:
     for node in pruned_graph.nodes()
   ]
 
+  node_color_lookup = {
+    node: MASTERED_COLOR if statuses[node] == "mastered"
+    else MISSING_COLOR if statuses[node] == "missing"
+    else LIGHT_ORANGE
+    for node in pruned_graph.nodes()
+  }
+
+  edge_colors = []
+  for source, target in pruned_graph.edges():
+    source_color = node_color_lookup.get(source, LIGHT_ORANGE)
+    target_color = node_color_lookup.get(target, LIGHT_ORANGE)
+
+    if source_color == LIGHT_ORANGE:
+      edge_colors.append(LIGHT_ORANGE)
+    else:
+      edge_colors.append(target_color)
+
   draw_graph(
     pruned_graph,
     positions,
     node_colors=color_map,
+    edge_colors=edge_colors,
     output=OUTPUT_DIR / "skills_graph_mastery.png",
     title=title,
   )
