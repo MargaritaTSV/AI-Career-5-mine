@@ -7,6 +7,8 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.UncheckedIOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -19,6 +21,7 @@ public final class RoadmapPromptBuilder {
     private static final String DESIRED_MATRIX_RESOURCE = "matrices/desired_role_matrix.json";
     private static final String SKILL_GRAPH_RESOURCE = "graphs/skills-graph.json";
     private static final String VACANCIES_RESOURCE = "export/vacancies_top25_java_backend_developer.json";
+    private static final Path MISSING_SKILLS_FILE = Path.of("target", "missing-skills.json");
     private static final String RESOURCES_FOR_RECOMMENDATIONS = """
             ## Computer Science (Harvard)
 
@@ -262,34 +265,41 @@ public final class RoadmapPromptBuilder {
         Map<String, Integer> userMatrix = readSkillMatrix(userMatrixResource);
         Map<String, Integer> desiredMatrix = readSkillMatrix(desiredMatrixResource);
         String graphJson = readResourceJson(skillGraphResource);
-        String vacanciesJson = readResourceJson(vacanciesResource);
 
         List<String> userSkills = flaggedSkills(userMatrix);
         List<String> targetSkills = flaggedSkills(desiredMatrix);
         List<String> missingSkills = targetSkills.stream()
                 .filter(skill -> !userSkills.contains(skill))
                 .toList();
+        String missingSkillsJson = persistMissingSkills(missingSkills);
 
         return String.join("\n", List.of(
-                "Ты — карьерный консультант и планировщик обучения. Тебе дан граф навыков, на котором стрелками показана связь навыков в программировании. ",
-                "Также данные ниже: матрица навыков пользователя, требования роли, ориентированный граф зависимостей навыков, список вакансий роли и список учебных ресурсов.",
-                "Задача: выдать краткий маршрут, который быстрее всего закроет дефицит навыков для целевой роли; более сильные рёбра графа ставь раньше в очереди. Ты должен учитывать, что например для aws и kafka (это ты поймешь по графу) сначала надо изучить kubernetes, тогда даже если этот навык не требуется в специальности ты должен его вписать в шаги по достижению необходимого уровня. Поэтому например в случае с Java Backend Developer не пропускай этот шаг и аналогично для остальных случаев.",
-            "Помни что в присланном тебе графе наибольшим приоритетом пользуются навыки вверху, то есть ты должен как бы идти сверху вниз.",
-            "Отдавай приоритет книгам и курсам вне Stepik/Coursera, в первую очередь материалам похожим на Harvard/CS50.",
-                "Для каждого шага выбери 1–2 ресурса из предложенного списка, которые лучше всего подходят под темы шага, и укажи их явно.",
-            "\nОриентированный граф навыков (используй уровни навыков для приоритета шагов, те у которых уровень меньше должны быть первее):\n" + graphJson,
-            "\nТекущие навыки пользователя (1 = владеет):\n" + formatJson(userMatrix)
-                        + "\nСильные стороны: " + String.join(", ", userSkills),
-                "\nМатрица требуемых навыков роли:\n" + formatJson(desiredMatrix)
-                        + "\nКлючевые цели: " + String.join(", ", targetSkills),
-                "\nНавыки, которых не хватает: " + (missingSkills.isEmpty() ? "нет" : String.join(", ", missingSkills)),
-                "\nВакансии для анализа стеков и узких тем (используй для выбора фреймворков и инструментов):\n" + vacanciesJson,
-                "\nСписок ресурсов: используй только их, подбирая к каждому шагу 1–2 варианта:\n" + RESOURCES_FOR_RECOMMENDATIONS,
+                "Ты — карьерный консультант и планировщик обучения. Тебе дан ориентированный граф зависимостей навыков с весами. Сильные рёбра важнее, а узлы выше по графу имеют больший приоритет.",
+                "Задача: упорядочить и закрыть только те навыки, которые на графе отмечены красным (ещё не освоены). Используй структуру графа и веса связей, чтобы расположить их в правильном порядке и подобрать материалы.",
+                "Входные данные:",
+                "- Навыки для освоения (красные узлы на графе): " + (missingSkills.isEmpty() ? "нет" : String.join(", ", missingSkills)),
+                "- Файл с навыками для освоения (target/missing-skills.json):\n" + missingSkillsJson,
+                "- Полный граф навыков в JSON (skills-graph.json), используй его для определения очередности и зависимостей:\n" + graphJson,
+                "\nСписок ресурсов: используй только их, подбирая к каждому шагу 2–3 варианта. Отдавай приоритет книгам и курсам вне Stepik/Coursera, особенно похожим на Harvard/CS50:\n" + RESOURCES_FOR_RECOMMENDATIONS,
                 "\nФормат ответа:",
-                "Roadmap: 3–7 шагов. Каждый шаг — одно предложение вида 'Шаг 1. Java: ООП, коллекции \n Ресурсы: Ресурсы: Learning Python — Марк Лутц \n → Шаг 2. Алгоритмы: асимптотика, разбиение.' или 'Шаг 2. Алгоритмы на Java: асимптотический анализ, толстое и тонкое разбиение. \n  *Ресурсы*",
-                "Правила: сначала закрывай пробелы в навыках, опираясь на уже освоенные; сильные рёбра графа = более важные зависимости, ставь их раньше; разрешено указывать фреймворки, темы, технологии; не повторяй уже освоенные навыки как отдельные шаги — только используй их как фундамент; для каждого шага перечисли 1–2 подходящих ресурса из списка выше. Не пытайся писать жирным шрифтом. Не пиши ничего после предложенных шагов по улучшению"
+                "Roadmap: 3–7 шагов. Каждый шаг — отдельная строка вида 'Шаг 1. Kubernetes: базовые объекты, деплойменты'.",
+                "После строки шага сразу переходи на новую строку и выведи 'Ресурсы:' и 2–3 ресурса (по одному на строку), используя только список выше. Не смешивай шаг и ресурсы в одной строке.",
+                "Правила: опирайся на зависимости из графа; не добавляй в ответ ничего, кроме шагов с материалами; перечисляй только навыки, которые нужно освоить, и необходимые промежуточные темы; запрещено использовать жирный шрифт; не пиши ничего после списка шагов"
         ));
 
+    }
+
+    private static String persistMissingSkills(List<String> missingSkills) {
+        try {
+            if (MISSING_SKILLS_FILE.getParent() != null) {
+                Files.createDirectories(MISSING_SKILLS_FILE.getParent());
+            }
+            String json = MAPPER.writerWithDefaultPrettyPrinter().writeValueAsString(missingSkills);
+            Files.writeString(MISSING_SKILLS_FILE, json);
+            return json;
+        } catch (IOException e) {
+            throw new UncheckedIOException("Failed to persist missing skills to file", e);
+        }
     }
 
     private static Map<String, Integer> readSkillMatrix(String resource) {
@@ -324,13 +334,5 @@ public final class RoadmapPromptBuilder {
                 .filter(entry -> entry.getValue() != null && entry.getValue() == 1)
                 .map(Map.Entry::getKey)
                 .collect(Collectors.toList());
-    }
-
-    private static String formatJson(Map<String, Integer> json) {
-        try {
-            return MAPPER.writerWithDefaultPrettyPrinter().writeValueAsString(json);
-        } catch (JsonProcessingException e) {
-            throw new IllegalStateException("Failed to format JSON payload", e);
-        }
     }
 }

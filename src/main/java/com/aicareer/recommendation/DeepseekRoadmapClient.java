@@ -49,7 +49,6 @@ public final class DeepseekRoadmapClient {
 
     public static String generateRoadmap(String prompt, Path skillGraphImage) {
         savePrompt(prompt);
-        System.out.println("[AI] Запрашиваем план развития у модели...");
         return executeInference(prompt, skillGraphImage);
     }
 
@@ -57,7 +56,6 @@ public final class DeepseekRoadmapClient {
         try {
             String raw = new OpenAIClient()
                     .generate(DEFAULT_MODEL_PATH, prompt, skillGraphImage);
-            System.out.println("[AI] Ответ по плану получен, извлекаем текст...");
             return extractContent(raw);
         } catch (IllegalStateException e) {
             throw e;
