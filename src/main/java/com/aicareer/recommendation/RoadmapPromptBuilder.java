@@ -271,7 +271,8 @@ public final class RoadmapPromptBuilder {
                 desiredMatrixResource,
                 skillGraphResource,
                 masteredSkills,
-                requiredSkills
+                requiredSkills,
+                null
         );
     }
 
@@ -280,7 +281,8 @@ public final class RoadmapPromptBuilder {
                                String desiredMatrixResource,
                                String skillGraphResource,
                                List<String> masteredSkills,
-                               List<String> requiredSkills) {
+                               List<String> requiredSkills,
+                               List<String> missingSkills) {
         Map<String, Integer> userMatrix = readSkillMatrix(userMatrixResource);
         Map<String, Integer> desiredMatrix = readSkillMatrix(desiredMatrixResource);
         String graphJson = readResourceJson(skillGraphResource);
@@ -288,7 +290,9 @@ public final class RoadmapPromptBuilder {
 
         List<String> safeMastered = masteredSkills != null ? masteredSkills : flaggedSkills(userMatrix);
         List<String> safeRequired = requiredSkills != null ? requiredSkills : flaggedSkills(desiredMatrix);
-        List<String> missingSkills = safeRequired.stream()
+        List<String> safeMissing = missingSkills != null
+                ? missingSkills
+                : safeRequired.stream()
                 .filter(skill -> !safeMastered.contains(skill))
                 .toList();
 
@@ -304,7 +308,7 @@ public final class RoadmapPromptBuilder {
                         + "\nСильные стороны: " + String.join(", ", safeMastered),
                 "\nМатрица требуемых навыков роли:\n" + formatJson(desiredMatrix)
                         + "\nКлючевые цели: " + String.join(", ", safeRequired),
-                "\nНавыки, которых не хватает: " + (missingSkills.isEmpty() ? "нет" : String.join(", ", missingSkills)),
+                "\nНавыки, которых не хватает: " + (safeMissing.isEmpty() ? "нет" : String.join(", ", safeMissing)),
                 "\nВакансии для анализа стеков и узких тем (используй для выбора фреймворков и инструментов):\n" + vacanciesJson,
                 "\nСписок ресурсов: используй только их, подбирая к каждому шагу 1–2 варианта:\n" + RESOURCES_FOR_RECOMMENDATIONS,
                 "\nФормат ответа:",

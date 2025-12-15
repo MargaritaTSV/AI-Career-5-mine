@@ -453,6 +453,12 @@ public class AppRunner {
 
     System.out.println("\n[SKILLS] Освоенные: " + String.join(", ", masteredSkills));
     System.out.println("[SKILLS] Требуются для роли: " + String.join(", ", requiredSkills));
+    List<String> missingSkills = requiredSkills.stream()
+        .filter(skill -> !masteredSkills.contains(skill))
+        .toList();
+    System.out.println("[SKILLS] Необходимо освоить: " + (missingSkills.isEmpty()
+        ? "нет"
+        : String.join(", ", missingSkills)));
 
     Path skillGraphImage = runVisualizationScript();
 
@@ -462,7 +468,8 @@ public class AppRunner {
         "matrices/desired_role_matrix.json",
         "graphs/skills-graph.json",
         masteredSkills,
-        requiredSkills
+        requiredSkills,
+        missingSkills
     );
 
     try {
