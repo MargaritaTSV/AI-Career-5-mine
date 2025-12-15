@@ -12,26 +12,46 @@ The script replicates the pruning/layout logic used in earlier experiments:
 Usage:
     python visualise/plot_skills_graphs.py
 
+Environment variables:
+    DB_URL, DB_USER, DB_PASSWORD  — enable loading the latest skill graph from the
+        database table `skill_graph` (falls back to the resources JSON file
+        otherwise).
+    USER_ID — optional user identifier for pulling skills from `app_skills`.
+
 Outputs are written to target/visualisations/skills_graph.png and
 skills_graph_mastery.png.
 """
 from __future__ import annotations
 
 import json
+import os
 from collections import defaultdict, deque
+from contextlib import closing
 from pathlib import Path
-from typing import Dict, Iterable, List, Tuple
+from typing import Dict, Iterable, List, Optional, Tuple
 
 import matplotlib.pyplot as plt
 import networkx as nx
 
+try:
+    import psycopg2
+except ImportError:  # pragma: no cover - optional dependency for local plotting
+    psycopg2 = None
+
 PROJECT_ROOT = Path(__file__).resolve().parents[2]
 VISUALISATION_ROOT = Path(__file__).resolve().parents[1]
 
-GRAPH_PATH = VISUALISATION_ROOT / "graphs" / "skills-graph.json"
+GRAPH_PATH = PROJECT_ROOT / "src" / "main" / "resources" / "graphs" / "skills-graph.json"
+FALLBACK_GRAPH_PATH = VISUALISATION_ROOT / "skills-graph.json"
 USER_MATRIX_PATH = PROJECT_ROOT / "src" / "main" / "resources" / "matrices" / "user_skill_matrix.json"
 DESIRED_MATRIX_PATH = PROJECT_ROOT / "src" / "main" / "resources" / "matrices" / "desired_role_matrix.json"
+SKILLS_REFERENCE_PATH = PROJECT_ROOT / "src" / "main" / "resources" / "skills.json"
 OUTPUT_DIR = VISUALISATION_ROOT / "target" / "visualisations"
+
+DB_URL = os.getenv("DB_URL")
+DB_USER = os.getenv("DB_USER")
+DB_PASSWORD = os.getenv("DB_PASSWORD")
+PREFERRED_USER_ID = os.getenv("USER_ID")
 
 LIGHT_ORANGE = "#ffd8a6"
 ORANGE_BORDER = "#f4a261"
@@ -40,9 +60,52 @@ MASTERED_COLOR = "#b8f5b1"  # light green
 MISSING_COLOR = "#c9e3ff"   # light blue
 
 
+def get_db_connection():
+    if not DB_URL or psycopg2 is None:
+        return None
+
+    params = {"dsn": DB_URL}
+    if DB_USER:
+        params["user"] = DB_USER
+    if DB_PASSWORD:
+        params["password"] = DB_PASSWORD
+
+    try:
+        return psycopg2.connect(**params)
+    except Exception:
+        return None
+
+
+def load_graph_from_db() -> Optional[dict]:
+    conn = get_db_connection()
+    if conn is None:
+        return None
+
+    with closing(conn):
+        with conn.cursor() as cursor:
+            cursor.execute(
+                """
+                SELECT graph_json
+                FROM skill_graph
+                ORDER BY created_at DESC
+                LIMIT 1
+                """
+            )
+            row = cursor.fetchone()
+            if row is None:
+                return None
+            graph_json = row[0]
+            if isinstance(graph_json, str):
+                return json.loads(graph_json)
+            return graph_json
+
+
 def load_graph() -> Tuple[nx.DiGraph, List[Tuple[str, str, int]]]:
-    with GRAPH_PATH.open("r", encoding="utf-8") as f:
-        data = json.load(f)
+    data = load_graph_from_db()
+    if data is None:
+        graph_source = GRAPH_PATH if GRAPH_PATH.exists() else FALLBACK_GRAPH_PATH
+        with graph_source.open("r", encoding="utf-8") as f:
+            data = json.load(f)
 
     nodes = data["nodes"]
     edges = data["edges"]
@@ -160,9 +223,50 @@ def load_matrix(path: Path) -> Dict[str, int]:
         return json.load(f)
 
 
+def load_skills_reference() -> List[str]:
+    with SKILLS_REFERENCE_PATH.open("r", encoding="utf-8") as f:
+        return json.load(f)
+
+
+def load_user_matrix_from_db(skills_reference: List[str]) -> Optional[Dict[str, int]]:
+    if PREFERRED_USER_ID is None:
+        return None
+
+    conn = get_db_connection()
+    if conn is None:
+        return None
+
+    with closing(conn):
+        with conn.cursor() as cursor:
+            cursor.execute(
+                "SELECT skill_name, level FROM app_skills WHERE user_id = %s",
+                (PREFERRED_USER_ID,),
+            )
+            rows = cursor.fetchall()
+            if not rows:
+                return None
+
+    matrix = {skill: 0 for skill in skills_reference}
+    for skill_name, level in rows:
+        matrix[skill_name] = 1 if level else 0
+    return matrix
+
+
+def load_user_matrix(skills_reference: List[str]) -> Dict[str, int]:
+    matrix = load_user_matrix_from_db(skills_reference)
+    if matrix is not None:
+        return matrix
+    return load_matrix(USER_MATRIX_PATH)
+
+
+def load_desired_matrix() -> Dict[str, int]:
+    return load_matrix(DESIRED_MATRIX_PATH)
+
+
 def classify_nodes(graph: nx.DiGraph) -> Dict[str, str]:
-    user_matrix = load_matrix(USER_MATRIX_PATH)
-    desired_matrix = load_matrix(DESIRED_MATRIX_PATH)
+    skills_reference = load_skills_reference()
+    user_matrix = load_user_matrix(skills_reference)
+    desired_matrix = load_desired_matrix()
 
     mastered = {skill for skill, flag in user_matrix.items() if flag == 1}
     required = {skill for skill, flag in desired_matrix.items() if flag == 1}
