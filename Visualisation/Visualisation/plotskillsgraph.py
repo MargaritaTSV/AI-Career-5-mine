@@ -333,18 +333,18 @@ def draw_graph(
   plt.legend(
     handles=legend_handles,
     loc="upper center",
-    bbox_to_anchor=(0.5, -0.08),
+    bbox_to_anchor=(0.5, -0.02),
     frameon=False,
     ncol=1,
   )
-  plt.title(title, fontsize=14, fontweight="bold", pad=20)
+  plt.title(title, fontsize=14, fontweight="bold", pad=20, y=0.98)
 
   plt.axis("off")
   plt.margins(0.15)
-  plt.tight_layout(rect=(0, 0.1, 1, 1))
+  plt.tight_layout(rect=(0, 0.1, 1, 0.95))
 
   output.parent.mkdir(parents=True, exist_ok=True)
-  plt.savefig(output, dpi=300, bbox_inches="tight")
+  plt.savefig(output, dpi=300, bbox_inches="tight", pad_inches=0.25)
   plt.close()
 
 
