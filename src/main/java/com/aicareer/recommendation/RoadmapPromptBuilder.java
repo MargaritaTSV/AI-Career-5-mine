@@ -261,13 +261,39 @@ public final class RoadmapPromptBuilder {
                                String skillGraphResource) {
         Map<String, Integer> userMatrix = readSkillMatrix(userMatrixResource);
         Map<String, Integer> desiredMatrix = readSkillMatrix(desiredMatrixResource);
+
+        List<String> masteredSkills = flaggedSkills(userMatrix);
+        List<String> requiredSkills = flaggedSkills(desiredMatrix);
+
+        return build(
+                vacanciesResource,
+                userMatrixResource,
+                desiredMatrixResource,
+                skillGraphResource,
+                masteredSkills,
+                requiredSkills,
+                null
+        );
+    }
+
+    public static String build(String vacanciesResource,
+                               String userMatrixResource,
+                               String desiredMatrixResource,
+                               String skillGraphResource,
+                               List<String> masteredSkills,
+                               List<String> requiredSkills,
+                               List<String> missingSkills) {
+        Map<String, Integer> userMatrix = readSkillMatrix(userMatrixResource);
+        Map<String, Integer> desiredMatrix = readSkillMatrix(desiredMatrixResource);
         String graphJson = readResourceJson(skillGraphResource);
         String vacanciesJson = readResourceJson(vacanciesResource);
 
-        List<String> userSkills = flaggedSkills(userMatrix);
-        List<String> targetSkills = flaggedSkills(desiredMatrix);
-        List<String> missingSkills = targetSkills.stream()
-                .filter(skill -> !userSkills.contains(skill))
+        List<String> safeMastered = masteredSkills != null ? masteredSkills : flaggedSkills(userMatrix);
+        List<String> safeRequired = requiredSkills != null ? requiredSkills : flaggedSkills(desiredMatrix);
+        List<String> safeMissing = missingSkills != null
+                ? missingSkills
+                : safeRequired.stream()
+                .filter(skill -> !safeMastered.contains(skill))
                 .toList();
 
         return String.join("\n", List.of(
@@ -279,10 +305,10 @@ public final class RoadmapPromptBuilder {
                 "Для каждого шага выбери 1–2 ресурса из предложенного списка, которые лучше всего подходят под темы шага, и укажи их явно.",
             "\nОриентированный граф навыков (используй уровни навыков для приоритета шагов, те у которых уровень меньше должны быть первее):\n" + graphJson,
             "\nТекущие навыки пользователя (1 = владеет):\n" + formatJson(userMatrix)
-                        + "\nСильные стороны: " + String.join(", ", userSkills),
+                        + "\nСильные стороны: " + String.join(", ", safeMastered),
                 "\nМатрица требуемых навыков роли:\n" + formatJson(desiredMatrix)
-                        + "\nКлючевые цели: " + String.join(", ", targetSkills),
-                "\nНавыки, которых не хватает: " + (missingSkills.isEmpty() ? "нет" : String.join(", ", missingSkills)),
+                        + "\nКлючевые цели: " + String.join(", ", safeRequired),
+                "\nНавыки, которых не хватает: " + (safeMissing.isEmpty() ? "нет" : String.join(", ", safeMissing)),
                 "\nВакансии для анализа стеков и узких тем (используй для выбора фреймворков и инструментов):\n" + vacanciesJson,
                 "\nСписок ресурсов: используй только их, подбирая к каждому шагу 1–2 варианта:\n" + RESOURCES_FOR_RECOMMENDATIONS,
                 "\nФормат ответа:",

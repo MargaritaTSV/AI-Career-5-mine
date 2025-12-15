@@ -441,15 +441,6 @@ public class AppRunner {
     ComparisonResult comparison = Comparison.calculate(roleMatrix, profile.skills());
     Comparison.writeOutputs(comparison, STATUSES_PATH, SUMMARY_PATH);
 
-    Path skillGraphImage = runVisualizationScript();
-
-    String prompt = RoadmapPromptBuilder.build(
-        vacanciesResource,
-        "matrices/user_skill_matrix.json",
-        "matrices/desired_role_matrix.json",
-        "graphs/skills-graph.json"
-    );
-
     List<String> masteredSkills = profile.skills().entrySet().stream()
         .filter(entry -> entry.getValue() != null && entry.getValue() == 1)
         .map(Map.Entry::getKey)
@@ -462,6 +453,24 @@ public class AppRunner {
 
     System.out.println("\n[SKILLS] Освоенные: " + String.join(", ", masteredSkills));
     System.out.println("[SKILLS] Требуются для роли: " + String.join(", ", requiredSkills));
+    List<String> missingSkills = requiredSkills.stream()
+        .filter(skill -> !masteredSkills.contains(skill))
+        .toList();
+    System.out.println("[SKILLS] Необходимо освоить: " + (missingSkills.isEmpty()
+        ? "нет"
+        : String.join(", ", missingSkills)));
+
+    Path skillGraphImage = runVisualizationScript();
+
+    String prompt = RoadmapPromptBuilder.build(
+        vacanciesResource,
+        "matrices/user_skill_matrix.json",
+        "matrices/desired_role_matrix.json",
+        "graphs/skills-graph.json",
+        masteredSkills,
+        requiredSkills,
+        missingSkills
+    );
 
     try {
       String roadmap = DeepseekRoadmapClient.generateRoadmap(prompt, skillGraphImage);
