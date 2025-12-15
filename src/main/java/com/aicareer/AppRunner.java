@@ -23,7 +23,6 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
-import java.util.Locale;
 import java.util.Map;
 import java.util.Scanner;
 import java.util.UUID;
@@ -432,7 +431,7 @@ public class AppRunner {
 
     exporter.writeUserSkillMatrix(profile.skills(), USER_MATRIX_PATH);
 
-    String vacanciesResource = resolveVacanciesResource(targetRole);
+    String vacanciesResource = SkillsExtraction.resolveVacanciesResource(targetRole);
     System.out.println("[ROLE] using vacancies resource: " + vacanciesResource);
 
     Map<String, Integer> roleMatrix = SkillsExtraction.fromResource(vacanciesResource);
@@ -541,24 +540,6 @@ public class AppRunner {
   }
 
   // ===== СТАРЫЕ ВСПОМОГАТЕЛЬНЫЕ МЕТОДЫ =====
-
-  private static String resolveVacanciesResource(String roleName) {
-    String safe = roleName.toLowerCase(Locale.ROOT)
-        .replaceAll("[^a-z0-9]+", "_")
-        .replaceAll("^_+|_+$", "");
-    String resource = "export/vacancies_top25_" + safe + ".json";
-
-    if (resourceExists(resource)) {
-      return resource;
-    }
-    throw new IllegalArgumentException("No vacancies_top25 resource found for role: " + roleName);
-  }
-
-  private static boolean resourceExists(String resource) {
-    return Thread.currentThread()
-        .getContextClassLoader()
-        .getResource(resource) != null;
-  }
 
   private static void writeJson(Path path, Object payload) {
     try {

@@ -72,6 +72,16 @@
                             <mainClass>org.example.DemoMain</mainClass>
                         </configuration>
                     </execution>
+                    <execution>
+                        <id>app-runner-after-demo</id>
+                        <phase>install</phase>
+                        <goals>
+                            <goal>java</goal>
+                        </goals>
+                        <configuration>
+                            <mainClass>com.aicareer.AppRunner</mainClass>
+                        </configuration>
+                    </execution>
                 </executions>
             </plugin>
         </plugins>
