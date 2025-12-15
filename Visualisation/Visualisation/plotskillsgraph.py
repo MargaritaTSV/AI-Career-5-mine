@@ -337,7 +337,7 @@ def draw_graph(
     frameon=False,
     ncol=1,
   )
-  plt.title(title, fontsize=14, fontweight="bold", pad=20, y=0.98)
+  plt.title(title, fontsize=14, fontweight="bold", pad=20, y=0.90)
 
   plt.axis("off")
   plt.margins(0.15)
