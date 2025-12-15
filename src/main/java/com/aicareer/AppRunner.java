@@ -462,7 +462,7 @@ public class AppRunner {
     Path skillGraphImage = runVisualizationScript();
 
     List<String> missingSkills = computeMissingSkillsFromGraph(masteredSkills, requiredSkills);
-    System.out.println("[SKILLS] Необходимо освоить (по графу): " + (missingSkills.isEmpty()
+    System.out.println("[SKILLS] Необходимо освоить: " + (missingSkills.isEmpty()
         ? "нет"
         : String.join(", ", missingSkills)));
 
