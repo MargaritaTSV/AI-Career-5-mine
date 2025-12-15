@@ -13,8 +13,8 @@ Usage:
     python Visualisation/Visualisation/plotskillsgraph.py
 
 The script works purely on local JSON files and does not contact any AI models
-or databases. Outputs are written to target/visualisations/skills_graph.png and
-skills_graph_mastery.png.
+or databases. Outputs are written to Visualisation/target/visualisations/
+skills_graph.png and skills_graph_mastery.png.
 """
 from __future__ import annotations
 
@@ -30,7 +30,6 @@ PROJECT_ROOT = Path(__file__).resolve().parents[2]
 VISUALISATION_ROOT = Path(__file__).resolve().parents[1]
 
 GRAPH_PATH = PROJECT_ROOT / "src" / "main" / "resources" / "graphs" / "skills-graph.json"
-FALLBACK_GRAPH_PATH = VISUALISATION_ROOT / "skills-graph.json"
 USER_MATRIX_PATH = PROJECT_ROOT / "src" / "main" / "resources" / "matrices" / "user_skill_matrix.json"
 DESIRED_MATRIX_PATH = PROJECT_ROOT / "src" / "main" / "resources" / "matrices" / "desired_role_matrix.json"
 SKILLS_REFERENCE_PATH = PROJECT_ROOT / "src" / "main" / "resources" / "skills.json"
@@ -44,8 +43,12 @@ MISSING_COLOR = "#c9e3ff"   # light blue
 
 
 def load_graph() -> Tuple[nx.DiGraph, List[Tuple[str, str, int]]]:
-    graph_source = GRAPH_PATH if GRAPH_PATH.exists() else FALLBACK_GRAPH_PATH
-    with graph_source.open("r", encoding="utf-8") as f:
+    if not GRAPH_PATH.exists():
+        raise FileNotFoundError(
+            f"Skill graph not found at {GRAPH_PATH}. Ensure the project resources are available."
+        )
+
+    with GRAPH_PATH.open("r", encoding="utf-8") as f:
         data = json.load(f)
 
     nodes = data["nodes"]
@@ -272,6 +275,9 @@ def main() -> None:
         node_colors=color_map,
         output=OUTPUT_DIR / "skills_graph_mastery.png",
     )
+
+    print(f"Skill graph saved to: {OUTPUT_DIR / 'skills_graph.png'}")
+    print(f"Mastery graph saved to: {OUTPUT_DIR / 'skills_graph_mastery.png'}")
 
 
 if __name__ == "__main__":
