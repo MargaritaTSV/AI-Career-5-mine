@@ -133,7 +133,7 @@ def compute_positions(level: Dict[str, int]) -> Dict[str, Tuple[float, float]]:
     for lvl, nodes_on_level in levels_to_nodes.items():
         count = len(nodes_on_level)
         for i, node in enumerate(sorted(nodes_on_level)):
-            x = 0.0 if count == 1 else -2.5 + 5.0 * i / (count - 1)
+            x = 0.0 if count == 1 else -3.5 + 7.0 * i / (count - 1)
             y = -lvl
             positions[node] = (x, y)
 
@@ -261,6 +261,11 @@ def draw_graph(
 
     plt.figure(figsize=(10, 8))
 
+    formatted_labels = {
+        node: "machine\nlearning" if node == "machine_learning" else node.replace("_", " ")
+        for node in graph.nodes()
+    }
+
     nx.draw_networkx_nodes(
         graph,
         positions,
@@ -282,10 +287,11 @@ def draw_graph(
         edge_color=ORANGE_BORDER,
     )
 
-    label_positions = {node: (coords[0], coords[1] - 0.15) for node, coords in positions.items()}
+    label_positions = {node: (coords[0], coords[1] - 0.18) for node, coords in positions.items()}
     nx.draw_networkx_labels(
         graph,
         label_positions,
+        labels=formatted_labels,
         font_size=11,
         font_weight="bold",
         font_color=TEXT_COLOR,
@@ -324,12 +330,18 @@ def draw_graph(
         ),
     ]
 
-    plt.legend(handles=legend_handles, loc="upper right", bbox_to_anchor=(1.22, 1), frameon=False)
+    plt.legend(
+        handles=legend_handles,
+        loc="upper center",
+        bbox_to_anchor=(0.5, -0.08),
+        frameon=False,
+        ncol=1,
+    )
     plt.title(title, fontsize=14, fontweight="bold", pad=20)
 
     plt.axis("off")
     plt.margins(0.25)
-    plt.tight_layout()
+    plt.tight_layout(rect=(0, 0.1, 1, 1))
 
     output.parent.mkdir(parents=True, exist_ok=True)
     plt.savefig(output, dpi=300, bbox_inches="tight")
