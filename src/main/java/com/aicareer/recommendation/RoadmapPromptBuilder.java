@@ -261,33 +261,55 @@ public final class RoadmapPromptBuilder {
                                String skillGraphResource) {
         Map<String, Integer> userMatrix = readSkillMatrix(userMatrixResource);
         Map<String, Integer> desiredMatrix = readSkillMatrix(desiredMatrixResource);
+
+        List<String> masteredSkills = flaggedSkills(userMatrix);
+        List<String> requiredSkills = flaggedSkills(desiredMatrix);
+
+        return build(
+                vacanciesResource,
+                userMatrixResource,
+                desiredMatrixResource,
+                skillGraphResource,
+                masteredSkills,
+                requiredSkills,
+                null
+        );
+    }
+
+    public static String build(String vacanciesResource,
+                               String userMatrixResource,
+                               String desiredMatrixResource,
+                               String skillGraphResource,
+                               List<String> masteredSkills,
+                               List<String> requiredSkills,
+                               List<String> missingSkills) {
+        Map<String, Integer> userMatrix = readSkillMatrix(userMatrixResource);
+        Map<String, Integer> desiredMatrix = readSkillMatrix(desiredMatrixResource);
         String graphJson = readResourceJson(skillGraphResource);
         String vacanciesJson = readResourceJson(vacanciesResource);
 
-        List<String> userSkills = flaggedSkills(userMatrix);
-        List<String> targetSkills = flaggedSkills(desiredMatrix);
-        List<String> missingSkills = targetSkills.stream()
-                .filter(skill -> !userSkills.contains(skill))
+        List<String> safeMastered = masteredSkills != null ? masteredSkills : flaggedSkills(userMatrix);
+        List<String> safeRequired = requiredSkills != null ? requiredSkills : flaggedSkills(desiredMatrix);
+        List<String> safeMissing = missingSkills != null
+                ? missingSkills
+                : safeRequired.stream()
+                .filter(skill -> !safeMastered.contains(skill))
                 .toList();
 
         return String.join("\n", List.of(
                 "Ты — карьерный консультант и планировщик обучения. Тебе дан граф навыков, на котором стрелками показана связь навыков в программировании. ",
-                "Также данные ниже: матрица навыков пользователя, требования роли, ориентированный граф зависимостей навыков, список вакансий роли и список учебных ресурсов.",
-                "Задача: выдать краткий маршрут, который быстрее всего закроет дефицит навыков для целевой роли; более сильные рёбра графа ставь раньше в очереди. Ты должен учитывать, что например для aws и kafka (это ты поймешь по графу) сначала надо изучить kubernetes, тогда даже если этот навык не требуется в специальности ты должен его вписать в шаги по достижению необходимого уровня. Поэтому например в случае с Java Backend Developer не пропускай этот шаг и аналогично для остальных случаев.",
-            "Помни что в присланном тебе графе наибольшим приоритетом пользуются навыки вверху, то есть ты должен как бы идти сверху вниз.",
-            "Отдавай приоритет книгам и курсам вне Stepik/Coursera, в первую очередь материалам похожим на Harvard/CS50.",
-                "Для каждого шага выбери 1–2 ресурса из предложенного списка, которые лучше всего подходят под темы шага, и укажи их явно.",
-            "\nОриентированный граф навыков (используй уровни навыков для приоритета шагов, те у которых уровень меньше должны быть первее):\n" + graphJson,
-            "\nТекущие навыки пользователя (1 = владеет):\n" + formatJson(userMatrix)
-                        + "\nСильные стороны: " + String.join(", ", userSkills),
-                "\nМатрица требуемых навыков роли:\n" + formatJson(desiredMatrix)
-                        + "\nКлючевые цели: " + String.join(", ", targetSkills),
-                "\nНавыки, которых не хватает: " + (missingSkills.isEmpty() ? "нет" : String.join(", ", missingSkills)),
+                "Задача: выдать краткий маршрут, который быстрее всего закроет дефицит навыков для целевой роли",
+                "Помни что в присланном тебе графе наибольшим приоритетом пользуются навыки вверху, то есть ты должен идти сверху вниз в процессе обучения.",
+                "Отдавай приоритет книгам и курсам вне Stepik/Coursera, в первую очередь материалам похожим на Harvard/CS50.",
+                "Для каждого шага выбери 2–3 ресурса из предложенного списка, которые лучше всего подходят под темы шага, и укажи их явно.",
+                "\nОриентированный граф навыков (используй уровни навыков для приоритета шагов, те у которых уровень меньше должны быть первее):\n" + graphJson,
+                "\nУже имеющиеся навыки: " + String.join(", ", safeMastered),
+                "\nНавыки, которых не хватает: " + (safeMissing.isEmpty() ? "нет" : String.join(", ", safeMissing)),
                 "\nВакансии для анализа стеков и узких тем (используй для выбора фреймворков и инструментов):\n" + vacanciesJson,
-                "\nСписок ресурсов: используй только их, подбирая к каждому шагу 1–2 варианта:\n" + RESOURCES_FOR_RECOMMENDATIONS,
+                "\nСписок ресурсов: используй только их, подбирая к каждому шагу 2–3 варианта:\n" + RESOURCES_FOR_RECOMMENDATIONS,
                 "\nФормат ответа:",
                 "Roadmap: 3–7 шагов. Каждый шаг — одно предложение вида 'Шаг 1. Java: ООП, коллекции \n Ресурсы: Ресурсы: Learning Python — Марк Лутц \n → Шаг 2. Алгоритмы: асимптотика, разбиение.' или 'Шаг 2. Алгоритмы на Java: асимптотический анализ, толстое и тонкое разбиение. \n  *Ресурсы*",
-                "Правила: сначала закрывай пробелы в навыках, опираясь на уже освоенные; сильные рёбра графа = более важные зависимости, ставь их раньше; разрешено указывать фреймворки, темы, технологии; не повторяй уже освоенные навыки как отдельные шаги — только используй их как фундамент; для каждого шага перечисли 1–2 подходящих ресурса из списка выше. Не пытайся писать жирным шрифтом. Не пиши ничего после предложенных шагов по улучшению"
+                "Правила: сначала закрывай пробелы в навыках, опираясь на уже освоенные и те, которые необходимо освоить для изучения требуемого навыка; разрешено указывать фреймворки, темы, технологии; не повторяй уже освоенные навыки как отдельные шаги — только используй их как фундамент; не пытайся писать жирным шрифтом. Не пиши ничего после предложенных шагов по улучшению"
         ));
 
     }

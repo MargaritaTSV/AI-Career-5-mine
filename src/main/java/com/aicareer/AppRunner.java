@@ -9,6 +9,7 @@ import com.aicareer.comparison.Comparison.ComparisonResult;
 import com.aicareer.hh.infrastructure.db.DbConnectionProvider;
 import com.aicareer.recommendation.DeepseekRoadmapClient;
 import com.aicareer.recommendation.RoadmapPromptBuilder;
+import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
 
@@ -20,11 +21,15 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayDeque;
 import java.util.ArrayList;
+import java.util.Deque;
 import java.util.LinkedHashMap;
+import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
+import java.util.Set;
 import java.util.Scanner;
 import java.util.UUID;
 import java.util.stream.Stream;
@@ -441,15 +446,6 @@ public class AppRunner {
     ComparisonResult comparison = Comparison.calculate(roleMatrix, profile.skills());
     Comparison.writeOutputs(comparison, STATUSES_PATH, SUMMARY_PATH);
 
-    Path skillGraphImage = runVisualizationScript();
-
-    String prompt = RoadmapPromptBuilder.build(
-        vacanciesResource,
-        "matrices/user_skill_matrix.json",
-        "matrices/desired_role_matrix.json",
-        "graphs/skills-graph.json"
-    );
-
     List<String> masteredSkills = profile.skills().entrySet().stream()
         .filter(entry -> entry.getValue() != null && entry.getValue() == 1)
         .map(Map.Entry::getKey)
@@ -462,6 +458,23 @@ public class AppRunner {
 
     System.out.println("\n[SKILLS] Освоенные: " + String.join(", ", masteredSkills));
     System.out.println("[SKILLS] Требуются для роли: " + String.join(", ", requiredSkills));
+
+    Path skillGraphImage = runVisualizationScript();
+
+    List<String> missingSkills = computeMissingSkillsFromGraph(masteredSkills, requiredSkills);
+    System.out.println("[SKILLS] Необходимо освоить: " + (missingSkills.isEmpty()
+        ? "нет"
+        : String.join(", ", missingSkills)));
+
+    String prompt = RoadmapPromptBuilder.build(
+        vacanciesResource,
+        "matrices/user_skill_matrix.json",
+        "matrices/desired_role_matrix.json",
+        "graphs/skills-graph.json",
+        masteredSkills,
+        requiredSkills,
+        missingSkills
+    );
 
     try {
       String roadmap = DeepseekRoadmapClient.generateRoadmap(prompt, skillGraphImage);
@@ -515,6 +528,71 @@ public class AppRunner {
       System.err.println("[VIS] Visualization script was interrupted");
     }
     return null;
+  }
+
+  private static List<String> computeMissingSkillsFromGraph(
+      List<String> masteredSkills,
+      List<String> requiredSkills
+  ) {
+    Set<String> missing = new LinkedHashSet<>();
+    for (String skill : requiredSkills) {
+      if (!masteredSkills.contains(skill)) {
+        missing.add(skill);
+      }
+    }
+
+    Path graphPath = Path.of("src/main/resources/graphs/skills-graph.json");
+    if (!Files.exists(graphPath)) {
+      return new ArrayList<>(missing);
+    }
+
+    Map<String, List<String>> parents = new LinkedHashMap<>();
+    try {
+      Map<String, Object> graph = MAPPER.readValue(graphPath.toFile(), new TypeReference<>() {});
+      @SuppressWarnings("unchecked")
+      List<Map<String, Object>> edges = (List<Map<String, Object>>) graph.getOrDefault("edges", List.of());
+      for (Map<String, Object> edge : edges) {
+        Object from = edge.get("from");
+        Object to = edge.get("to");
+        if (!(from instanceof String) || !(to instanceof String)) {
+          continue;
+        }
+        parents.computeIfAbsent((String) to, k -> new ArrayList<>()).add((String) from);
+        parents.computeIfAbsent((String) from, k -> new ArrayList<>());
+      }
+    } catch (IOException e) {
+      System.err.println("[GRAPH] Не удалось прочитать skills-graph.json: " + e.getMessage());
+      return new ArrayList<>(missing);
+    }
+
+    Set<String> enrichedMissing = new LinkedHashSet<>(missing);
+    for (String skill : missing) {
+      collectAncestors(skill, parents, masteredSkills, enrichedMissing);
+    }
+
+    return new ArrayList<>(enrichedMissing);
+  }
+
+  private static void collectAncestors(
+      String skill,
+      Map<String, List<String>> parents,
+      List<String> masteredSkills,
+      Set<String> accumulator
+  ) {
+    Deque<String> stack = new ArrayDeque<>();
+    stack.push(skill);
+
+    while (!stack.isEmpty()) {
+      String current = stack.pop();
+      for (String parent : parents.getOrDefault(current, List.of())) {
+        if (masteredSkills.contains(parent)) {
+          continue;
+        }
+        if (accumulator.add(parent)) {
+          stack.push(parent);
+        }
+      }
+    }
   }
 
   private static String resolvePythonExecutable() {
